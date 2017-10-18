@@ -32,5 +32,5 @@ hs_err_pid*
 # MAC
 .DS_Store
 
-#db.properties
-#log4j.properties
+db.properties
+log4j.properties
