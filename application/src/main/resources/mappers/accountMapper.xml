@@ -2,17 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="accountMapper.AccountMapper">
+<mapper namespace="cn.edu.nju.mapper.accontMapper.AccountMapper">
     <select id="getAccountNumByEmail" resultType="int">
         SELECT COUNT(*) FROM t_user WHERE email = #{email}
     </select>
 
     <select id="getAccountNumByEmailAndPassword" resultType="int">
-        SELECT COUNT(*) FROM t_user WHERE email = #{email} AND password = #{password}
+        SELECT COUNT(*) FROM t_user WHERE email = #{0} AND password = #{1}
     </select>
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="id"
-            parameterType="accountModel.UserModel">
+            parameterType="cn.edu.nju.model.accountModel.UserModel">
         INSERT INTO t_user(name, email, password, role, verified, enabled)
                 VALUES (#{name}, #{email}, #{password}, #{role}, #{verified}, #{enabled})
     </insert>

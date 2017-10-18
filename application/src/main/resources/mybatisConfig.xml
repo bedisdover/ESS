@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+
     <settings>
         <setting name="cacheEnabled" value="true"/>
         <setting name="lazyLoadingEnabled" value="true"/>
@@ -11,12 +12,11 @@
         <setting name="logImpl" value="LOG4J"/>
     </settings>
 
-    <typeAliases>
-        <package name="cn.edu.nju.mapper"/>
-        <package name="cn.edu.nju.model"/>
-    </typeAliases>
+    <!--<typeAliases>-->
+        <!--<package name="cn.edu.nju.mapper"/>-->
+    <!--</typeAliases>-->
 
-    <mappers>
-        <mapper resource="mappers/accountMapper.xml"/>
-    </mappers>
+    <!--<mappers>-->
+        <!--<mapper resource="mappers/accountMapper.xml"/>-->
+    <!--</mappers>-->
 </configuration>

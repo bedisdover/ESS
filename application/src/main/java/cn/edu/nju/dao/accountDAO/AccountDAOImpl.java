@@ -18,6 +18,8 @@ public class AccountDAOImpl implements IAccountDAO {
     @Override
     public boolean isAccountValid(LoginModel model) {
         int userNum;
+        System.out.println(model.getEmail());
+        System.out.println(model.getPassword());
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
             userNum = mapper.getAccountNumByEmailAndPassword(
