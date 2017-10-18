@@ -13,21 +13,40 @@ import org.springframework.stereotype.Service;
 @Service(value = "accountService")
 public class AccountServiceImpl implements IAccountService {
 
-    @Autowired
-    private IAccountDAO accountDAO;
+    private final IAccountDAO accountDAO;
 
-    @Override
-    public boolean isValidAccount(LoginModel model) {
-        return false;
+    @Autowired
+    public AccountServiceImpl(IAccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
     }
 
     @Override
-    public ResultModel logout() {
-        return null;
+    public boolean isAccountValid(LoginModel model) {
+        return accountDAO.isAccountValid(model);
+    }
+
+    @Override
+    public boolean isAccountExist(LoginModel model) {
+        return accountDAO.isAccountExist(model);
+    }
+
+    @Override
+    public void logout() {
     }
 
     @Override
     public ResultModel signUp(SigUpModel model) {
-        return null;
+        if (accountDAO.isAccountExist(new LoginModel(
+                model.getEmail(), model.getPassword(), model.getRole()))) {
+            return new ResultModel(false, "该账户已经存在");
+        }
+
+        ResultModel result = accountDAO.addUser(model);
+        if (result.isSuccess()) {
+            return new ResultModel(true, "成功注册账户");
+        }
+        else {
+            return result;
+        }
     }
 }

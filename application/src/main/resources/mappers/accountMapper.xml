@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="accountMapper.AccountMapper">
+    <select id="getAccountNumByEmail" resultType="int">
+        SELECT COUNT(*) FROM t_user WHERE email = #{email}
+    </select>
+
+    <select id="getAccountNumByEmailAndPassword" resultType="int">
+        SELECT COUNT(*) FROM t_user WHERE email = #{email} AND password = #{password}
+    </select>
+
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="id"
+            parameterType="accountModel.UserModel">
+        INSERT INTO t_user(name, email, password, role, verified, enabled)
+                VALUES (#{name}, #{email}, #{password}, #{role}, #{verified}, #{enabled})
+    </insert>
+</mapper>

@@ -1,28 +1,28 @@
 package cn.edu.nju.model;
 
 /**
- * information required for result
+ * information required for success
  */
 public class ResultModel {
 
-    private boolean result;
+    private boolean success;
 
     private String message;
 
     public ResultModel() {
     }
 
-    public ResultModel(boolean result, String message) {
-        this.result = result;
+    public ResultModel(boolean success, String message) {
+        this.success = success;
         this.message = message;
     }
 
-    public boolean isResult() {
-        return result;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setResult(boolean result) {
-        this.result = result;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {

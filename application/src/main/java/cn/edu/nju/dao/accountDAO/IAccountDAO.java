@@ -17,6 +17,13 @@ public interface IAccountDAO {
     boolean isAccountValid(LoginModel model);
 
     /**
+     * tell if account has existed
+     * @param model user information
+     * @return exist or not
+     */
+    boolean isAccountExist(LoginModel model);
+
+    /**
      * add a user
      * @param model user information
      * @return success or not

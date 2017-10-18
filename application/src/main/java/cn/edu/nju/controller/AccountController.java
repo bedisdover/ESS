@@ -1,6 +1,8 @@
 package cn.edu.nju.controller;
 
 import cn.edu.nju.model.ResultModel;
+import cn.edu.nju.model.accountModel.LoginModel;
+import cn.edu.nju.model.accountModel.SigUpModel;
 import cn.edu.nju.service.accountService.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,14 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class AccountController {
 
+    private final IAccountService accountService;
+
+    private static final String LOGIN_KEY = "user";
+
     @Autowired
-    private IAccountService accountService;
+    public AccountController(IAccountService accountService) {
+        this.accountService = accountService;
+    }
 
     /**
      * login
@@ -32,7 +40,18 @@ public class AccountController {
     @ResponseBody
     public ResultModel login(HttpSession session, String email,
                              String password, int role) {
-        return null;
+        if (session.getAttribute(LOGIN_KEY) == null) {
+            if (accountService.isAccountValid(new LoginModel(email, password, role))) {
+                session.setAttribute(LOGIN_KEY, email);
+                return new ResultModel(true, "登录成功");
+            }
+            else {
+                return new ResultModel(false, "账号与密码不一致");
+            }
+        }
+        else {
+            return new ResultModel(false, "账号已经登录,无需重新登录");
+        }
     }
 
     /**
@@ -43,12 +62,13 @@ public class AccountController {
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
     public ResultModel logout(HttpSession session) {
-        return null;
+        accountService.logout();
+        session.setAttribute(LOGIN_KEY, null);
+        return new ResultModel(true, "成功退出");
     }
 
     /**
      * sign up
-     * @param session http session
      * @param name user name
      * @param email user email
      * @param password user password
@@ -57,8 +77,10 @@ public class AccountController {
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     @ResponseBody
-    public ResultModel signUp(HttpSession session, String name,
+    public ResultModel signUp(String name,
                               String email, String password, int role) {
-        return null;
+        return accountService.signUp(new SigUpModel(
+                name, email, password, role
+        ));
     }
 }

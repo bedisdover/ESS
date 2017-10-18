@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS t_user;
+
+CREATE TABLE t_user(
+	id		INT PRIMARY KEY AUTO_INCREMENT,
+	name		VARCHAR(255) NOT NULL,
+	email		VARCHAR(255) NOT NULL,
+	password	VARCHAR(255) NOT NULL,
+	role		TINYINT NOT NULL COMMENT '角色: 1教师, 2学生',
+	verified	TINYINT	NOT NULL DEFAULT 0 COMMENT '是否激活, 0未激活, 1激活',
+	enabled		TINYINT NOT NULL DEFAULT 1 COMMENT '是否可用, 0不可用, 1可用',
+	UNIQUE KEY(email)
+) COMMENT = '用户表,包括学生和教师';
+
+

@@ -12,16 +12,22 @@ public interface IAccountService {
 
     /**
      * tell if it is a valid account
-     * @param model login information
+     * @param model user information
      * @return valid or not
      */
-    boolean isValidAccount(LoginModel model);
+    boolean isAccountValid(LoginModel model);
+
+    /**
+     * tell if account has existed
+     * @param model user information
+     * @return exist or not
+     */
+    boolean isAccountExist(LoginModel model);
 
     /**
      * logout
-     * @return logout result
      */
-    ResultModel logout();
+    void logout();
 
     /**
      * add a new user

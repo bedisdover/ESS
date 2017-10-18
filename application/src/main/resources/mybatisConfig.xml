@@ -13,5 +13,10 @@
 
     <typeAliases>
         <package name="cn.edu.nju.mapper"/>
+        <package name="cn.edu.nju.model"/>
     </typeAliases>
+
+    <mappers>
+        <mapper resource="mappers/accountMapper.xml"/>
+    </mappers>
 </configuration>
