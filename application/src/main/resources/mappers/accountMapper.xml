@@ -2,18 +2,20 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.edu.nju.mapper.accontMapper.AccountMapper">
+<mapper namespace="cn.edu.nju.mapper.accountMapper.AccountMapper">
     <select id="getAccountNumByEmail" resultType="int">
         SELECT COUNT(*) FROM t_user WHERE email = #{email}
+        AND verified = 1 AND enable = 1
     </select>
 
     <select id="getAccountNumByEmailAndPassword" resultType="int">
         SELECT COUNT(*) FROM t_user WHERE email = #{0} AND password = #{1}
+        AND verified = 1 AND enable = 1
     </select>
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="id"
             parameterType="cn.edu.nju.model.accountModel.UserModel">
-        INSERT INTO t_user(name, email, password, role, verified, enabled)
+        INSERT INTO t_user(name, email, password, role, verified, enable)
                 VALUES (#{name}, #{email}, #{password}, #{role}, #{verified}, #{enabled})
     </insert>
 </mapper>

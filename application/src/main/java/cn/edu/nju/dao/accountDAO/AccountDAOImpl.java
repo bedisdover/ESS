@@ -18,8 +18,6 @@ public class AccountDAOImpl implements IAccountDAO {
     @Override
     public boolean isAccountValid(LoginModel model) {
         int userNum;
-        System.out.println(model.getEmail());
-        System.out.println(model.getPassword());
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
             userNum = mapper.getAccountNumByEmailAndPassword(
@@ -45,7 +43,7 @@ public class AccountDAOImpl implements IAccountDAO {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
             mapper.addUser(new UserModel(
                     model.getName(), model.getEmail(), model.getPassword(),
-                    model.getRole(), 1, 1
+                    model.getRole(), 0, 1
             ));
         }
         return new ResultModel(true, "已成功注册账号");
