@@ -1,18 +1,18 @@
-package cn.edu.nju.model;
+package cn.edu.nju.vo;
 
 /**
  * information required for success
  */
-public class ResultModel {
+public class ResultInfo {
 
     private boolean success;
 
     private String message;
 
-    public ResultModel() {
+    public ResultInfo() {
     }
 
-    public ResultModel(boolean success, String message) {
+    public ResultInfo(boolean success, String message) {
         this.success = success;
         this.message = message;
     }

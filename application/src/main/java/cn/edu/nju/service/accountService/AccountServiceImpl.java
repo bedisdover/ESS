@@ -1,7 +1,7 @@
 package cn.edu.nju.service.accountService;
 
 import cn.edu.nju.dao.accountDAO.IAccountDAO;
-import cn.edu.nju.model.ResultModel;
+import cn.edu.nju.vo.ResultInfo;
 import cn.edu.nju.model.accountModel.LoginModel;
 import cn.edu.nju.model.accountModel.SigUpModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +26,19 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public boolean isAccountExist(LoginModel model) {
-        return accountDAO.isAccountExist(model);
-    }
-
-    @Override
     public void logout() {
     }
 
     @Override
-    public ResultModel signUp(SigUpModel model) {
+    public ResultInfo signUp(SigUpModel model) {
         if (accountDAO.isAccountExist(new LoginModel(
                 model.getEmail(), model.getPassword(), model.getRole()))) {
-            return new ResultModel(false, "该账户已经存在");
+            return new ResultInfo(false, "该账户已经存在");
         }
 
-        ResultModel result = accountDAO.addUser(model);
+        ResultInfo result = accountDAO.addUser(model);
         if (result.isSuccess()) {
-            return new ResultModel(true, "成功注册账户");
+            return new ResultInfo(true, "成功注册账户");
         }
         else {
             return result;

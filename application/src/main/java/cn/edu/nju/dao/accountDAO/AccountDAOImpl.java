@@ -1,8 +1,8 @@
 package cn.edu.nju.dao.accountDAO;
 
 import cn.edu.nju.dao.SessionFactory;
-import cn.edu.nju.mapper.accontMapper.AccountMapper;
-import cn.edu.nju.model.ResultModel;
+import cn.edu.nju.mapper.accountMapper.AccountMapper;
+import cn.edu.nju.vo.ResultInfo;
 import cn.edu.nju.model.accountModel.LoginModel;
 import cn.edu.nju.model.accountModel.SigUpModel;
 import cn.edu.nju.model.accountModel.UserModel;
@@ -38,7 +38,7 @@ public class AccountDAOImpl implements IAccountDAO {
     }
 
     @Override
-    public ResultModel addUser(SigUpModel model) {
+    public ResultInfo addUser(SigUpModel model) {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
             mapper.addUser(new UserModel(
@@ -46,6 +46,6 @@ public class AccountDAOImpl implements IAccountDAO {
                     model.getRole(), 0, 1
             ));
         }
-        return new ResultModel(true, "已成功注册账号");
+        return new ResultInfo(true, "已成功注册账号");
     }
 }

@@ -1,4 +1,4 @@
-package cn.edu.nju.mapper.accontMapper;
+package cn.edu.nju.mapper.accountMapper;
 
 import cn.edu.nju.model.accountModel.UserModel;
 

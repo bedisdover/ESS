@@ -1,6 +1,6 @@
 package cn.edu.nju.service.accountService;
 
-import cn.edu.nju.model.ResultModel;
+import cn.edu.nju.vo.ResultInfo;
 import cn.edu.nju.model.accountModel.LoginModel;
 import cn.edu.nju.model.accountModel.SigUpModel;
 
@@ -18,13 +18,6 @@ public interface IAccountService {
     boolean isAccountValid(LoginModel model);
 
     /**
-     * tell if account has existed
-     * @param model user information
-     * @return exist or not
-     */
-    boolean isAccountExist(LoginModel model);
-
-    /**
      * logout
      */
     void logout();
@@ -34,5 +27,5 @@ public interface IAccountService {
      * @param model user information
      * @return sign up result
      */
-    ResultModel signUp(SigUpModel model);
+    ResultInfo signUp(SigUpModel model);
 }

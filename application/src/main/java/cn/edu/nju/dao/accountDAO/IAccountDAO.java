@@ -1,6 +1,6 @@
 package cn.edu.nju.dao.accountDAO;
 
-import cn.edu.nju.model.ResultModel;
+import cn.edu.nju.vo.ResultInfo;
 import cn.edu.nju.model.accountModel.LoginModel;
 import cn.edu.nju.model.accountModel.SigUpModel;
 
@@ -28,5 +28,5 @@ public interface IAccountDAO {
      * @param model user information
      * @return success or not
      */
-    ResultModel addUser(SigUpModel model);
+    ResultInfo addUser(SigUpModel model);
 }
