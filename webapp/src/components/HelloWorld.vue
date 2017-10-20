@@ -6,6 +6,8 @@
 </template>
 
 <script>
+  import request from '../utils/request'
+
   export default {
     name: 'HelloWorld',
     data () {
@@ -15,15 +17,12 @@
     },
     methods: {
       getData: function () {
-        console.log(process.env.API_ROOT)
-        function reqListener () {
-          console.log(this.responseText)
-        }
-
-        let oReq = new XMLHttpRequest()
-        oReq.onload = reqListener
-        oReq.open('get', process.env.API_ROOT + '/test', true)
-        oReq.send()
+        request('/test', 'get', '', function (success, message) {
+          if (success) {
+            console.log('success')
+          }
+          console.log(message)
+        })
       }
     }
   }
