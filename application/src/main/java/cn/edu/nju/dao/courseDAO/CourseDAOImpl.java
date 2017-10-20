@@ -18,8 +18,6 @@ import java.util.List;
 @Service(value = "courseDAO")
 public class CourseDAOImpl implements ICourseDAO {
 
-    private static final Logger logger = Logger.getLogger(CourseDAOImpl.class);
-
     @Transactional
     @Override
     public ResultInfo addCourse(int userId, CourseInfo info) {
@@ -39,7 +37,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return new ResultInfo(false, "添加课程失败");
         }
     }
@@ -53,7 +51,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return new ResultInfo(false, "系统异常");
         }
     }
@@ -73,7 +71,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return new ResultInfo(false, "系统异常");
         }
     }
@@ -87,7 +85,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return new ResultInfo(false, "系统异常");
         }
     }
@@ -100,7 +98,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return -1;
         }
     }
@@ -113,7 +111,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return "";
         }
     }
@@ -130,7 +128,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return new CourseListResult(
                     new ResultInfo(false, "系统异常"), null
             );
@@ -149,7 +147,7 @@ public class CourseDAOImpl implements ICourseDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(CourseDAOImpl.class).error(e);
             return new CourseListResult(
                     new ResultInfo(false, "系统异常"), null
             );

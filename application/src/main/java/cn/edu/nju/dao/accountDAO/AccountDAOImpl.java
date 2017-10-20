@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 @Service(value = "accountDAO")
 public class AccountDAOImpl implements IAccountDAO {
 
-    private static final Logger logger = Logger.getLogger(AccountDAOImpl.class);
-
     @Override
     public boolean isAccountValid(LoginInfo model) {
         int userNum;
@@ -52,7 +50,7 @@ public class AccountDAOImpl implements IAccountDAO {
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
+            Logger.getLogger(AccountDAOImpl.class).error(e);
             return new ResultInfo(false, "系统异常");
         }
     }
