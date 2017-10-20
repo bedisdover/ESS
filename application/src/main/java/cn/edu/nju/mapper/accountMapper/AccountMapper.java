@@ -1,6 +1,6 @@
 package cn.edu.nju.mapper.accountMapper;
 
-import cn.edu.nju.model.accountModel.UserModel;
+import cn.edu.nju.po.userPO.UserModel;
 
 /**
  * account data sql mapper

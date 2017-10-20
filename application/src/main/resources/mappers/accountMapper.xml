@@ -14,7 +14,7 @@
     </select>
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="id"
-            parameterType="cn.edu.nju.model.accountModel.UserModel">
+            parameterType="cn.edu.nju.po.userPO.UserModel">
         INSERT INTO t_user(name, email, password, role, verified, enable)
                 VALUES (#{name}, #{email}, #{password}, #{role}, #{verified}, #{enabled})
     </insert>

@@ -3,10 +3,11 @@ package cn.edu.nju.dao.accountDAO;
 import cn.edu.nju.dao.SessionFactory;
 import cn.edu.nju.mapper.accountMapper.AccountMapper;
 import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.model.accountModel.LoginModel;
-import cn.edu.nju.model.accountModel.SigUpModel;
-import cn.edu.nju.model.accountModel.UserModel;
+import cn.edu.nju.vo.accountVO.LoginInfo;
+import cn.edu.nju.vo.accountVO.SigUpInfo;
+import cn.edu.nju.po.userPO.UserModel;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Service;
 @Service(value = "accountDAO")
 public class AccountDAOImpl implements IAccountDAO {
 
+    private static final Logger logger = Logger.getLogger(AccountDAOImpl.class);
+
     @Override
-    public boolean isAccountValid(LoginModel model) {
+    public boolean isAccountValid(LoginInfo model) {
         int userNum;
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
@@ -28,7 +31,7 @@ public class AccountDAOImpl implements IAccountDAO {
     }
 
     @Override
-    public boolean isAccountExist(LoginModel model) {
+    public boolean isAccountExist(LoginInfo model) {
         int userNum;
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
@@ -38,14 +41,19 @@ public class AccountDAOImpl implements IAccountDAO {
     }
 
     @Override
-    public ResultInfo addUser(SigUpModel model) {
+    public ResultInfo addUser(SigUpInfo model) {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
             mapper.addUser(new UserModel(
                     model.getName(), model.getEmail(), model.getPassword(),
                     model.getRole(), 0, 1
             ));
+            return new ResultInfo(true, "已成功注册账号");
         }
-        return new ResultInfo(true, "已成功注册账号");
+        catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+            return new ResultInfo(false, "系统异常");
+        }
     }
 }

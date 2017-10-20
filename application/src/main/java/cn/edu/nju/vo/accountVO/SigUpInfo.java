@@ -1,19 +1,19 @@
-package cn.edu.nju.model.accountModel;
+package cn.edu.nju.vo.accountVO;
 
 /**
  * information required for sign up
  */
-public class SigUpModel {
+public class SigUpInfo {
 
     private String name;
     private String email;
     private String password;
     private int role;   // role of user: 0 for teacher, 1 for student
 
-    public SigUpModel() {
+    public SigUpInfo() {
     }
 
-    public SigUpModel(String name, String email, String password, int role) {
+    public SigUpInfo(String name, String email, String password, int role) {
         this.name = name;
         this.email = email;
         this.password = password;

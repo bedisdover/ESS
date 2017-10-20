@@ -1,14 +1,15 @@
 package cn.edu.nju.controller;
 
 import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.model.accountModel.LoginModel;
-import cn.edu.nju.model.accountModel.SigUpModel;
+import cn.edu.nju.vo.accountVO.LoginInfo;
+import cn.edu.nju.vo.accountVO.SigUpInfo;
 import cn.edu.nju.service.accountService.IAccountService;
 import cn.edu.nju.service.userService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -35,18 +36,17 @@ public class AccountController {
     /**
      * login
      * @param session http session
-     * @param email user email
-     * @param password user password
-     * @param role teacher or student
+     * @param info information required for login
      * @return login result
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo login(HttpSession session, String email,
-                            String password, int role) {
+    public ResultInfo login(HttpSession session, @RequestParam LoginInfo info) {
         if (session.getAttribute(LOGIN_KEY) == null) {
-            if (accountService.isAccountValid(new LoginModel(email, password, role))) {
-                session.setAttribute(LOGIN_KEY, userService.getUserIdByEmail(email));
+            if (accountService.isAccountValid(info)) {
+                session.setAttribute(LOGIN_KEY,
+                        userService.getUserIdByEmail(info.getEmail())
+                );
                 return new ResultInfo(true, "登录成功");
             }
             else {
@@ -63,7 +63,7 @@ public class AccountController {
      * @param session http session
      * @return logout result
      */
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @RequestMapping(value = "/logout")
     @ResponseBody
     public ResultInfo logout(HttpSession session) {
         if (getUserId(session) == null) {
@@ -76,19 +76,13 @@ public class AccountController {
 
     /**
      * sign up
-     * @param name user name
-     * @param email user email
-     * @param password user password
-     * @param role teacher or student
+     * @param info information required for sign up
      * @return sign up result
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo signUp(String name,
-                             String email, String password, int role) {
-        return accountService.signUp(new SigUpModel(
-                name, email, password, role
-        ));
+    public ResultInfo signUp(@RequestParam SigUpInfo info) {
+        return accountService.signUp(info);
     }
 
     /**

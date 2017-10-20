@@ -1,18 +1,18 @@
-package cn.edu.nju.model.accountModel;
+package cn.edu.nju.vo.accountVO;
 
 /**
  * information required for login operation
  */
-public class LoginModel {
+public class LoginInfo {
 
     private String email;
     private String password;
     private int role;   // role of user: 0 for teacher, 1 for student
 
-    public LoginModel() {
+    public LoginInfo() {
     }
 
-    public LoginModel(String email, String password, int role) {
+    public LoginInfo(String email, String password, int role) {
         this.email = email;
         this.password = password;
         this.role = role;

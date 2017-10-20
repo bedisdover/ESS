@@ -1,7 +1,8 @@
-package cn.edu.nju.model.accountModel;
+package cn.edu.nju.po.userPO;
 
 public class UserModel {
 
+    private int id;
     private String name;
     private String email;
     private String password;
@@ -12,6 +13,17 @@ public class UserModel {
     public UserModel() {
     }
 
+    public UserModel(int id, String name, String email, String password,
+                     int role, int verified, int enabled) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.verified = verified;
+        this.enabled = enabled;
+    }
+
     public UserModel(String name, String email, String password,
                      int role, int verified, int enabled) {
         this.name = name;
@@ -20,6 +32,14 @@ public class UserModel {
         this.role = role;
         this.verified = verified;
         this.enabled = enabled;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
