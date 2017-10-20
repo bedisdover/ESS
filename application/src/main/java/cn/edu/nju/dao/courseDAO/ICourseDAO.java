@@ -1,7 +1,6 @@
 package cn.edu.nju.dao.courseDAO;
 
 import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseListResult;
 import cn.edu.nju.vo.courseVO.CourseInfo;
 
 public interface ICourseDAO {
@@ -18,7 +17,7 @@ public interface ICourseDAO {
 
     String getCourseKeyById(int courseId);
 
-    CourseListResult getCourseList(int userId, int num);
+    ResultInfo getCourseList(int userId, int num);
 
-    CourseListResult getCourseListById(int userId);
+    ResultInfo getCourseListById(int userId);
 }

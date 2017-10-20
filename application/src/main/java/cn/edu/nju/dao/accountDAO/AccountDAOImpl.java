@@ -46,12 +46,12 @@ public class AccountDAOImpl implements IAccountDAO {
                     model.getName(), model.getEmail(), model.getPassword(),
                     model.getRole(), 0, 1
             ));
-            return new ResultInfo(true, "已成功注册账号");
+            return new ResultInfo(true, "已成功注册账号", null);
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(AccountDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常");
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 }

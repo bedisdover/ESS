@@ -33,12 +33,12 @@ public class AccountServiceImpl implements IAccountService {
     public ResultInfo signUp(SigUpInfo info) {
         if (accountDAO.isAccountExist(new LoginInfo(
                 info.getEmail(), info.getPassword(), info.getRole()))) {
-            return new ResultInfo(false, "该账户已经存在");
+            return new ResultInfo(false, "该账户已经存在", null);
         }
 
         ResultInfo result = accountDAO.addUser(info);
         if (result.isSuccess()) {
-            return new ResultInfo(true, "成功注册账户");
+            return new ResultInfo(true, "成功注册账户", null);
         }
         else {
             return result;

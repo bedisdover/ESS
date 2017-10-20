@@ -1,15 +1,11 @@
 package cn.edu.nju.controller;
 
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseListResult;
 import cn.edu.nju.service.courseService.ICourseService;
+import cn.edu.nju.vo.ResultInfo;
 import cn.edu.nju.vo.courseVO.CourseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,10 +31,10 @@ public class CourseController {
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo addCourse(HttpSession session, @RequestParam CourseInfo info) {
+    public ResultInfo addCourse(HttpSession session, @ModelAttribute CourseInfo info) {
         Integer userId = AccountController.getUserId(session);
         if (userId == null) {
-            return new ResultInfo(false, "请先登录");
+            return new ResultInfo(false, "请先登录", null);
         }
         return courseService.addCourse(userId, info);
     }
@@ -51,10 +47,10 @@ public class CourseController {
      */
     @RequestMapping(value = "/modify")
     @ResponseBody
-    public ResultInfo modifyCourse(HttpSession session, @RequestParam CourseInfo info) {
+    public ResultInfo modifyCourse(HttpSession session, @ModelAttribute CourseInfo info) {
         Integer userId = AccountController.getUserId(session);
         if (userId == null) {
-            return new ResultInfo(false, "请先登录");
+            return new ResultInfo(false, "请先登录", null);
         }
         return courseService.modifyCourse(userId, info);
     }
@@ -72,7 +68,7 @@ public class CourseController {
                                    @RequestParam String courseKey) {
         Integer userId = AccountController.getUserId(session);
         if (userId == null) {
-            return new ResultInfo(false, "请先登录");
+            return new ResultInfo(false, "请先登录", null);
         }
         return courseService.enrollCourse(userId, courseId, courseKey);
     }
@@ -88,7 +84,7 @@ public class CourseController {
     public ResultInfo quitCourse(HttpSession session, @RequestParam int courseId) {
         Integer userId = AccountController.getUserId(session);
         if (userId == null) {
-            return new ResultInfo(false, "请先登录");
+            return new ResultInfo(false, "请先登录", null);
         }
         return courseService.quitCourse(userId, courseId);
     }
@@ -98,17 +94,15 @@ public class CourseController {
      * @param session http session
      * @param page page of course list, default value is 1
      * @param size size of page, default value is 10
-     * @return course list
+     * @return result
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public CourseListResult getCourseList(HttpSession session, @RequestParam int page,
+    public ResultInfo getCourseList(HttpSession session, @RequestParam int page,
                                           @RequestParam int size) {
         Integer userId = AccountController.getUserId(session);
         if (userId == null) {
-            return new CourseListResult(
-                    new ResultInfo(false, "请先登录"), null
-            );
+            return new ResultInfo(false, "请先登录", null);
         }
         return courseService.getCourseList(userId, page, size);
     }
@@ -120,12 +114,10 @@ public class CourseController {
      */
     @RequestMapping(value = "/my")
     @ResponseBody
-    public CourseListResult getMyCourses(HttpSession session) {
+    public ResultInfo getMyCourses(HttpSession session) {
         Integer userId = AccountController.getUserId(session);
         if (userId == null) {
-            return new CourseListResult(
-                    new ResultInfo(false, "请先登录"), null
-            );
+            return new ResultInfo(false, "请先登录", null);
         }
         return courseService.getUserCourseList(userId);
     }

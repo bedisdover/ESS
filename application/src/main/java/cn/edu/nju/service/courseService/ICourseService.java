@@ -1,7 +1,6 @@
 package cn.edu.nju.service.courseService;
 
 import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseListResult;
 import cn.edu.nju.vo.courseVO.CourseInfo;
 
 /**
@@ -49,12 +48,12 @@ public interface ICourseService {
      * @param size size of a page
      * @return course list result
      */
-    CourseListResult getCourseList(int id, int page, int size);
+    ResultInfo getCourseList(int id, int page, int size);
 
     /**
      * get user course list
      * @param id user id
      * @return course list result
      */
-    CourseListResult getUserCourseList(int id);
+    ResultInfo getUserCourseList(int id);
 }

@@ -7,10 +7,7 @@ import cn.edu.nju.service.accountService.IAccountService;
 import cn.edu.nju.service.userService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -41,20 +38,20 @@ public class AccountController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo login(HttpSession session, @RequestParam LoginInfo info) {
+    public ResultInfo login(HttpSession session, @ModelAttribute LoginInfo info) {
         if (session.getAttribute(LOGIN_KEY) == null) {
             if (accountService.isAccountValid(info)) {
                 session.setAttribute(LOGIN_KEY,
                         userService.getUserIdByEmail(info.getEmail())
                 );
-                return new ResultInfo(true, "登录成功");
+                return new ResultInfo(true, "登录成功", null);
             }
             else {
-                return new ResultInfo(false, "账号与密码不一致");
+                return new ResultInfo(false, "账号与密码不一致", null);
             }
         }
         else {
-            return new ResultInfo(false, "账号已经登录,无需重新登录");
+            return new ResultInfo(false, "账号已经登录,无需重新登录", null);
         }
     }
 
@@ -67,11 +64,11 @@ public class AccountController {
     @ResponseBody
     public ResultInfo logout(HttpSession session) {
         if (getUserId(session) == null) {
-            return new ResultInfo(false, "请先登录");
+            return new ResultInfo(false, "请先登录", null);
         }
         accountService.logout();
         session.setAttribute(LOGIN_KEY, null);
-        return new ResultInfo(true, "成功退出");
+        return new ResultInfo(true, "成功退出", null);
     }
 
     /**
@@ -81,7 +78,7 @@ public class AccountController {
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo signUp(@RequestParam SigUpInfo info) {
+    public ResultInfo signUp(@ModelAttribute SigUpInfo info) {
         return accountService.signUp(info);
     }
 

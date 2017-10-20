@@ -3,9 +3,8 @@ package cn.edu.nju.dao.courseDAO;
 import cn.edu.nju.dao.SessionFactory;
 import cn.edu.nju.mapper.IdMapper;
 import cn.edu.nju.mapper.courseMapper.CourseMapper;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseListResult;
 import cn.edu.nju.po.coursePO.CourseModel;
+import cn.edu.nju.vo.ResultInfo;
 import cn.edu.nju.vo.courseVO.CourseInfo;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
@@ -33,12 +32,12 @@ public class CourseDAOImpl implements ICourseDAO {
                 int courseId = idMapper.getLastInsertId();
                 courseMapper.addUserCourseRecord(userId, courseId);
             }
-            return new ResultInfo(true, "添加课程成功");
+            return new ResultInfo(true, "添加课程成功", null);
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "添加课程失败");
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 
@@ -47,12 +46,12 @@ public class CourseDAOImpl implements ICourseDAO {
         try(SqlSession session = SessionFactory.getInstance().openSession()) {
             CourseMapper courseMapper = session.getMapper(CourseMapper.class);
             courseMapper.updateCourse(new CourseModel(info));
-            return new ResultInfo(true, "课程信息修改成功");
+            return new ResultInfo(true, "课程信息修改成功", null);
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常");
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 
@@ -67,12 +66,12 @@ public class CourseDAOImpl implements ICourseDAO {
             else {
                 mapper.addUserCourseRecord(userId, courseId);
             }
-            return new ResultInfo(true, "选课成功");
+            return new ResultInfo(true, "选课成功", null);
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常");
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 
@@ -81,12 +80,12 @@ public class CourseDAOImpl implements ICourseDAO {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             CourseMapper mapper = session.getMapper(CourseMapper.class);
             mapper.removeUserCourseRecord(userId, courseId);
-            return new ResultInfo(true, "退课成功");
+            return new ResultInfo(true, "退课成功", null);
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常");
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 
@@ -117,41 +116,38 @@ public class CourseDAOImpl implements ICourseDAO {
     }
 
     @Override
-    public CourseListResult getCourseList(int userId, int num) {
+    public ResultInfo getCourseList(int userId, int num) {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             CourseMapper mapper = session.getMapper(CourseMapper.class);
             List<CourseModel> list = mapper.getCourseListBySize(userId, num);
-            return new CourseListResult(
-                    new ResultInfo(true, "成功获取课程信息列表"),
+            return new ResultInfo(
+                    true, "成功获取课程信息列表",
                     toCourseInfoList(list)
             );
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new CourseListResult(
-                    new ResultInfo(false, "系统异常"), null
-            );
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 
     @Override
-    public CourseListResult getCourseListById(int userId) {
+    public ResultInfo getCourseListById(int userId) {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             CourseMapper mapper = session.getMapper(CourseMapper.class);
             List<CourseModel> list = mapper.getCourseListById(userId);
-            return new CourseListResult(
-                    new ResultInfo(true, "成功获取课程信息列表"),
+            return new ResultInfo(
+                    true, "成功获取课程信息列表",
                     toCourseInfoList(list)
             );
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new CourseListResult(
-                    new ResultInfo(false, "系统异常"), null
-            );
+            return new ResultInfo(false, "系统异常", null);
         }
+
     }
 
     private List<CourseInfo> toCourseInfoList(List<CourseModel> list) {

@@ -9,12 +9,15 @@ public class ResultInfo {
 
     private String message;
 
+    private Object data;
+
     public ResultInfo() {
     }
 
-    public ResultInfo(boolean success, String message) {
+    public ResultInfo(boolean success, String message, Object data) {
         this.success = success;
         this.message = message;
+        this.data = data;
     }
 
     public boolean isSuccess() {
@@ -31,5 +34,13 @@ public class ResultInfo {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }
