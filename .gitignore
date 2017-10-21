@@ -34,3 +34,4 @@ hs_err_pid*
 
 db.properties
 log4j.properties
+mailSender.properties
