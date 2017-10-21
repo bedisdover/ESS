@@ -22,13 +22,14 @@
             alert('success:' + JSON.stringify(data));
 
             $.ajax({
-                'url': '/course/enroll',
+                'url': '/course/my',
                 'method': 'post',
                 'data': {
 //                    'id': 9, 'name': 'Spring MVC', 'grade': 4, 'cls': '1,2,3,4',
 //                    'year': 2017, 'term': 1, 'password': 'grade14'
-                    'courseId': 9, 'courseKey': 'grade14'
+//                    'courseId': 9, 'courseKey': 'grade14'
 //                    'courseId': 9
+//                    'page': 1, 'size': 10
                 },
                 'success': function (data) {
                     alert('success:' + JSON.stringify(data));
