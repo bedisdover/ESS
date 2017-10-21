@@ -38,8 +38,7 @@
     </select>
 
     <update id="recoverRemovedCourse">
-        UPDATE t_course SET enable = 1
-        WHERE id = #{0}
+        UPDATE t_course SET enable = 1 WHERE id = #{0}
     </update>
 
     <update id="recoverRemovedRecord">

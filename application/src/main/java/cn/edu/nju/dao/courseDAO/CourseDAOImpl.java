@@ -24,7 +24,7 @@ public class CourseDAOImpl implements ICourseDAO {
             CourseMapper courseMapper = session.getMapper(CourseMapper.class);
             boolean isRecordExist = courseMapper.getRemovedCourseNum(info.getId()) > 0;
             if (isRecordExist) {
-                courseMapper.recoverRemovedCourse(info.getId());
+                courseMapper.recoverRemovedRecord(info.getId());
             }
             else {
                 courseMapper.addCourse(new CourseModel(info));
@@ -61,7 +61,7 @@ public class CourseDAOImpl implements ICourseDAO {
             CourseMapper mapper = session.getMapper(CourseMapper.class);
             boolean isRecordExist = mapper.getRemovedRecordNum(userId, courseId) > 0;
             if (isRecordExist) {
-                mapper.recoverRemovedCourse(userId, courseId);
+                mapper.recoverRemovedRecord(userId, courseId);
             }
             else {
                 mapper.addUserCourseRecord(userId, courseId);

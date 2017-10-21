@@ -20,9 +20,9 @@ public interface CourseMapper {
 
     int getRemovedCourseNum(int courseId);
 
-    void recoverRemovedCourse(int courseId);
+    void recoverRemovedRecord(int courseId);
 
-    void recoverRemovedCourse(int userId, int courseId);
+    void recoverRemovedRecord(int userId, int courseId);
 
     String getCourseKeyById(int courseId);
 
