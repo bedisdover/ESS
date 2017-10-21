@@ -28,4 +28,11 @@ public interface IAccountService {
      * @return sign up result
      */
     ResultInfo signUp(SigUpInfo info);
+
+    /**
+     * verify email
+     * @param key uuid
+     * @return success or not
+     */
+    ResultInfo verifyEmail(String key);
 }

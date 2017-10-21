@@ -19,6 +19,6 @@ public class TestController {
         // 记录error级别的信息
         logger.error("This is error message.");
 
-        return new ResultInfo(true, "test application!!!");
+        return new ResultInfo(true, "test application!!!", null);
     }
 }

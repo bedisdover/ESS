@@ -18,10 +18,10 @@ public interface IAccountDAO {
 
     /**
      * tell if account has existed
-     * @param model user information
+     * @param email user email
      * @return exist or not
      */
-    boolean isAccountExist(LoginInfo model);
+    boolean isAccountExist(String email);
 
     /**
      * add a user

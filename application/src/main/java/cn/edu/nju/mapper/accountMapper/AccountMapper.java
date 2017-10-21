@@ -9,7 +9,7 @@ public interface AccountMapper {
 
     int getAccountNumByEmail(String email);
 
-    int getAccountNumByEmailAndPassword(String email, String password);
+    int getVerifiedAccountNumByEmailAndPassword(String email, String password);
 
     void addUser(UserModel model);
 }

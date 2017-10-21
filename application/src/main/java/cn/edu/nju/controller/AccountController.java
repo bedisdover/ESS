@@ -82,6 +82,12 @@ public class AccountController {
         return accountService.signUp(info);
     }
 
+    @RequestMapping(value = "/mail/verify")
+    @ResponseBody
+    public ResultInfo verifyEmail(String key) {
+        return accountService.verifyEmail(key);
+    }
+
     /**
      * get user id, if not login, return null
      * @param session http session

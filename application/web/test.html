@@ -12,21 +12,22 @@
 </script>
 
 <script>
-    $.ajax({
-        'url': '/login',
-        'method': 'post',
-        'data': {
-            'email': '1483809252@qq.com', 'password': 'test', 'role': 2
-        },
-        'success': function (data) {
-            alert('success:' + JSON.stringify(data));
+//    $.ajax({
+//        'url': '/login',
+//        'method': 'post',
+//        'data': {
+//            'email': '1282976747@qq.com', 'password': 'test', 'role': 2
+//        },
+//        'success': function (data) {
+//            alert('success:' + JSON.stringify(data));
 
             $.ajax({
-                'url': '/course/my',
+                'url': '/signUp',
                 'method': 'post',
-//                'data': {
-//                    'page': 1, 'size': 10
-//                },
+                'data': {
+                    'name': 'anson', 'email': '1282976747@qq.com',
+                    'password': 'test', 'role': 1
+                },
                 'success': function (data) {
                     alert('success:' + JSON.stringify(data));
 
@@ -40,11 +41,11 @@
                 }
             });
 
-        },
-        'error': function (reason) {
-            alert('error:' + reason.responseText);
-        }
-    });
+//        },
+//        'error': function (reason) {
+//            alert('error:' + reason.responseText);
+//        }
+//    });
 
 </script>
 </body>

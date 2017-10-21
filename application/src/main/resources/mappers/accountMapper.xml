@@ -8,7 +8,7 @@
         AND verified = 1 AND enable = 1
     </select>
 
-    <select id="getAccountNumByEmailAndPassword" resultType="int">
+    <select id="getVerifiedAccountNumByEmailAndPassword" resultType="int">
         SELECT COUNT(*) FROM t_user WHERE email = #{0} AND password = #{1}
         AND verified = 1 AND enable = 1
     </select>

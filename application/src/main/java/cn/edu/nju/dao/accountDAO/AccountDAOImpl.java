@@ -21,7 +21,7 @@ public class AccountDAOImpl implements IAccountDAO {
         int userNum;
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
-            userNum = mapper.getAccountNumByEmailAndPassword(
+            userNum = mapper.getVerifiedAccountNumByEmailAndPassword(
                     model.getEmail(), model.getPassword()
             );
         }
@@ -29,11 +29,11 @@ public class AccountDAOImpl implements IAccountDAO {
     }
 
     @Override
-    public boolean isAccountExist(LoginInfo model) {
+    public boolean isAccountExist(String email) {
         int userNum;
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
-            userNum = mapper.getAccountNumByEmail(model.getEmail());
+            userNum = mapper.getAccountNumByEmail(email);
         }
         return userNum == 1;
     }
@@ -44,7 +44,7 @@ public class AccountDAOImpl implements IAccountDAO {
             AccountMapper mapper = session.getMapper(AccountMapper.class);
             mapper.addUser(new UserModel(
                     model.getName(), model.getEmail(), model.getPassword(),
-                    model.getRole(), 0, 1
+                    model.getRole(), 1, 1
             ));
             return new ResultInfo(true, "已成功注册账号", null);
         }
