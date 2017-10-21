@@ -25,7 +25,7 @@
             http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--启动自动扫描 -->
-    <context:component-scan base-package="cn.edu.nju.controller">
+    <context:component-scan base-package="cn.edu.nju">
         <!--制定扫包规则 ,只扫描使用@Controller注解的JAVA类 -->
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>

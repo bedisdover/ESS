@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+<script
+        src="http://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+</script>
+
+<script>
+    $.ajax({
+        'url': '/mail/send',
+        'method': 'post',
+        'data': {
+            'addressTo': '141250152@smail.nju.edu.cn',
+            'subject': 'test subject',
+            'content': 'test content'
+        },
+        'success': function (data) {
+            alert('success:' + JSON.stringify(data));
+        },
+        'error': function (reason) {
+            alert('error:' + reason.responseText);
+        }
+    });
+
+</script>
+</body>
+</html>
