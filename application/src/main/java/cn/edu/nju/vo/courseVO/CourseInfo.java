@@ -1,7 +1,5 @@
 package cn.edu.nju.vo.courseVO;
 
-import cn.edu.nju.po.coursePO.CourseModel;
-
 public class CourseInfo {
 
     private String name;

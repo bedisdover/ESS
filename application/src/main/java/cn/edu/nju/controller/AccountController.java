@@ -1,5 +1,6 @@
 package cn.edu.nju.controller;
 
+import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.vo.ResultInfo;
 import cn.edu.nju.vo.accountVO.LoginInfo;
 import cn.edu.nju.vo.accountVO.SigUpInfo;
@@ -39,6 +40,7 @@ public class AccountController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo login(HttpSession session, @ModelAttribute LoginInfo info) {
+        info.setPassword(EncryptionUtil.sha256(info.getPassword()));
         if (session.getAttribute(LOGIN_KEY) == null) {
             if (accountService.isAccountValid(info)) {
                 session.setAttribute(LOGIN_KEY,
@@ -79,6 +81,7 @@ public class AccountController {
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo signUp(@ModelAttribute SigUpInfo info) {
+        info.setPassword(EncryptionUtil.sha256(info.getPassword()));
         return accountService.signUp(info);
     }
 
