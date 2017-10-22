@@ -5,7 +5,7 @@
       <router-view class="main"></router-view>
     </div>
     <div v-else>
-      <Index></Index>
+      <router-view></router-view>
     </div>
   </div>
 </template>
