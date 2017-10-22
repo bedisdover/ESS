@@ -18,7 +18,11 @@ const request = function (url, type, data, success, error) {
   }
 
   xhr.onerror = function () {
-    error()
+    if (error instanceof Function) {
+      error()
+    } else {
+      console.log('error')
+    }
   }
 
   xhr.send(data)
