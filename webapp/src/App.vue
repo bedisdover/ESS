@@ -1,23 +1,46 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <div v-if="login">
+      <NavBar :role="role"></NavBar>
+      <router-view class="main"></router-view>
+    </div>
+    <div v-else>
+      <Index></Index>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  import Index from './components/Index'
+  import NavBar from './components/Nav'
+
+  export default {
+    name: 'app',
+    components: {Index, NavBar},
+    data () {
+      return {
+        login: false,
+        role: 2
+      }
+    }
+  }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+
+  .main {
+    margin-top: 70px;
+  }
 </style>
