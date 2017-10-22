@@ -74,15 +74,12 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public ResultInfo getCourseList(int userId, int page, int size) {
-        if (page < 0 || size < 0 || (long) page * size > Integer.MAX_VALUE) {
-            return new ResultInfo(false, "非法参数", null);
-        }
-        return courseDAO.getCourseList(userId, page * size);
+    public ResultInfo getNotSelectCourses(int userId) {
+        return courseDAO.getNotSelectCourses(userId);
     }
 
     @Override
-    public ResultInfo getUserCourseList(int id) {
-        return courseDAO.getCourseListById(id);
+    public ResultInfo getSelectCourses(int userId) {
+        return courseDAO.getSelectCourses(userId);
     }
 }

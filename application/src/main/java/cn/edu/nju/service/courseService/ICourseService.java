@@ -43,17 +43,15 @@ public interface ICourseService {
 
     /**
      * get course list
-     * @param id user id
-     * @param page page of course list
-     * @param size size of a page
+     * @param userId user id
      * @return course list result
      */
-    ResultInfo getCourseList(int id, int page, int size);
+    ResultInfo getNotSelectCourses(int userId);
 
     /**
      * get user course list
-     * @param id user id
+     * @param userId user id
      * @return course list result
      */
-    ResultInfo getUserCourseList(int id);
+    ResultInfo getSelectCourses(int userId);
 }

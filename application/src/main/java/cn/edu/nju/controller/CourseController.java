@@ -92,19 +92,16 @@ public class CourseController {
     /**
      * get course list, not include selected courses
      * @param session http session
-     * @param page page of course list, default value is 1
-     * @param size size of page, default value is 10
      * @return result
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public ResultInfo getCourseList(HttpSession session, @RequestParam int page,
-                                          @RequestParam int size) {
+    public ResultInfo getCourseList(HttpSession session) {
         Integer userId = AccountController.getUserId(session);
         if (userId == null) {
             return new ResultInfo(false, "请先登录", null);
         }
-        return courseService.getCourseList(userId, page, size);
+        return courseService.getNotSelectCourses(userId);
     }
 
     /**
@@ -119,6 +116,6 @@ public class CourseController {
         if (userId == null) {
             return new ResultInfo(false, "请先登录", null);
         }
-        return courseService.getUserCourseList(userId);
+        return courseService.getSelectCourses(userId);
     }
 }
