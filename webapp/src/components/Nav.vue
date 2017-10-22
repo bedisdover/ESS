@@ -32,4 +32,7 @@
     padding: 6px 20px;
     text-decoration: none;
   }
+  a:hover{
+    color: gold;
+  }
 </style>

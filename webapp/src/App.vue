@@ -2,7 +2,7 @@
   <div id="app">
     <div v-if="login">
       <NavBar :role="role"></NavBar>
-      <router-view class="main"></router-view>
+      <router-view></router-view>
     </div>
     <div v-else>
       <router-view></router-view>
@@ -19,7 +19,7 @@
     components: {Index, NavBar},
     data () {
       return {
-        login: false,
+        login: true,
         role: 2
       }
     }

@@ -5,6 +5,7 @@ import CourseList from '@/components/CourseList'
 import MyCourse from '@/components/MyCourse'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import CreateCourse from '../components/CreateCourse.vue'
 
 Vue.use(Router)
 
@@ -20,6 +21,11 @@ export default new Router({
       path: '/list',
       name: 'CourseList',
       component: CourseList
+    },
+    {
+      path: '/createCourse',
+      name: 'CreateCourse',
+      component: CreateCourse
     },
     {
       path: '/my',

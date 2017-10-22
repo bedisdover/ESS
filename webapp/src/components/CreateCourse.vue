@@ -1,13 +1,12 @@
 <template>
   <div>
-    courseList
-    <router-link to="createCourse">create</router-link>
+    create Course
   </div>
 </template>
 
 <script>
   export default {
-    name: 'CourseList'
+    name: 'CreateCourse'
   }
 </script>
 
