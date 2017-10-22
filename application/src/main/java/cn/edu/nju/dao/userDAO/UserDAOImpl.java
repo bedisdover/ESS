@@ -3,6 +3,7 @@ package cn.edu.nju.dao.userDAO;
 import cn.edu.nju.dao.SessionFactory;
 import cn.edu.nju.enumeration.Role;
 import cn.edu.nju.mapper.userMapper.UserMapper;
+import cn.edu.nju.po.userPO.UserModel;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,22 @@ public class UserDAOImpl implements IUserDAO {
             UserMapper mapper = session.getMapper(UserMapper.class);
             int role = mapper.getRoleById(userId);
             return role == TEACHER_ROLE ? Role.teacher : Role.student;
+        }
+    }
+
+    @Override
+    public UserModel getUserInfoByEmail(String email) {
+        try (SqlSession session = SessionFactory.getInstance().openSession()) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            return mapper.getUserInfoByEmail(email);
+        }
+    }
+
+    @Override
+    public UserModel getUserInfoById(int userId) {
+        try (SqlSession session = SessionFactory.getInstance().openSession()) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            return mapper.getUserInfoById(userId);
         }
     }
 }

@@ -46,15 +46,34 @@ public class AccountController {
                 session.setAttribute(LOGIN_KEY,
                         userService.getUserIdByEmail(info.getEmail())
                 );
-                return new ResultInfo(true, "登录成功", null);
+                return new ResultInfo(
+                        true, "登录成功",
+                        userService.getUserInfoByEmail(info.getEmail())
+                );
             }
             else {
                 return new ResultInfo(false, "账号与密码不一致", null);
             }
         }
         else {
-            return new ResultInfo(false, "账号已经登录,无需重新登录", null);
+            return new ResultInfo(
+                    false, "账号已经登录,无需重新登录",
+                    userService.getUserInfoByEmail(info.getEmail())
+            );
         }
+    }
+
+    @RequestMapping(value = "/isLogin")
+    @ResponseBody
+    public ResultInfo isLogin(HttpSession session) {
+        Integer userId = getUserId(session);
+        if (userId == null) {
+            return new ResultInfo(false, "没有登录", null);
+        }
+        return new ResultInfo(
+                true, "已经登录",
+                userService.getUserInfoById(userId)
+        );
     }
 
     /**

@@ -1,5 +1,7 @@
 package cn.edu.nju.po.userPO;
 
+import cn.edu.nju.vo.userVO.UserInfo;
+
 public class UserModel {
 
     private int id;
@@ -32,6 +34,10 @@ public class UserModel {
         this.role = role;
         this.verified = verified;
         this.enabled = enabled;
+    }
+
+    public UserInfo toUserInfo() {
+        return new UserInfo(name, email, role);
     }
 
     public int getId() {
