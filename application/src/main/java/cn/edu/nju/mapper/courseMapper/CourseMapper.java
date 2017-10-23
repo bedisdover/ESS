@@ -26,7 +26,7 @@ public interface CourseMapper {
 
     String getCourseKeyById(int courseId);
 
-    List<CourseModel> getCourseListBySize(int userId, int num);
+    List<CourseModel> getNotSelectCourses(int userId);
 
-    List<CourseModel> getCourseListById(int id);
+    List<CourseModel> getSelectCourses(int userId);
 }

@@ -116,10 +116,10 @@ public class CourseDAOImpl implements ICourseDAO {
     }
 
     @Override
-    public ResultInfo getCourseList(int userId, int num) {
+    public ResultInfo getNotSelectCourses(int userId) {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             CourseMapper mapper = session.getMapper(CourseMapper.class);
-            List<CourseModel> list = mapper.getCourseListBySize(userId, num);
+            List<CourseModel> list = mapper.getNotSelectCourses(userId);
             return new ResultInfo(
                     true, "成功获取课程信息列表",
                     toCourseInfoList(list)
@@ -133,10 +133,10 @@ public class CourseDAOImpl implements ICourseDAO {
     }
 
     @Override
-    public ResultInfo getCourseListById(int userId) {
+    public ResultInfo getSelectCourses(int userId) {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             CourseMapper mapper = session.getMapper(CourseMapper.class);
-            List<CourseModel> list = mapper.getCourseListById(userId);
+            List<CourseModel> list = mapper.getSelectCourses(userId);
             return new ResultInfo(
                     true, "成功获取课程信息列表",
                     toCourseInfoList(list)

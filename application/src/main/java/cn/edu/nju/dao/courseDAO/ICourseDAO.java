@@ -17,7 +17,7 @@ public interface ICourseDAO {
 
     String getCourseKeyById(int courseId);
 
-    ResultInfo getCourseList(int userId, int num);
+    ResultInfo getNotSelectCourses(int userId);
 
-    ResultInfo getCourseListById(int userId);
+    ResultInfo getSelectCourses(int userId);
 }
