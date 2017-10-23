@@ -1,12 +1,10 @@
 <template>
-  <el-row class="main">
-    <el-col :span="8" :offset="8">
-      <el-card>
-        <div>
-          <span>学生登录</span>
-          <span>教师登录</span>
-        </div>
-      </el-card>
+  <el-row>
+    <el-col :span="6" :offset="10">
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab">
+        <el-tab-pane label="学生注册" name="2"></el-tab-pane>
+        <el-tab-pane label="教师注册" name="1"></el-tab-pane>
+      </el-tabs>
       <el-card>
         <el-form :model="registerForm" ref="registerForm" :rules="rules" label-width="80px">
           <el-form-item label="姓名" required>
@@ -35,13 +33,6 @@
   export default {
     name: 'Register',
     data () {
-      let validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'))
-        } else {
-          callback()
-        }
-      }
       let validatePassRepeat = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'))
@@ -53,6 +44,7 @@
       }
       return {
         role: 2,
+        activeName: '2',
         registerForm: {
           name: '',
           email: '',
@@ -60,8 +52,14 @@
           passwordRepeat: ''
         },
         rules: {
+          name: [
+            {required: true, message: '请输入姓名'}
+          ],
+          email: [
+            {required: true, message: '请输入邮箱'}
+          ],
           password: [
-            {validator: validatePass, trigger: 'blur'}
+            {required: true, message: '请输入密码'}
           ],
           passwordRepeat: [
             {validator: validatePassRepeat, trigger: 'blur'}
@@ -70,6 +68,9 @@
       }
     },
     methods: {
+      handleClick (tab) {
+        this.role = tab.name
+      },
       onRegister: function (e) {
         e.preventDefault()
         this.$refs['registerForm'].validate((valid) => {
@@ -83,7 +84,7 @@
 </script>
 
 <style scoped>
-  .main {
-    min-height: 100%;
+  .tab {
+    margin-bottom: -16px;
   }
 </style>

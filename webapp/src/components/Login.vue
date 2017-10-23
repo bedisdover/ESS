@@ -30,7 +30,7 @@
     data () {
       return {
         role: 2,
-        activeName: 'student',
+        activeName: '2',
         loginForm: {
           password: '',
           email: ''
