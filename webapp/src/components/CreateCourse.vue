@@ -23,6 +23,14 @@
                 </el-select>
               </el-form-item>
 
+              <el-form-item label="学期">
+                <el-select v-model="form.grade" placeholder="请选择学期" style="width: 100%">
+                  <el-option label="第一学期" value="1"></el-option>
+                  <el-option label="第二学期" value="2"></el-option>
+                  <el-option label="第三学期" value="3"></el-option>
+                </el-select>
+              </el-form-item>
+
               <el-form-item label="班级">
                 <el-checkbox-group v-model="form.class">
                   <el-checkbox label="1"></el-checkbox>
@@ -68,10 +76,11 @@
           grade: '',
           class: [],
           year: [],
+          term: '',
           password: ''
         },
         years: [
-          '2014', '2015', '2016', '2017', '2018'
+          '2014 - 2015', '2015 - 2016', '2016 - 2017', '2017 - 2018', '2018 - 2019'
         ],
         person: {
           role: 1,
@@ -91,6 +100,7 @@
           grade: '',
           class: [],
           year: [],
+          term: '',
           password: ''
         }
       }
