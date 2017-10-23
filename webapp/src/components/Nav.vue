@@ -24,6 +24,7 @@
     width: 100%;
     height: 72px;
     background: #2b83f9 linear-gradient(143deg, #2945cb 20%, #2b83f9 81%, #3a9dff);
+    margin-bottom: 72px;
   }
 
   a {

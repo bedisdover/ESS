@@ -1,22 +1,26 @@
 <template>
   <div id="app">
-    <div v-if="login">
-      <NavBar :role="role"></NavBar>
-      <router-view></router-view>
+    <div id="container">
+      <div v-if="login" class="content">
+        <NavBar :role="role"></NavBar>
+        <router-view></router-view>
+      </div>
+      <div v-else class="content">
+        <router-view></router-view>
+      </div>
     </div>
-    <div v-else>
-      <router-view></router-view>
-    </div>
+    <MyFooter></MyFooter>
   </div>
 </template>
 
 <script>
   import Index from './components/Index'
   import NavBar from './components/Nav'
+  import MyFooter from './components/Footer'
 
   export default {
     name: 'app',
-    components: {Index, NavBar},
+    components: {Index, NavBar, MyFooter},
     data () {
       return {
         login: true,
@@ -27,9 +31,10 @@
 </script>
 
 <style>
-  body {
+  html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
   }
 
   #app {
@@ -38,9 +43,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    height: 100%;
   }
 
-  .main {
-    margin-top: 70px;
+  #container {
+    min-height: 100%;
+  }
+
+  .content {
+    padding-bottom: 100px;
   }
 </style>
