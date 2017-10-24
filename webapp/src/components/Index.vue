@@ -11,17 +11,6 @@
 </template>
 
 <script>
-  import request from '../utils/request'
-
-  (function () {
-    request('/test', 'get', '', function (success, message) {
-      if (success) {
-        console.log(message)
-      }
-    }, function () {
-      console.log('errror')
-    })
-  })()
   export default {
     name: 'Index'
   }

@@ -14,18 +14,29 @@
 </template>
 
 <script>
-  import Index from './components/Index'
   import NavBar from './components/Nav'
   import MyFooter from './components/Footer'
+  import request from './utils/request'
 
   export default {
     name: 'app',
-    components: {Index, NavBar, MyFooter},
+    components: {NavBar, MyFooter},
     data () {
       return {
         login: true,
-        role: 2
+        role: 2,
+        user: {}
       }
+    },
+    created () {
+      request('/isLogin', 'post', '', (success, message, data) => {
+        this.login = success
+        console.log(success, message)
+
+        if (this.login) {
+          this.user = data
+        }
+      })
     }
   }
 </script>

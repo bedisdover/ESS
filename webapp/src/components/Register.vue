@@ -1,5 +1,5 @@
 <template>
-  <el-row>
+  <el-row class="main">
     <el-col :span="6" :offset="10">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab">
         <el-tab-pane label="学生注册" name="2"></el-tab-pane>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+  import request from '../utils/request'
+
   export default {
     name: 'Register',
     data () {
@@ -73,9 +75,20 @@
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            global.request('/login', 'post', '', function (success, message, data) {
-              if (success) {
+            let data = {
+              name: this.registerForm.name,
+              email: this.registerForm.email,
+              password: this.registerForm.password,
+              role: this.role
+            }
 
+            request('/signUp', 'post', data, function (success, message) {
+              if (success) {
+                this.$notify({
+                  title: '成功',
+                  message: message,
+                  type: 'success'
+                })
               } else {
                 console.log(message)
               }
@@ -90,6 +103,10 @@
 </script>
 
 <style scoped>
+  .main {
+
+  }
+
   .tab {
     margin-bottom: -16px;
   }
