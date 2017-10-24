@@ -14,7 +14,7 @@ const request = function (url, type, data, success, error) {
   xhr.responseType = 'json'
 
   xhr.onload = function () {
-    success(xhr.response.success, xhr.response.message, xhr.data)
+    success(xhr.response.success, xhr.response.message, xhr.response.data)
   }
 
   xhr.onerror = function () {
@@ -39,7 +39,5 @@ const request = function (url, type, data, success, error) {
 
   return xhr
 }
-
-global.request = request
 
 export default request

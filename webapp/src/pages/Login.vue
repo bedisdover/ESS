@@ -1,10 +1,6 @@
 <template>
   <el-row>
     <el-col :span="6" :offset="10">
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab">
-        <el-tab-pane label="学生登录" name="2"></el-tab-pane>
-        <el-tab-pane label="教师登录" name="1"></el-tab-pane>
-      </el-tabs>
       <el-card>
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="80px">
           <el-form-item label="邮箱" prop="email">
@@ -14,7 +10,7 @@
             <el-input type="password" v-model="loginForm.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('loginForm')">登 录</el-button>
+            <el-button type="primary" @click="login('loginForm')">登 录</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -23,14 +19,13 @@
 </template>
 
 <script>
-  import request from '../utils/request'
+  import request from '../lib/request'
+  import Cookies from 'js-cookie'
 
   export default {
     name: 'Login',
     data () {
       return {
-        role: 2,
-        activeName: '2',
         loginForm: {
           password: '',
           email: ''
@@ -46,27 +41,32 @@
       }
     },
     methods: {
-      handleClick (tab) {
-        this.role = tab.name
-      },
-      submitForm (formName) {
-        let data = {
-          test: '123',
-          name: 'bedisdover'
+      login (formName) {
+        let params = {
+          email: this.loginForm.email,
+          password: this.loginForm.password
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            request('/test', 'post', data, function (success, message, data) {
-              console.log(success, message)
+            request('/login', 'post', params, (success, message, data) => {
               if (success) {
-
+                this.afterLogin(data)
               } else {
-                console.log(message)
+                this.$notify.error({
+                  title: '错误',
+                  message: message
+                })
               }
             })
           } else {
             return false
           }
+        })
+      },
+      afterLogin: function (data) {
+        Cookies.set('user', data, {expires: 1})
+        this.$router.push({
+          name: 'MyCourse'
         })
       }
     }

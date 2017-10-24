@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import request from '../utils/request'
+  import request from '../lib/request'
 
   export default {
     name: 'Register',
