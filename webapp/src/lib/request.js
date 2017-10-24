@@ -14,7 +14,7 @@ const request = function (url, type, data, success, error) {
   xhr.responseType = 'json'
 
   xhr.onload = function () {
-    success(xhr.response.success, xhr.response.message, xhr.data)
+    success(xhr.response.success, xhr.response.message, xhr.response.data)
   }
 
   xhr.onerror = function () {
@@ -25,7 +25,17 @@ const request = function (url, type, data, success, error) {
     }
   }
 
-  xhr.send(data)
+  let params = ''
+
+  if (data instanceof Object) {
+    for (let key in data) {
+      params += key + '=' + data[key] + '&'
+    }
+  } else if (data instanceof String) {
+    params = data
+  }
+
+  xhr.send(params)
 
   return xhr
 }

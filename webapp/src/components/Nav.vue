@@ -1,9 +1,9 @@
 <template>
-  <div class="nav">
-    <div v-if="role === 1">
+  <div class="nav" v-show="user !== undefined">
+    <div v-if="user.role === 1">
       <router-link to="/my">我的课程</router-link>
     </div>
-    <div v-else-if="role === 2">
+    <div v-else-if="user.role === 2">
       <span>
         <router-link to="/list">所有课程</router-link>
         <router-link to="/my">我的课程</router-link>
@@ -13,9 +13,22 @@
 </template>
 
 <script>
+  import Cookies from 'js-cookie'
+
   export default {
     name: 'NavBar',
-    props: ['role']
+    props: ['role'],
+    computed: {
+      user: function () {
+        let user = Cookies.get('user')
+
+        if (user) {
+          user = JSON.parse(user)
+        }
+
+        return user
+      }
+    }
   }
 </script>
 
@@ -24,6 +37,7 @@
     width: 100%;
     height: 72px;
     background: #2b83f9 linear-gradient(143deg, #2945cb 20%, #2b83f9 81%, #3a9dff);
+    margin-bottom: 72px;
   }
 
   a {
