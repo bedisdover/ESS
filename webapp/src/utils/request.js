@@ -30,4 +30,6 @@ const request = function (url, type, data, success, error) {
   return xhr
 }
 
+global.request = request
+
 export default request

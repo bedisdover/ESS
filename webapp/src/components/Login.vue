@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import request from '../utils/request'
+//  import request from '../utils/request'
 
   export default {
     name: 'Login',
@@ -52,13 +52,14 @@
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            request('/login', 'post', '', function (success, message, data) {
-              if (success) {
-
-              } else {
-                console.log(message)
-              }
-            })
+//            request('/login', 'post', '', function (success, message, data) {
+//              if (success) {
+//
+//              } else {
+//                console.log(message)
+//              }
+//            })
+            console.log(this.loginForm.email)
           } else {
             return false
           }
