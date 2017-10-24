@@ -24,7 +24,7 @@
               </el-form-item>
 
               <el-form-item label="学期">
-                <el-select v-model="form.grade" placeholder="请选择学期" style="width: 100%">
+                <el-select v-model="form.term" placeholder="请选择学期" style="width: 100%">
                   <el-option label="第一学期" value="1"></el-option>
                   <el-option label="第二学期" value="2"></el-option>
                   <el-option label="第三学期" value="3"></el-option>
