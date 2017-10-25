@@ -3,6 +3,7 @@ import Index from '@/pages/Index'
 import Login from '@/pages/Login'
 import Error404 from '@/pages/404'
 import Register from '@/pages/Register'
+import Verify from '@/pages/Verify'
 import CourseList from '@/components/CourseList'
 import MyCourse from '@/components/MyCourse'
 import CreateCourse from '@/components/CreateCourse'
@@ -37,6 +38,14 @@ const pageRouter = [
     component: Register,
     meta: {
       title: '注册'
+    }
+  },
+  {
+    path: '/verify',
+    name: 'Verify',
+    component: Verify,
+    meta: {
+      title: '邮箱验证'
     }
   }
 ]

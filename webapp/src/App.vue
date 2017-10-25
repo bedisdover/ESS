@@ -1,20 +1,51 @@
 <template>
   <div id="app">
     <div class="content">
-      <NavBar></NavBar>
-      <router-view></router-view>
+      <NavBar v-if="showNav()" :user="getUser()" @onLogout="onLogout"></NavBar>
+      <router-view :user="getUser()"></router-view>
     </div>
     <MyFooter></MyFooter>
   </div>
 </template>
 
 <script>
+  import Cookies from 'js-cookie'
+  import request from './lib/request'
   import NavBar from './components/Nav'
   import MyFooter from './components/Footer'
 
   export default {
     name: 'app',
-    components: {NavBar, MyFooter}
+    components: {NavBar, MyFooter},
+    methods: {
+      getUser: function () {
+        let user = Cookies.get('user')
+
+        if (user) {
+          user = JSON.parse(user)
+        }
+
+        return user
+      },
+      showNav: function () {
+        return this.getUser() !== undefined
+      },
+      onLogout: function () {
+        request('/logout', 'post', '', (success, message) => {
+          if (success) {
+            Cookies.remove('user')
+            this.$router.push({
+              name: 'Index'
+            })
+          } else {
+            this.$notify.error({
+              title: '错误',
+              message: message
+            })
+          }
+        })
+      }
+    }
   }
 </script>
 

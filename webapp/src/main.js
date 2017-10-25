@@ -15,15 +15,6 @@ Vue.config.productionTip = false
 Vue.use(Router)
 Vue.use(ElementUI)
 
-// 整页加载
-// let loading
-// loading = Loading.service({
-//   // fullscreen: true,
-//   // lock: true,
-//   text: '玩命加载中...'
-// })
-// loading.close()
-
 router.beforeEach((to, from, next) => {
   Util.title(to.meta.title)
 
@@ -40,13 +31,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
-
-  // loading.close()
-})
-
-router.afterEach(() => {
-  // loading.close()
-  window.scrollTo(0, 0)
 })
 
 /* eslint-disable no-new */
