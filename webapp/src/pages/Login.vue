@@ -20,7 +20,7 @@
 
 <script>
   import request from '../lib/request'
-  import Cookies from 'js-cookie'
+  import Util from '../lib/util'
 
   export default {
     name: 'Login',
@@ -64,8 +64,7 @@
         })
       },
       afterLogin: function (data) {
-        // cookie 过期时间设为1天
-        Cookies.set('user', data, {expires: 1})
+        Util.setCookie('user', data)
         this.$router.push({
           name: 'MyCourse'
         })

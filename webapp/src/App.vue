@@ -9,8 +9,8 @@
 </template>
 
 <script>
-  import Cookies from 'js-cookie'
   import request from './lib/request'
+  import Util from './lib/util'
   import NavBar from './components/Nav'
   import MyFooter from './components/Footer'
 
@@ -19,13 +19,7 @@
     components: {NavBar, MyFooter},
     methods: {
       getUser: function () {
-        let user = Cookies.get('user')
-
-        if (user) {
-          user = JSON.parse(user)
-        }
-
-        return user
+        return Util.getCookie('user')
       },
       showNav: function () {
         return this.getUser() !== undefined
@@ -33,7 +27,7 @@
       onLogout: function () {
         request('/logout', 'post', '', (success, message) => {
           if (success) {
-            Cookies.remove('user')
+            Util.removeCookie('user')
             this.$router.push({
               name: 'Index'
             })
