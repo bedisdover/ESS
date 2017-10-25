@@ -64,6 +64,7 @@
         })
       },
       afterLogin: function (data) {
+        // cookie 过期时间设为1天
         Cookies.set('user', data, {expires: 1})
         this.$router.push({
           name: 'MyCourse'
