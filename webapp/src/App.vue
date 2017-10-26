@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="content">
+    <div class="container">
       <NavBar v-if="showNav()" :user="getUser()" @onLogout="onLogout"></NavBar>
       <router-view :user="getUser()"></router-view>
     </div>
@@ -64,10 +64,10 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    min-height: 100%;
+    height: 100%;
   }
 
-  .content {
-    padding-bottom: 100px;
+  .container {
+    min-height: 100%;
   }
 </style>

@@ -16,13 +16,13 @@
         'url': '/login',
         'method': 'post',
         'data': {
-            'email': '1483809252@qq.com', 'password': 'test', 'role': 2
+            'email': '1282976747@qq.com', 'password': 'test', 'role': 2
         },
         'success': function (data) {
             alert('success:' + JSON.stringify(data));
 
             $.ajax({
-                'url': '/course/list',
+                'url': '/course/my',
                 'method': 'post',
                 'data': {
 //                    'id': 9, 'name': 'Spring MVC', 'grade': 4, 'cls': '1,2,3,4',

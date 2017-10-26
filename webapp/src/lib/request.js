@@ -10,6 +10,9 @@ const request = function (url, type, data, success, error) {
   }
 
   xhr.open(type, process.env.API_ROOT + url)
+  // 允许跨域, 使用cookie
+  xhr.withCredentials = true
+
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8')
   xhr.responseType = 'json'
 
