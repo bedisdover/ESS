@@ -7,7 +7,7 @@ public class LoginInfo {
 
     private String email;
     private String password;
-    private int role;   // role of user: 0 for teacher, 1 for student
+    private int role;   // role of user: 1 for teacher, 2 for student
 
     public LoginInfo() {
     }
