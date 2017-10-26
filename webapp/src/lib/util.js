@@ -55,6 +55,17 @@ util.removeCookie = function (name) {
 }
 
 /**
+ * 成功通知
+ * @param message 成功信息
+ */
+util.notifySuccess = function (message) {
+  Notification.success({
+    title: '成功',
+    message: message
+  })
+}
+
+/**
  * 错误通知
  * @param message 错误信息
  */

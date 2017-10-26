@@ -1,21 +1,29 @@
 <template>
-  <el-row>
-    <el-col :span="6" :offset="10">
-      <el-card>
-        <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="80px">
-          <el-form-item label="邮箱" prop="email">
-            <el-input type="email" v-model="loginForm.email"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="loginForm.password"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="login('loginForm')">登 录</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-    </el-col>
-  </el-row>
+  <div class="main">
+    <el-row type="flex" justify="center" align="middle">
+      <el-col>
+        <el-card>
+          <el-form :model="loginForm" :rules="rules" ref="loginForm" :label-width="'60px'" class="form">
+            <el-form-item label="邮箱" prop="email">
+              <el-input type="email" v-model="loginForm.email"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input type="password" v-model="loginForm.password"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <div class="button-container">
+                <el-button type="primary" @click="login('loginForm')">登录</el-button>
+                <span>
+                  还没账号?
+                  <el-button type="text" @click="gotoRegister()">立即注册</el-button>
+                </span>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -63,6 +71,11 @@
           }
         })
       },
+      gotoRegister: function () {
+        this.$router.push({
+          name: 'Register'
+        })
+      },
       afterLogin: function (data) {
         Util.setCookie('user', data)
         this.$router.push({
@@ -74,7 +87,23 @@
 </script>
 
 <style scoped>
-  .tab {
-    margin-bottom: -16px;
+  .main {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    background: #eeeeee;
+  }
+
+  .form {
+    min-width: 400px;
+    padding: 30px 20px 0 20px;
+    text-align: left;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
   }
 </style>
