@@ -11,18 +11,19 @@
             <el-form-item label="姓名" prop="name">
               <el-input v-model="registerForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
+            <el-form-item label="邮箱" prop="email" required>
               <el-input v-model="registerForm.email"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
               <el-input v-model="registerForm.password" type="password" autoComplete="false"></el-input>
             </el-form-item>
-            <el-form-item label="重复密码" prop="passwordRepeat">
+            <el-form-item label="重复密码" prop="passwordRepeat" required>
               <el-input v-model="registerForm.passwordRepeat" type="password" autoComplete="false"></el-input>
             </el-form-item>
             <el-form-item>
               <div class="button-container">
-                <el-button type="primary" @click="register('registerForm')">注册</el-button>
+                <el-button type="primary" @click="register('registerForm')" :loading="registerForm.loading">注册
+                </el-button>
                 <span>
                   已有账号?
                   <el-button type="text" @click="gotoLogin()">前去登录</el-button>
@@ -52,6 +53,7 @@
           callback()
         }
       }
+
       return {
         role: 2,
         activeName: '2',
@@ -59,14 +61,15 @@
           name: '',
           email: '',
           password: '',
-          passwordRepeat: ''
+          passwordRepeat: '',
+          loading: false
         },
         rules: {
           name: [
             {required: true, message: '请输入姓名'}
           ],
           email: [
-            {required: true, message: '请输入邮箱'}
+            {validator: Util.validateEmail, trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码'}
@@ -84,6 +87,8 @@
       register (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.registerForm.loading = true
+
             let data = {
               name: this.registerForm.name,
               email: this.registerForm.email,
@@ -91,12 +96,17 @@
               role: this.role
             }
 
-            request('/signUp', 'post', data, function (success, message) {
+            request('/signUp', 'post', data, (success, message) => {
+              this.registerForm.loading = false
+
               if (success) {
                 Util.notifySuccess(message)
+                this.gotoLogin()
               } else {
                 Util.notifyError(message)
               }
+            }, () => {
+              this.registerForm.loading = false
             })
           } else {
             return false

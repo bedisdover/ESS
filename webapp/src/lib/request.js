@@ -1,3 +1,5 @@
+import Util from './util'
+
 const request = function (url, type, data, success, error) {
   let xhr = null
 
@@ -21,6 +23,8 @@ const request = function (url, type, data, success, error) {
   }
 
   xhr.onerror = function () {
+    Util.notifyError('出错了...')
+
     if (error instanceof Function) {
       error()
     } else {

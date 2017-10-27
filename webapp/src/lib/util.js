@@ -76,4 +76,19 @@ util.notifyError = function (message) {
   })
 }
 
+/**
+ * 校验邮箱合法性
+ */
+util.validateEmail = (rule, value, callback) => {
+  const mailRegex = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+\.){1,63}[a-z0-9]+$/
+
+  if (value === '') {
+    callback(new Error('请输入邮箱'))
+  } else if (!mailRegex.test(value)) {
+    callback(new Error('请输入正确邮箱'))
+  } else {
+    callback()
+  }
+}
+
 export default util
