@@ -4,7 +4,7 @@
       <NavBar v-if="showNav()" :user="getUser()" @onLogout="onLogout"></NavBar>
       <router-view :user="getUser()"></router-view>
     </div>
-    <MyFooter></MyFooter>
+    <MyFooter v-show="showFooter()"></MyFooter>
   </div>
 </template>
 
@@ -23,6 +23,9 @@
       },
       showNav: function () {
         return this.getUser() !== undefined
+      },
+      showFooter: function () {
+        return this.$router.currentRoute.name !== 'Index'
       },
       onLogout: function () {
         request('/logout', 'post', '', (success, message) => {
@@ -48,6 +51,7 @@
     margin: 0;
     padding: 0;
     height: 100%;
+    background: #eeeeee;
   }
 
   ol, ul {
@@ -59,7 +63,8 @@
   }
 
   .icon {
-    width: 1em; height: 1em;
+    width: 1em;
+    height: 1em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
@@ -69,12 +74,14 @@
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-flow: column;
     text-align: center;
     color: #2c3e50;
-    height: 100%;
+    min-height: 100vh;
   }
 
   .container {
-    min-height: 100%;
+    flex: 1;
   }
 </style>
