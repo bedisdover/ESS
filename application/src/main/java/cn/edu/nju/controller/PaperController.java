@@ -1,8 +1,13 @@
 package cn.edu.nju.controller;
 
+import cn.edu.nju.vo.ResultInfo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +20,8 @@ import java.io.OutputStream;
 public class PaperController {
 
     @RequestMapping("/question/download")
-    public void getQuestionTemplate(HttpServletRequest request,
-                                    HttpServletResponse response) {
+    public void downloadQuestionTemplate(HttpServletRequest request,
+                                         HttpServletResponse response) {
         final String fileName = "/download/questionTemplate.xlsx";
         final String filePath = request.getSession().getServletContext().getRealPath("/");
         File file = new File(filePath+fileName);
@@ -38,5 +43,13 @@ public class PaperController {
             e.printStackTrace();
             Logger.getLogger(PaperController.class).error(e);
         }
+    }
+
+    @RequestMapping(value = "/question/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo uploadQuestions(@RequestParam int courseId,
+                                      @RequestParam CommonsMultipartFile file) {
+        System.out.println(courseId + ":" + file.getName());
+        return null;
     }
 }

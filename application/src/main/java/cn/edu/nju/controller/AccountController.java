@@ -84,9 +84,6 @@ public class AccountController {
     @RequestMapping(value = "/logout")
     @ResponseBody
     public ResultInfo logout(HttpSession session) {
-        if (getUserId(session) == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
         accountService.logout();
         session.setAttribute(LOGIN_KEY, null);
         return new ResultInfo(true, "成功退出", null);
@@ -115,7 +112,7 @@ public class AccountController {
      * @param session http session
      * @return user id
      */
-    static Integer getUserId(HttpSession session) {
+    public static Integer getUserId(HttpSession session) {
         return (Integer) session.getAttribute(LOGIN_KEY);
     }
 }

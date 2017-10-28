@@ -12,14 +12,14 @@
 </script>
 
 <script>
-    $.ajax({
-        'url': '/login',
-        'method': 'post',
-        'data': {
-            'email': '1282976747@qq.com', 'password': 'test', 'role': 2
-        },
-        'success': function (data) {
-            alert('success:' + JSON.stringify(data));
+//    $.ajax({
+//        'url': '/login',
+//        'method': 'post',
+//        'data': {
+//            'email': '1282976747@qq.com', 'password': 'test', 'role': 2
+//        },
+//        'success': function (data) {
+//            alert('success:' + JSON.stringify(data));
 
             $.ajax({
                 'url': '/course/my',
@@ -34,21 +34,24 @@
                 'success': function (data) {
                     alert('success:' + JSON.stringify(data));
 
-                    $.ajax({
-                        'url': '/logout',
-                        'method': 'post'
-                    });
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
                 },
                 'error': function (reason) {
                     alert('error:' + reason.responseText);
                 }
             });
 
-        },
-        'error': function (reason) {
-            alert('error:' + reason.responseText);
-        }
-    });
+//        },
+//        'error': function (reason) {
+//            alert('error:' + reason.responseText);
+//        }
+//    });
 
 </script>
 </body>

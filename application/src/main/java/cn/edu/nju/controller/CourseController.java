@@ -33,9 +33,6 @@ public class CourseController {
     @ResponseBody
     public ResultInfo addCourse(HttpSession session, @ModelAttribute CourseInfo info) {
         Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
         return courseService.addCourse(userId, info);
     }
 
@@ -49,9 +46,6 @@ public class CourseController {
     @ResponseBody
     public ResultInfo modifyCourse(HttpSession session, @ModelAttribute CourseInfo info) {
         Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
         return courseService.modifyCourse(userId, info);
     }
 
@@ -67,9 +61,6 @@ public class CourseController {
     public ResultInfo enrollCourse(HttpSession session, @RequestParam int courseId,
                                    @RequestParam String courseKey) {
         Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
         return courseService.enrollCourse(userId, courseId, courseKey);
     }
 
@@ -83,9 +74,6 @@ public class CourseController {
     @ResponseBody
     public ResultInfo quitCourse(HttpSession session, @RequestParam int courseId) {
         Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
         return courseService.quitCourse(userId, courseId);
     }
 
@@ -98,9 +86,6 @@ public class CourseController {
     @ResponseBody
     public ResultInfo getCourseList(HttpSession session) {
         Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
         return courseService.getNotSelectCourses(userId);
     }
 
@@ -113,9 +98,6 @@ public class CourseController {
     @ResponseBody
     public ResultInfo getMyCourses(HttpSession session) {
         Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
         return courseService.getSelectCourses(userId);
     }
 }
