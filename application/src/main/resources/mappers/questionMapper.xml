@@ -19,4 +19,19 @@
              #{question.enable}, #{question.optionJson})
         </foreach>
     </insert>
+
+    <resultMap id="questionMap" type="cn.edu.nju.model.examModel.QuestionModel">
+        <id property="questionId" column="id"/>
+        <result property="courseId" column="courseId"/>
+        <result property="content" column="content"/>
+        <result property="md5Value" column="md5Value"/>
+        <result property="level" column="level"/>
+        <result property="answer" column="answer"/>
+        <result property="enable" column="enable"/>
+        <result property="optionJson" column="optionJson"/>
+    </resultMap>
+
+    <select id="getAllQuestions" resultMap="questionMap">
+        SELECT * FROM t_question WHERE enable = 1 LIMIT #{num}
+    </select>
 </mapper>

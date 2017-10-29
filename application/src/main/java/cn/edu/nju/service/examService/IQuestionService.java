@@ -7,4 +7,6 @@ import java.io.InputStream;
 public interface IQuestionService {
 
     ResultInfo saveQuestion(int courseId, InputStream excelStream);
+
+    ResultInfo getAllQuestions(int num);
 }

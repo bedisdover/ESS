@@ -1,5 +1,14 @@
 package cn.edu.nju.model.examModel;
 
+import cn.edu.nju.info.examInfo.OptionInfo;
+import cn.edu.nju.info.examInfo.QuestionInfo;
+import cn.edu.nju.mapper.examMapper.QuestionMapper;
+import cn.edu.nju.utils.JsonUtil;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class QuestionModel {
 
     private int questionId;
@@ -24,6 +33,19 @@ public class QuestionModel {
         this.answer = answer;
         this.optionJson = optionJson;
         this.enable = enable;
+    }
+
+    public static List<QuestionInfo> toInfoList(List<QuestionModel> list) throws IOException {
+        List<QuestionInfo> result = new ArrayList<>(list.size());
+        for (QuestionModel model : list) {
+            List<OptionInfo> options = JsonUtil.toOptionInfoList(model.getOptionJson());
+            result.add(new QuestionInfo(
+                    model.getQuestionId(), model.getCourseId(),
+                    model.getContent(), model.getLevel(),
+                    model.getAnswer(), options
+            ));
+        }
+        return result;
     }
 
     public int getQuestionId() {

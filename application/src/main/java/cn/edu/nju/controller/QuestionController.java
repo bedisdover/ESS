@@ -66,4 +66,19 @@ public class QuestionController {
             return new ResultInfo(false, "文件读取错误", null);
         }
     }
+
+    @RequestMapping(value = "/question/list")
+    @ResponseBody
+    public ResultInfo getAllQuestions(Integer page, Integer size) {
+        if (page == null || page <= 0) {
+            page = 1;
+        }
+        if (size == null || size <= 0) {
+            size = 10;
+        }
+
+        int num = (long)page * size > Integer.MAX_VALUE ?
+                Integer.MAX_VALUE : page * size;
+        return questionService.getAllQuestions(num);
+    }
 }

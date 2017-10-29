@@ -10,4 +10,6 @@ public interface IQuestionDAO {
     boolean isMD5Exist(String md5);
 
     ResultInfo saveQuestions(List<QuestionModel> questions);
+
+    ResultInfo getAllQuestions(int num);
 }

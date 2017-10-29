@@ -1,6 +1,7 @@
 package cn.edu.nju.service.examService;
 
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
+import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.utils.ExcelUtil;
 import cn.edu.nju.info.ResultInfo;
@@ -29,7 +30,7 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public ResultInfo saveQuestion(int courseId, InputStream excelStream) {
         try {
-            ByteArrayOutputStream bufferStream = toBAOS(excelStream);
+            ByteArrayOutputStream bufferStream = toByteArrayOutputStream(excelStream);
             byte[] data = bufferStream.toByteArray();
 
             InputStream stream1 = new ByteArrayInputStream(data);
@@ -44,7 +45,6 @@ public class QuestionServiceImpl implements IQuestionService {
             InputStream stream2 = new ByteArrayInputStream(data);
             List<QuestionInfo> list = ExcelUtil.extractQuestions(courseId, stream2);
             stream2.close();
-            ExcelUtil.print(list);
 
             excelStream.close();
             return questionDAO.saveQuestions(QuestionInfo.toModelList(list, md5));
@@ -57,7 +57,27 @@ public class QuestionServiceImpl implements IQuestionService {
         }
     }
 
-    private ByteArrayOutputStream toBAOS(InputStream inputStream) throws IOException {
+    @Override
+    @SuppressWarnings("unchecked")
+    public ResultInfo getAllQuestions(int num) {
+        ResultInfo result = questionDAO.getAllQuestions(num);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        List<QuestionInfo> questions;
+        try {
+            questions = QuestionModel.toInfoList((List<QuestionModel>) result.getData());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.getLogger(QuestionServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
+
+        return new ResultInfo(true, "成功获取问题列表", questions);
+    }
+
+    private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         byte[] buffer = new byte[2048];
         int len;

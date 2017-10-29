@@ -26,5 +26,20 @@ public class QuestionDAOImpl implements IQuestionDAO {
             mapper.addQuestionList(questions);
             return new ResultInfo(true, "成功添加问题", null);
         }
+        catch (Exception e) {
+            return new ResultInfo(false, "系统异常", null);
+        }
+    }
+
+    @Override
+    public ResultInfo getAllQuestions(int num) {
+        try (SqlSession session = SessionFactory.getInstance().openSession()) {
+            QuestionMapper mapper = session.getMapper(QuestionMapper.class);
+            List<QuestionModel> questions = mapper.getAllQuestions(num);
+            return new ResultInfo(true, "成功添加问题", questions);
+        }
+        catch (Exception e) {
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 }
