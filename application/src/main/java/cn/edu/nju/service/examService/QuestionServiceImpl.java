@@ -77,6 +77,11 @@ public class QuestionServiceImpl implements IQuestionService {
         return new ResultInfo(true, "成功获取问题列表", questions);
     }
 
+    @Override
+    public ResultInfo deleteQuestions(List<Integer> questionIdList) {
+        return questionDAO.deleteQuestions(questionIdList);
+    }
+
     private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         byte[] buffer = new byte[2048];

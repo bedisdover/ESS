@@ -5,10 +5,10 @@
     <title>Test</title>
 </head>
 <body>
-<!--<form>-->
-    <!--<input type="file" id="questions" name="questions">-->
-    <!--<button type="button">upload</button>-->
-<!--</form>-->
+<form>
+    <input type="file" id="questions" name="questions">
+    <button type="button">upload</button>
+</form>
 
 <script
         src="http://code.jquery.com/jquery-3.2.1.min.js"
@@ -27,56 +27,68 @@
         'success': function(data) {
             alert(JSON.stringify(data));
 
-            $.ajax({
-                'url': '/question/list',
-                'method': 'get',
-                'success': function (data) {
-                    alert(JSON.stringify(data));
-                    $.ajax({
-                        'url': '/logout',
-                        'method': 'post',
-                        'success': function (data) {
-                            alert(JSON.stringify(data));
-                        }
-                    });
-                }
-            });
+//            $.ajax({
+//                'url': '/question/delete',
+//                'method': 'post',
+//                'contentType': 'application/json',
+//                'data': JSON.stringify([11, 12]),
+//                'success': function (data) {
+//                    alert(JSON.stringify(data));
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
+//                },
+//                'error': function (data) {
+//                    alert(JSON.stringify(data));
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
+//                }
+//            });
         }
     });
 
-//    $('button').click(function () {
-//        var data = new FormData();
-//        data.append('courseId', 1);
-//        data.append('questions', $('#questions')[0].files[0]);
-//        $.ajax({
-//            'url': '/question/upload',
-//            'method': 'post',
-//            'data': data,
-//            'processData': false,
-//            'contentType': false,
-//            'cache': false,
-//            'success': function (data) {
-//                alert(JSON.stringify(data));
-//                $.ajax({
-//                    'url': '/logout',
-//                    'method': 'post',
-//                    'success': function (data) {
-//                        alert(JSON.stringify(data));
-//                    }
-//                });
-//            },
-//            'error': function() {
-//                alert("上传失败");
-//                $.ajax({
-//                    'url': '/logout',
-//                    'method': 'post',
-//                    'success': function (data) {
-//                        alert(JSON.stringify(data));
-//                    }
-//                });
-//            }
-//        });
-//    });
+    $('button').click(function () {
+        var data = new FormData();
+        data.append('courseId', 1);
+        data.append('questions', $('#questions')[0].files[0]);
+        $.ajax({
+            'url': '/question/upload',
+            'method': 'post',
+            'data': data,
+            'processData': false,
+            'contentType': false,
+            'cache': false,
+            'success': function (data) {
+                alert(JSON.stringify(data));
+                $.ajax({
+                    'url': '/logout',
+                    'method': 'post',
+                    'success': function (data) {
+                        alert(JSON.stringify(data));
+                    }
+                });
+            },
+            'error': function() {
+                alert("上传失败");
+                $.ajax({
+                    'url': '/logout',
+                    'method': 'post',
+                    'success': function (data) {
+                        alert(JSON.stringify(data));
+                    }
+                });
+            }
+        });
+    });
 
 //    $.ajax({
 //        'url': '/login',

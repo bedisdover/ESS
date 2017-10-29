@@ -2,10 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/context
-            http://www.springframework.org/schema/context/spring-context.xsd">
+            http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!--Jackson 相关-->
     <bean id="stringConverter"
@@ -28,6 +29,7 @@
     </bean>
     <!--Jackson 相关-->
 
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="10"/>
         <property name="prefix" value="/"/>
@@ -40,4 +42,19 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
+
+    <tx:annotation-driven/>
+    <mvc:annotation-driven/>
+
+    <!-- interceptor support -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/isLogin"/>
+            <mvc:exclude-mapping path="/signUp"/>
+            <mvc:exclude-mapping path="/mail/verify"/>
+            <bean class="cn.edu.nju.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

@@ -12,4 +12,6 @@ public interface IQuestionDAO {
     ResultInfo saveQuestions(List<QuestionModel> questions);
 
     ResultInfo getAllQuestions(int num);
+
+    ResultInfo deleteQuestions(List<Integer> questionIdList);
 }

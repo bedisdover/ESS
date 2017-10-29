@@ -11,4 +11,6 @@ public interface QuestionMapper {
     void addQuestionList(List<QuestionModel> questions);
 
     List<QuestionModel> getAllQuestions(int num);
+
+    void deleteQuestions(List<Integer> questionIdList);
 }
