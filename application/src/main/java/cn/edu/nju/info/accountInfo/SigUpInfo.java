@@ -1,4 +1,4 @@
-package cn.edu.nju.vo.accountVO;
+package cn.edu.nju.info.accountInfo;
 
 /**
  * information required for sign up

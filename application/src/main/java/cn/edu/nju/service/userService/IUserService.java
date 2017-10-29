@@ -1,6 +1,6 @@
 package cn.edu.nju.service.userService;
 
-import cn.edu.nju.vo.userVO.UserInfo;
+import cn.edu.nju.info.userInfo.UserInfo;
 
 /**
  * interface of user service

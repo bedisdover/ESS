@@ -11,11 +11,11 @@
         SELECT role FROM t_user WHERE id = #{userId} AND enable = 1
     </select>
 
-    <select id="getUserInfoByEmail" resultType="cn.edu.nju.po.userPO.UserModel">
+    <select id="getUserInfoByEmail" resultType="cn.edu.nju.model.userModel.UserModel">
         SELECT * FROM t_user WHERE email = #{email} AND enable = 1
     </select>
 
-    <select id="getUserInfoById" resultType="cn.edu.nju.po.userPO.UserModel">
+    <select id="getUserInfoById" resultType="cn.edu.nju.model.userModel.UserModel">
         SELECT * FROM t_user WHERE id = #{userId} AND enable = 1
     </select>
 </mapper>

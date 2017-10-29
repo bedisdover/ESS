@@ -1,6 +1,6 @@
-package cn.edu.nju.po.coursePO;
+package cn.edu.nju.model.courseModel;
 
-import cn.edu.nju.vo.courseVO.CourseInfo;
+import cn.edu.nju.info.courseInfo.CourseInfo;
 
 public class CourseModel {
 

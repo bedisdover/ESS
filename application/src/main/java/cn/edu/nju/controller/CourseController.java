@@ -1,8 +1,8 @@
 package cn.edu.nju.controller;
 
 import cn.edu.nju.service.courseService.ICourseService;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseInfo;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.courseInfo.CourseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

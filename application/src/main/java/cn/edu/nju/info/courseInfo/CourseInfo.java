@@ -1,4 +1,4 @@
-package cn.edu.nju.vo.courseVO;
+package cn.edu.nju.info.courseInfo;
 
 public class CourseInfo {
 

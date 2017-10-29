@@ -1,4 +1,4 @@
-package cn.edu.nju.vo.userVO;
+package cn.edu.nju.info.userInfo;
 
 public class UserInfo {
 

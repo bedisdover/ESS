@@ -1,6 +1,6 @@
 package cn.edu.nju.mapper.userMapper;
 
-import cn.edu.nju.po.userPO.UserModel;
+import cn.edu.nju.model.userModel.UserModel;
 
 /**
  * user sql mapper

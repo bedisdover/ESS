@@ -1,6 +1,6 @@
 package cn.edu.nju.mapper.courseMapper;
 
-import cn.edu.nju.po.coursePO.CourseModel;
+import cn.edu.nju.model.courseModel.CourseModel;
 
 import java.util.List;
 

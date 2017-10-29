@@ -1,6 +1,6 @@
-package cn.edu.nju.po.userPO;
+package cn.edu.nju.model.userModel;
 
-import cn.edu.nju.vo.userVO.UserInfo;
+import cn.edu.nju.info.userInfo.UserInfo;
 
 public class UserModel {
 

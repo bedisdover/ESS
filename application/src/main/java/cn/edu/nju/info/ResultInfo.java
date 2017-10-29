@@ -1,4 +1,4 @@
-package cn.edu.nju.vo;
+package cn.edu.nju.info;
 
 /**
  * information required for success

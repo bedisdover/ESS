@@ -1,7 +1,7 @@
 package cn.edu.nju.dao.userDAO;
 
 import cn.edu.nju.enumeration.Role;
-import cn.edu.nju.po.userPO.UserModel;
+import cn.edu.nju.model.userModel.UserModel;
 
 /**
  * interface of user dao

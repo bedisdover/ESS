@@ -28,8 +28,7 @@
             http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!--启动自动扫描 -->
-    <context:component-scan base-package="cn.edu.nju.controller">
-        <!--制定扫包规则 ,只扫描使用@Controller注解的JAVA类 -->
+    <context:component-scan base-package="cn.edu.nju">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
@@ -70,8 +69,18 @@
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="local"/>
     </bean>
+
+    <!-- file upload support -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="1048576"/>
+        <property name="resolveLazily" value="true"/>
+        <property name="maxInMemorySize" value="4096"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
     <tx:annotation-driven/>
 
+    <!-- interceptor support -->
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>

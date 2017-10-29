@@ -2,10 +2,10 @@ package cn.edu.nju.dao.accountDAO;
 
 import cn.edu.nju.dao.SessionFactory;
 import cn.edu.nju.mapper.accountMapper.AccountMapper;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.accountVO.LoginInfo;
-import cn.edu.nju.vo.accountVO.SigUpInfo;
-import cn.edu.nju.po.userPO.UserModel;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.accountInfo.LoginInfo;
+import cn.edu.nju.info.accountInfo.SigUpInfo;
+import cn.edu.nju.model.userModel.UserModel;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;

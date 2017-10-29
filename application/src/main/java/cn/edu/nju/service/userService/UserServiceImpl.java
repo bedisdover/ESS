@@ -1,7 +1,7 @@
 package cn.edu.nju.service.userService;
 
 import cn.edu.nju.dao.userDAO.IUserDAO;
-import cn.edu.nju.vo.userVO.UserInfo;
+import cn.edu.nju.info.userInfo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

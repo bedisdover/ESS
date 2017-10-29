@@ -2,7 +2,7 @@ package cn.edu.nju.interceptor;
 
 import cn.edu.nju.controller.AccountController;
 import cn.edu.nju.utils.JsonUtil;
-import cn.edu.nju.vo.ResultInfo;
+import cn.edu.nju.info.ResultInfo;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 

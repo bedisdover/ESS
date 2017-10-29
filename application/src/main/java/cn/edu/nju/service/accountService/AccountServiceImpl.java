@@ -2,9 +2,9 @@ package cn.edu.nju.service.accountService;
 
 import cn.edu.nju.dao.accountDAO.IAccountDAO;
 import cn.edu.nju.utils.EmailUtil;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.accountVO.LoginInfo;
-import cn.edu.nju.vo.accountVO.SigUpInfo;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.accountInfo.LoginInfo;
+import cn.edu.nju.info.accountInfo.SigUpInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

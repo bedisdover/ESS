@@ -1,8 +1,7 @@
 package cn.edu.nju.controller;
 
-import cn.edu.nju.vo.ResultInfo;
+import cn.edu.nju.info.ResultInfo;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

@@ -1,9 +1,9 @@
 package cn.edu.nju.controller;
 
 import cn.edu.nju.utils.EncryptionUtil;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.accountVO.LoginInfo;
-import cn.edu.nju.vo.accountVO.SigUpInfo;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.accountInfo.LoginInfo;
+import cn.edu.nju.info.accountInfo.SigUpInfo;
 import cn.edu.nju.service.accountService.IAccountService;
 import cn.edu.nju.service.userService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

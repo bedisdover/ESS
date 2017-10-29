@@ -1,7 +1,7 @@
 package cn.edu.nju.dao.courseDAO;
 
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseInfo;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.courseInfo.CourseInfo;
 
 public interface ICourseDAO {
 

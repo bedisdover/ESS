@@ -1,7 +1,7 @@
 package cn.edu.nju.service.courseService;
 
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseInfo;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.courseInfo.CourseInfo;
 
 /**
  * interface of course service
