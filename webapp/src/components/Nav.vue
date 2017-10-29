@@ -2,7 +2,7 @@
   <div class="nav">
     <div class="content">
       <div class="nav-left">
-        <router-link to="/list">所有课程</router-link>
+        <router-link to="/list">课程列表</router-link>
         <router-link to="/my">我的课程</router-link>
       </div>
       <div class="nav-right">

@@ -4,7 +4,7 @@
       <el-col :span="20"  :offset="2">
         <el-card class="box-card clearfix">
           <div slot="header">
-            <span>未选课程</span>
+            <span>课程列表</span>
             <el-button v-if="user.role === 1" style="float: right; padding: 3px 0" type="text">
               <router-link to="createCourse">创建课程</router-link>
             </el-button>
