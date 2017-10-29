@@ -124,11 +124,9 @@
 
 <style scoped>
   .main {
-    height: 100vh;
-    width: 100vw;
+    height: calc(100vh - 100px);
     display: flex;
     justify-content: center;
-    background: #eeeeee;
   }
 
   .form {

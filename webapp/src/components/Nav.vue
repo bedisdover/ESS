@@ -1,12 +1,14 @@
 <template>
   <div class="nav">
-      <span>
+    <div class="content">
+      <div class="nav-left">
         <router-link to="/list">所有课程</router-link>
         <router-link to="/my">我的课程</router-link>
-      </span>
-    <span>
+      </div>
+      <div class="nav-right">
         <a @click="logout">登出</a>
-    </span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,20 +29,66 @@
     width: 100%;
     height: 72px;
     background: #2b83f9 linear-gradient(143deg, #2945cb 20%, #2b83f9 81%, #3a9dff);
-    margin-bottom: 72px;
     display: inline-block;
+    margin-bottom: 25px;
+  }
+
+  .content {
+    max-width: 1200px;
+    width: 100%;
+    display: inline-flex;
+  }
+
+  .content > div {
+    display: inline-block;
+  }
+
+  .nav-left {
+    flex: 1;
+    text-align: left;
   }
 
   a {
     line-height: 72px;
     color: #dedfe3;
-    padding: 6px 20px;
+    margin: 0 10px;
+    padding: 0 20px;
     text-decoration: none;
-    display: inline-block;
     cursor: pointer;
+    position: relative;
   }
 
-  a:hover {
+  a:hover, .router-link-active {
     color: gold;
+  }
+
+  a:after, .router-link-active:after {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: #fff;
+    opacity: 0;
+    -webkit-transition: height 0.3s, opacity 0.3s, -webkit-transform 0.3s;
+    -moz-transition: height 0.3s, opacity 0.3s, -moz-transform 0.3s;
+    transition: height 0.3s, opacity 0.3s, transform 0.3s;
+    -webkit-transform: translateY(-10px);
+    -moz-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+
+  .router-link-active:after {
+    opacity: 1;
+    top: 50px;
+  }
+
+  a:not(.router-link-active):hover:after {
+    height: 5px;
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    transform: translateY(0px);
   }
 </style>
