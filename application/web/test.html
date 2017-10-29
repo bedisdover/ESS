@@ -22,73 +22,73 @@
         'url': '/login',
         'method': 'post',
         'data': {
-            'email': '1282976747@qq.com', 'password': 'test', 'role': 2
+            'email': '1282976747@qq.com', 'password': 'test', 'role': 1
         },
         'success': function(data) {
             alert(JSON.stringify(data));
 
-//            $.ajax({
-//                'url': '/question/delete',
-//                'method': 'post',
-//                'contentType': 'application/json',
-//                'data': JSON.stringify([11, 12]),
-//                'success': function (data) {
-//                    alert(JSON.stringify(data));
-//                    $.ajax({
-//                        'url': '/logout',
-//                        'method': 'post',
-//                        'success': function (data) {
-//                            alert(JSON.stringify(data));
-//                        }
-//                    });
-//                },
-//                'error': function (data) {
-//                    alert(JSON.stringify(data));
-//                    $.ajax({
-//                        'url': '/logout',
-//                        'method': 'post',
-//                        'success': function (data) {
-//                            alert(JSON.stringify(data));
-//                        }
-//                    });
-//                }
-//            });
+            $.ajax({
+                'url': '/question/delete',
+                'method': 'post',
+                'contentType': 'application/json',
+                'data': JSON.stringify([13, 14]),
+                'success': function (data) {
+                    alert(JSON.stringify(data));
+                    $.ajax({
+                        'url': '/logout',
+                        'method': 'post',
+                        'success': function (data) {
+                            alert(JSON.stringify(data));
+                        }
+                    });
+                },
+                'error': function (data) {
+                    alert(JSON.stringify(data));
+                    $.ajax({
+                        'url': '/logout',
+                        'method': 'post',
+                        'success': function (data) {
+                            alert(JSON.stringify(data));
+                        }
+                    });
+                }
+            });
         }
     });
 
-    $('button').click(function () {
-        var data = new FormData();
-        data.append('courseId', 1);
-        data.append('questions', $('#questions')[0].files[0]);
-        $.ajax({
-            'url': '/question/upload',
-            'method': 'post',
-            'data': data,
-            'processData': false,
-            'contentType': false,
-            'cache': false,
-            'success': function (data) {
-                alert(JSON.stringify(data));
-                $.ajax({
-                    'url': '/logout',
-                    'method': 'post',
-                    'success': function (data) {
-                        alert(JSON.stringify(data));
-                    }
-                });
-            },
-            'error': function() {
-                alert("上传失败");
-                $.ajax({
-                    'url': '/logout',
-                    'method': 'post',
-                    'success': function (data) {
-                        alert(JSON.stringify(data));
-                    }
-                });
-            }
-        });
-    });
+//    $('button').click(function () {
+//        var data = new FormData();
+//        data.append('courseId', 1);
+//        data.append('questions', $('#questions')[0].files[0]);
+//        $.ajax({
+//            'url': '/question/upload',
+//            'method': 'post',
+//            'data': data,
+//            'processData': false,
+//            'contentType': false,
+//            'cache': false,
+//            'success': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            },
+//            'error': function() {
+//                alert("上传失败");
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            }
+//        });
+//    });
 
 //    $.ajax({
 //        'url': '/login',

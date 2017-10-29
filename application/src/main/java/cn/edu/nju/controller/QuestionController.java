@@ -1,7 +1,10 @@
 package cn.edu.nju.controller;
 
+import cn.edu.nju.config.AccountConfig;
+import cn.edu.nju.config.Role;
 import cn.edu.nju.service.examService.IQuestionService;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.service.userService.IUserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +13,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.List;
 
@@ -52,11 +56,13 @@ public class QuestionController {
 
     @RequestMapping(value = "/question/upload", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo uploadQuestions(@RequestParam int courseId,
+    public ResultInfo uploadQuestions(HttpSession session,
+                                      @RequestParam int courseId,
                                       @RequestParam CommonsMultipartFile questions) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         try {
             return questionService.saveQuestion(
-                    courseId, questions.getInputStream()
+                    userId, courseId, questions.getInputStream()
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,21 +74,14 @@ public class QuestionController {
     @RequestMapping(value = "/question/list")
     @ResponseBody
     public ResultInfo getAllQuestions(Integer page, Integer size) {
-        if (page == null || page <= 0) {
-            page = 1;
-        }
-        if (size == null || size <= 0) {
-            size = 10;
-        }
-
-        int num = (long)page * size > Integer.MAX_VALUE ?
-                Integer.MAX_VALUE : page * size;
-        return questionService.getAllQuestions(num);
+        return questionService.getAllQuestions(page, size);
     }
 
     @RequestMapping(value = "/question/delete", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo deleteQuestions(@RequestBody List<Integer> questionIdList) {
-        return questionService.deleteQuestions(questionIdList);
+    public ResultInfo deleteQuestions(HttpSession session,
+                                      @RequestBody List<Integer> questionIdList) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return questionService.deleteQuestions(userId, questionIdList);
     }
 }

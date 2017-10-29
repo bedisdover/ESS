@@ -1,5 +1,6 @@
 package cn.edu.nju.service.userService;
 
+import cn.edu.nju.config.Role;
 import cn.edu.nju.info.userInfo.UserInfo;
 
 /**
@@ -22,4 +23,6 @@ public interface IUserService {
     UserInfo getUserInfoByEmail(String email);
 
     UserInfo getUserInfoById(int userId);
+
+    Role getUserRoleById(int userId);
 }

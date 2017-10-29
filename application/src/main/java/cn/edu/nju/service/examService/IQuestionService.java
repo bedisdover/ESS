@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface IQuestionService {
 
-    ResultInfo saveQuestion(int courseId, InputStream excelStream);
+    ResultInfo saveQuestion(int userId, int courseId, InputStream excelStream);
 
-    ResultInfo getAllQuestions(int num);
+    ResultInfo getAllQuestions(Integer page, Integer size);
 
-    ResultInfo deleteQuestions(List<Integer> questionIdList);
+    ResultInfo deleteQuestions(int userId, List<Integer> questionIdList);
 }

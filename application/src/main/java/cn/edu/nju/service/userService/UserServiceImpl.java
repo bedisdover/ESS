@@ -1,5 +1,6 @@
 package cn.edu.nju.service.userService;
 
+import cn.edu.nju.config.Role;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.userInfo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserInfo getUserInfoById(int userId) {
         return userDAO.getUserInfoById(userId).toUserInfo();
+    }
+
+    @Override
+    public Role getUserRoleById(int userId) {
+        return userDAO.getRoleById(userId);
     }
 }

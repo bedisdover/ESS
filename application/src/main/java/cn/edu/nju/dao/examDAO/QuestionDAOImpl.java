@@ -62,4 +62,12 @@ public class QuestionDAOImpl implements IQuestionDAO {
             return new ResultInfo(false, "系统异常", null);
         }
     }
+
+    @Override
+    public int getCourseIdByQuestionId(int questionId) {
+        try (SqlSession session = SessionFactory.getInstance().openSession()) {
+            QuestionMapper mapper = session.getMapper(QuestionMapper.class);
+            return mapper.getCourseIdByQuestionId(questionId);
+        }
+    }
 }

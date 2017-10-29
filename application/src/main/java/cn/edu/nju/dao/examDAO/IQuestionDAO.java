@@ -14,4 +14,6 @@ public interface IQuestionDAO {
     ResultInfo getAllQuestions(int num);
 
     ResultInfo deleteQuestions(List<Integer> questionIdList);
+
+    int getCourseIdByQuestionId(int questionId);
 }

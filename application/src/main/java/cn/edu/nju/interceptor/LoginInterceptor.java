@@ -1,9 +1,8 @@
 package cn.edu.nju.interceptor;
 
 import cn.edu.nju.config.AccountConfig;
-import cn.edu.nju.controller.AccountController;
-import cn.edu.nju.utils.JsonUtil;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.utils.JsonUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,7 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object o) throws Exception {
         HttpSession session = request.getSession();
-        boolean isLogin = session.getAttribute(AccountConfig.LOGIN_KEY) == null;
+        boolean isLogin = session.getAttribute(AccountConfig.LOGIN_KEY) != null;
         if (!isLogin) {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json;charset=utf-8");

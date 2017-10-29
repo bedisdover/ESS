@@ -13,4 +13,6 @@ public interface QuestionMapper {
     List<QuestionModel> getAllQuestions(int num);
 
     void deleteQuestions(List<Integer> questionIdList);
+
+    int getCourseIdByQuestionId(int questionId);
 }
