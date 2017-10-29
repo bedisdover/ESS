@@ -13,25 +13,10 @@
             :data="courseListData"
             style="width: 100%;text-align: left">
             <el-table-column type="expand">
-              <template slot-scope="props">
-                <el-form label-position="left" inline class="demo-table-expand">
-                  <el-form-item label="课程名称：">
-                    <span>{{ props.row.name }}</span>
-                  </el-form-item>
-                  <el-form-item label="年份：">
-                    <span>{{ props.row.year }}</span>
-                  </el-form-item>
-                  <el-form-item label="年级：">
-                    <span>{{ props.row.grade }}</span>
-                  </el-form-item>
-                  <el-form-item label="学期：">
-                    <span>{{ props.row.term }}</span>
-                  </el-form-item>
-                  <el-form-item label="班级：">
-                    <span>{{ props.row.cls }}</span>
-                  </el-form-item>
-                </el-form>
-              </template>
+                <template slot-scope="props">
+                  <CourseInfo :props="props">
+                  </CourseInfo>
+                </template>
             </el-table-column>
             <el-table-column
               label="课程名称"
@@ -39,13 +24,8 @@
             >
             </el-table-column>
             <el-table-column
-              label="年级"
+              label="年份"
               prop="year"
-            >
-            </el-table-column>
-            <el-table-column
-              label="年级"
-              prop="grade"
             >
             </el-table-column>
             <el-table-column
@@ -53,7 +33,11 @@
               prop="term"
             >
             </el-table-column>
-
+            <el-table-column
+              label="年级"
+              prop="grade"
+            >
+            </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button type="success" size="mini" @click="dialogHandle(scope.row.name, scope.row.id)" v-if="user.role === 2">加入课程</el-button>
@@ -69,7 +53,7 @@
       :visible.sync="dialogVisible"
       width="30%"
     >
-      <span>您正在加入{{courseName}}</span>
+      <span>您确定加入{{courseName}}</span>
       <el-form :model="form" ref="form">
         <el-form-item label="选课密码">
           <el-input v-model="form.courseKey" auto-complete="off"></el-input>
@@ -85,9 +69,12 @@
 
 <script>
   import request from '../lib/request'
+  import util from '../lib/util'
+  import CourseInfo from './CourseInfo.vue'
 
   export default {
     name: 'CourseList',
+    components: {CourseInfo},
     props: ['user'],
     data () {
       return {
@@ -105,10 +92,7 @@
         if (success) {
           this.courseListData = data
         } else {
-          this.$notify.error({
-            title: '错误',
-            message: message
-          })
+          util.notifyError(message)
         }
       })
     },
@@ -125,14 +109,11 @@
           courseId: this.courseId,
           courseKey: this.form.courseKey
         }
-        request('/course/enroll', 'post', params, (success, message, data) => {
+        request('/course/enroll', 'post', params, (success, message) => {
           if (success) {
             this.$router.push('my')
           } else {
-            this.$notify.error({
-              title: '错误',
-              message: message
-            })
+            util.notifyError(message)
           }
         })
       }
@@ -141,18 +122,6 @@
 </script>
 
 <style scoped>
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
-
   .box-card {
     width: 100%;
   }
