@@ -2,7 +2,7 @@ package cn.edu.nju.service.courseService;
 
 import cn.edu.nju.dao.courseDAO.ICourseDAO;
 import cn.edu.nju.dao.userDAO.IUserDAO;
-import cn.edu.nju.enumeration.Role;
+import cn.edu.nju.config.Role;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.courseInfo.CourseInfo;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,6 @@
 package cn.edu.nju.controller;
 
+import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.accountInfo.LoginInfo;
@@ -23,8 +24,6 @@ public class AccountController {
 
     private final IUserService userService;
 
-    private static final String LOGIN_KEY = "user";
-
     @Autowired
     public AccountController(IAccountService accountService, IUserService userService) {
         this.accountService = accountService;
@@ -41,9 +40,9 @@ public class AccountController {
     @ResponseBody
     public ResultInfo login(HttpSession session, @ModelAttribute LoginInfo info) {
         info.setPassword(EncryptionUtil.sha256(info.getPassword()));
-        if (session.getAttribute(LOGIN_KEY) == null) {
+        if (session.getAttribute(AccountConfig.LOGIN_KEY) == null) {
             if (accountService.isAccountValid(info)) {
-                session.setAttribute(LOGIN_KEY,
+                session.setAttribute(AccountConfig.LOGIN_KEY,
                         userService.getUserIdByEmail(info.getEmail())
                 );
                 return new ResultInfo(
@@ -85,7 +84,7 @@ public class AccountController {
     @ResponseBody
     public ResultInfo logout(HttpSession session) {
         accountService.logout();
-        session.setAttribute(LOGIN_KEY, null);
+        session.setAttribute(AccountConfig.LOGIN_KEY, null);
         return new ResultInfo(true, "成功退出", null);
     }
 
@@ -112,7 +111,7 @@ public class AccountController {
      * @param session http session
      * @return user id
      */
-    public static Integer getUserId(HttpSession session) {
-        return (Integer) session.getAttribute(LOGIN_KEY);
+    private Integer getUserId(HttpSession session) {
+        return (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
     }
 }

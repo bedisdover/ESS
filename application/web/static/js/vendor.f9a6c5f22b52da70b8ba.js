@@ -7471,7 +7471,7 @@ function initProps (vm, propsOptions) {
   var propsData = vm.$options.propsData || {};
   var props = vm._props = {};
   // cache prop keys so that future props updates can iterate using Array
-  // instead of dynamic object key enumeration.
+  // instead of dynamic object key config.
   var keys = vm.$options._propKeys = [];
   var isRoot = !vm.$parent;
   // root instance props should be converted
@@ -8712,7 +8712,7 @@ function initMixin (Vue) {
 
 function initInternalComponent (vm, options) {
   var opts = vm.$options = Object.create(vm.constructor.options);
-  // doing this because it's faster than dynamic enumeration.
+  // doing this because it's faster than dynamic config.
   opts.parent = options.parent;
   opts.propsData = options.propsData;
   opts._parentVnode = options._parentVnode;

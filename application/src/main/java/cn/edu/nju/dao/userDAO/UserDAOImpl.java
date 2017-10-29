@@ -1,7 +1,7 @@
 package cn.edu.nju.dao.userDAO;
 
 import cn.edu.nju.dao.SessionFactory;
-import cn.edu.nju.enumeration.Role;
+import cn.edu.nju.config.Role;
 import cn.edu.nju.mapper.userMapper.UserMapper;
 import cn.edu.nju.model.userModel.UserModel;
 import org.apache.ibatis.session.SqlSession;

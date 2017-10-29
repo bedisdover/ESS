@@ -1,6 +1,8 @@
 package cn.edu.nju.service.examService;
 
+import cn.edu.nju.controller.AccountController;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
+import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.utils.ExcelUtil;
@@ -22,9 +24,12 @@ public class QuestionServiceImpl implements IQuestionService {
 
     private final IQuestionDAO questionDAO;
 
+    private final IUserDAO userDAO;
+
     @Autowired
-    public QuestionServiceImpl(IQuestionDAO questionDAO) {
+    public QuestionServiceImpl(IQuestionDAO questionDAO, IUserDAO userDAO) {
         this.questionDAO = questionDAO;
+        this.userDAO = userDAO;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package cn.edu.nju.enumeration;
+package cn.edu.nju.config;
 
 public enum Role {
     student, teacher
