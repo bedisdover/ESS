@@ -4,9 +4,9 @@ import Login from '@/pages/Login'
 import Error404 from '@/pages/404'
 import Register from '@/pages/Register'
 import Verify from '@/pages/Verify'
-import CourseList from '@/components/CourseList'
-import MyCourse from '@/components/MyCourse'
-import CreateCourse from '@/components/CreateCourse'
+import CourseList from '@/pages/CourseList'
+import MyCourse from '@/pages/MyCourse'
+import CreateCourse from '@/pages/CreateCourse'
 
 // 无需登录的页面
 export const withoutLogin = [

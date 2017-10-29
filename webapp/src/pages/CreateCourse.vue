@@ -23,7 +23,7 @@
 
 <script>
   import request from '../lib/request'
-  import CourseForm from './CourseForm.vue'
+  import CourseForm from '../components/CourseForm.vue'
   import util from '../lib/util'
 
   export default {

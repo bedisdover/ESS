@@ -70,7 +70,7 @@
 <script>
   import request from '../lib/request'
   import util from '../lib/util'
-  import CourseInfo from './CourseInfo.vue'
+  import CourseInfo from '../components/CourseInfo.vue'
 
   export default {
     name: 'CourseList',

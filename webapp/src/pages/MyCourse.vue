@@ -80,8 +80,8 @@
 <script>
   import request from '../lib/request'
   import util from '../lib/util'
-  import CourseForm from './CourseForm.vue'
-  import CourseInfo from './CourseInfo.vue'
+  import CourseForm from '../components/CourseForm.vue'
+  import CourseInfo from '../components/CourseInfo.vue'
 
   export default {
     components: {
