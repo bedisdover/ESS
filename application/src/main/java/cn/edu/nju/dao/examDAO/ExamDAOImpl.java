@@ -28,4 +28,14 @@ public class ExamDAOImpl implements IExamDAO {
     public void deleteExam(int examId) throws Exception {
         examMapper.deleteExam(examId);
     }
+
+    @Override
+    public int getCourseIdByExamId(int examId) {
+        return examMapper.getCourseIdByExamId(examId);
+    }
+
+    @Override
+    public void updateNumOfQuestions(int examId, String num) throws Exception {
+        examMapper.updateNumOfQuestions(examId, num);
+    }
 }

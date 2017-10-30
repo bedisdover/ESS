@@ -31,4 +31,14 @@ public class ExamController {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return examService.createExam(userId, courseId, num, mark);
     }
+
+    @RequestMapping(value = "/exam/update", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo updateExam(HttpSession session,
+                                 @RequestParam int examId,
+                                 @RequestParam String num,
+                                 @RequestParam String mark) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return examService.updateExam(userId, examId, num, mark);
+    }
 }

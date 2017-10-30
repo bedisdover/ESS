@@ -9,7 +9,15 @@
        VALUES (#{exam.courseId}, #{exam.num}, #{exam.enable});
     </insert>
 
-    <delete id="deleteExam">
-        DELETE FROM t_exam WHERE id = #{examId}
-    </delete>
+    <update id="deleteExam">
+        UPDATE t_exam SET enable = 0 WHERE id = #{examId}
+    </update>
+
+    <select id="getCourseIdByExamId" resultType="int">
+        SELECT courseId FROM t_exam WHERE id = #{examId} AND enable = 1
+    </select>
+
+    <update id="updateNumOfQuestions">
+        UPDATE t_exam SET num = #{num} WHERE id = #{examId}
+    </update>
 </mapper>

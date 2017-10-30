@@ -10,4 +10,9 @@ public interface ExamMapper {
     void createExam(@Param("exam")ExamModel exam);
 
     void deleteExam(@Param("examId")int examId);
+
+    int getCourseIdByExamId(@Param("examId") int examId);
+
+    void updateNumOfQuestions(@Param("examId") int exmaId,
+                              @Param("num") String num);
 }

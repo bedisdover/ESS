@@ -6,6 +6,7 @@ import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,30 +55,70 @@ public class ExamServiceImpl implements IExamService {
         int level = 1;
         String[] marks = mark.split(",");
         List<LevelModel> levelModels = new ArrayList<>(marks.length);
-        for (String str : marks) {
-            try {
+        try {
+            for (String str : marks) {
                 double m = Double.parseDouble(str);
                 levelModels.add(new LevelModel(0, courseId, level, examId, m));
                 level += 1;
-            } catch (NumberFormatException e) {
-                try {
-                    examDAO.deleteExam(examId);
-                    return new ResultInfo(
-                            false, "等级分数应该是由逗号隔开的小数组成", null
-                    );
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Logger.getLogger(ExamServiceImpl.class).error(e);
-                    return new ResultInfo(false, "系统异常", null);
-                }
             }
-        }
-
-        // update mark of level
-        try {
             questionDAO.updateMarkOfLevelByUniqueKey(levelModels);
             return new ResultInfo(true, "成功创建考试", null);
-        } catch (Exception e) {
+        }
+        catch (NumberFormatException e) {
+            try {
+                examDAO.deleteExam(examId);
+                return new ResultInfo(
+                        false, "等级分数应该是由逗号隔开的小数组成", null
+                );
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Logger.getLogger(ExamServiceImpl.class).error(e);
+                return new ResultInfo(false, "系统异常", null);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Logger logger = Logger.getLogger(ExamServiceImpl.class);
+            logger.error(e);
+            try {
+                examDAO.deleteExam(examId);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                logger.error(e1);
+            }
+            return new ResultInfo(false, "系统异常", null);
+        }
+    }
+
+    @Override
+    public ResultInfo updateExam(int userId, int examId, String num, String mark) {
+        int courseId = examDAO.getCourseIdByExamId(examId);
+        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
+            return new ResultInfo(
+                    false, "只有该门课的老师才能修改该门课的考试信息", null
+            );
+        }
+
+        try {
+            examDAO.updateNumOfQuestions(examId, num);
+
+            int level = 1;
+            String[] marks = mark.split(",");
+            List<LevelModel> levelModels = new ArrayList<>(marks.length);
+            for (String str : marks) {
+                double m = Double.parseDouble(str);
+                levelModels.add(new LevelModel(0, courseId, level, examId, m));
+                level += 1;
+            }
+            questionDAO.updateMarkOfLevelByUniqueKey(levelModels);
+            return new ResultInfo(true, "成功修改考试信息", null);
+        }
+        catch (NumberFormatException e) {
+            return new ResultInfo(
+                    false, "等级分数应该是由逗号隔开的小数组成", null
+            );
+        }
+        catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
