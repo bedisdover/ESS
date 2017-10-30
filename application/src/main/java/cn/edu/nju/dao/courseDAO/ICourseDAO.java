@@ -1,23 +1,24 @@
 package cn.edu.nju.dao.courseDAO;
 
-import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.courseInfo.CourseInfo;
+import cn.edu.nju.model.courseModel.CourseModel;
+
+import java.util.List;
 
 public interface ICourseDAO {
 
-    ResultInfo addCourse(int userId, CourseInfo model);
+    void addCourse(int userId, CourseModel model) throws Exception;
 
-    ResultInfo updateCourse(CourseInfo model);
+    void updateCourse(CourseModel model) throws Exception;
 
-    ResultInfo enrollCourse(int userId, int courseId);
+    void enrollCourse(int userId, int courseId) throws Exception;
 
-    ResultInfo quitCourse(int userId, int courseId);
+    void quitCourse(int userId, int courseId) throws Exception;
 
     int getCourseUserRecordNum(int courseId, int userId);
 
     String getCourseKeyById(int courseId);
 
-    ResultInfo getNotSelectCourses(int userId);
+    List<CourseModel> getNotSelectCourses(int userId);
 
-    ResultInfo getSelectCourses(int userId);
+    List<CourseModel> getSelectCourses(int userId);
 }

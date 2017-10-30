@@ -1,9 +1,11 @@
 package cn.edu.nju.mapper.courseMapper;
 
 import cn.edu.nju.model.courseModel.CourseModel;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service("courseMapper")
 public interface CourseMapper {
 
     void addCourse(CourseModel model);

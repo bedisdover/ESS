@@ -3,9 +3,11 @@ package cn.edu.nju.mapper.examMapper;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service(value = "questionMapper")
 public interface QuestionMapper {
 
     int getMD5Num(@Param("md5") String md5);

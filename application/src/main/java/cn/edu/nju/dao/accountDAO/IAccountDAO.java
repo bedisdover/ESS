@@ -28,5 +28,5 @@ public interface IAccountDAO {
      * @param model user information
      * @return success or not
      */
-    ResultInfo addUser(SigUpInfo model);
+    void addUser(SigUpInfo model) throws Exception;
 }

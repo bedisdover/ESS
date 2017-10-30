@@ -2,6 +2,9 @@ package cn.edu.nju.model.courseModel;
 
 import cn.edu.nju.info.courseInfo.CourseInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CourseModel {
 
     private String name;
@@ -27,6 +30,19 @@ public class CourseModel {
         this.password = info.getPassword();
         this.id = info.getId();
         this.enable = DEFAULT_ENABLE;
+    }
+
+    public static List<CourseInfo> toInfoList(List<CourseModel> list) {
+        List<CourseInfo> result = new ArrayList<>(list.size());
+        for (CourseModel model : list) {
+            result.add(new CourseInfo(
+                    model.getName(), model.getGrade(),
+                    model.getCls(), model.getYear(),
+                    model.getTerm(), model.getPassword(),
+                    model.getId()
+            ));
+        }
+        return result;
     }
 
     public CourseModel(String name, int grade, String cls, int year,

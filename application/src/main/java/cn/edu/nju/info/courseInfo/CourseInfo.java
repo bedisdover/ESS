@@ -1,5 +1,7 @@
 package cn.edu.nju.info.courseInfo;
 
+import cn.edu.nju.model.courseModel.CourseModel;
+
 public class CourseInfo {
 
     private String name;
@@ -21,6 +23,13 @@ public class CourseInfo {
         this.year = year;
         this.term = term;
         this.password = password;
+    }
+
+    public CourseModel toModel() {
+        return new CourseModel(
+                name, grade, cls, year,
+                term, password, id, 1
+        );
     }
 
     public CourseInfo(String name, int grade, String cls,

@@ -10,19 +10,19 @@ public interface IQuestionDAO {
 
     boolean isMD5Exist(String md5);
 
-    ResultInfo saveQuestions(List<QuestionModel> questions);
+    void saveQuestions(List<QuestionModel> questions) throws Exception;
 
-    ResultInfo getAllQuestions(int num);
+    List<QuestionModel> getAllQuestions(int num);
 
-    ResultInfo deleteQuestions(int courseId, List<Integer> questionIdList);
+    void deleteQuestions(int courseId, List<Integer> questionIdList) throws Exception;
 
     int getCourseIdByQuestionId(int questionId);
 
-    ResultInfo setMarkOfLevel(int courseId, int examId, double[] marks);
+    void setMarkOfLevel(int courseId, int examId, double[] marks) throws Exception;
 
-    ResultInfo getLevelModelList(int courseId);
+    List<LevelModel> getLevelModelList(int courseId);
 
-    ResultInfo updateMarkOfLevelById(List<LevelModel> levelModelList);
+    void updateMarkOfLevelById(List<LevelModel> levelModelList) throws Exception;
 
-    ResultInfo updateMarkOfLevelByUniqueKey(List<LevelModel> levelModelList);
+    void updateMarkOfLevelByUniqueKey(List<LevelModel> levelModelList) throws Exception;
 }

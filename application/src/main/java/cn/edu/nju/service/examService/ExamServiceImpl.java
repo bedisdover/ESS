@@ -6,6 +6,7 @@ import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,14 +40,17 @@ public class ExamServiceImpl implements IExamService {
             );
         }
 
-        ResultInfo createResult = examDAO.createExam(new ExamModel(
-                0, courseId, 1, num
-        ));
-        if (!createResult.isSuccess()) {
-            return createResult;
+        // add an exam record to database
+        int examId;
+        try {
+            examId = examDAO.createExam(new ExamModel(0, courseId, 1, num));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
         }
 
-        int examId = (int) createResult.getData();
+        // extract mark of level
         int level = 1;
         String[] marks = mark.split(",");
         List<LevelModel> levelModels = new ArrayList<>(marks.length);
@@ -55,21 +59,28 @@ public class ExamServiceImpl implements IExamService {
                 double m = Double.parseDouble(str);
                 levelModels.add(new LevelModel(0, courseId, level, examId, m));
                 level += 1;
-            }
-            catch (NumberFormatException e) {
-                examDAO.deleteExam(examId);
-                return new ResultInfo(
-                        false, "等级分数应该是由逗号隔开的小数组成", false
-                );
+            } catch (NumberFormatException e) {
+                try {
+                    examDAO.deleteExam(examId);
+                    return new ResultInfo(
+                            false, "等级分数应该是由逗号隔开的小数组成", null
+                    );
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Logger.getLogger(ExamServiceImpl.class).error(e);
+                    return new ResultInfo(false, "系统异常", null);
+                }
             }
         }
 
-        ResultInfo updateResult = questionDAO.updateMarkOfLevelByUniqueKey(levelModels);
-        if (!updateResult.isSuccess()) {
-            examDAO.deleteExam(examId);
-            return updateResult;
+        // update mark of level
+        try {
+            questionDAO.updateMarkOfLevelByUniqueKey(levelModels);
+            return new ResultInfo(true, "成功创建考试", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
         }
-
-        return new ResultInfo(true, "成功创建考试", null);
     }
 }

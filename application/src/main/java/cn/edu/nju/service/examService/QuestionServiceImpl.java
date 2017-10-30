@@ -61,13 +61,16 @@ public class QuestionServiceImpl implements IQuestionService {
             stream2.close();
 
             excelStream.close();
-            return questionDAO.saveQuestions(QuestionInfo.toModelList(list, md5));
+            questionDAO.saveQuestions(QuestionInfo.toModelList(list, md5));
+            return new ResultInfo(true, "成功添加问题", null);
         } catch (IOException | BiffException e) {
             e.printStackTrace();
             Logger.getLogger(QuestionServiceImpl.class).error(e);
             return new ResultInfo(false, "文件读写错误", null);
         } catch (ErrorTemplateFormatException e) {
             return new ResultInfo(false, e.getMessage(), null);
+        } catch (Exception e) {
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 
@@ -83,21 +86,16 @@ public class QuestionServiceImpl implements IQuestionService {
         int num = (long)page * size > Integer.MAX_VALUE ?
                 Integer.MAX_VALUE : page * size;
 
-        ResultInfo result = questionDAO.getAllQuestions(num);
-        if (!result.isSuccess()) {
-            return result;
-        }
-
+        List<QuestionModel> list = questionDAO.getAllQuestions(num);
         List<QuestionInfo> questions;
         try {
-            questions = QuestionModel.toInfoList((List<QuestionModel>) result.getData());
+            questions = QuestionModel.toInfoList(list);
+            return new ResultInfo(true, "成功获取问题列表", questions);
         } catch (IOException e) {
             e.printStackTrace();
             Logger.getLogger(QuestionServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
-
-        return new ResultInfo(true, "成功获取问题列表", questions);
     }
 
     @Override
@@ -114,7 +112,14 @@ public class QuestionServiceImpl implements IQuestionService {
             );
         }
 
-        return questionDAO.deleteQuestions(courseId, questionIdList);
+        try {
+            questionDAO.deleteQuestions(courseId, questionIdList);
+            return new ResultInfo(true, "成功删除问题", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(QuestionServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 
     @Override
@@ -133,20 +138,24 @@ public class QuestionServiceImpl implements IQuestionService {
             );
         }
 
-        return questionDAO.setMarkOfLevel(courseId, examId, marks);
+        try {
+            questionDAO.setMarkOfLevel(courseId, examId, marks);
+            return new ResultInfo(true, "成功设置等级分数", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(QuestionServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public ResultInfo getLevelInfoList(int courseId) {
-        ResultInfo result = questionDAO.getLevelModelList(courseId);
-        if (!result.isSuccess()) {
-            return result;
-        }
-
-        List<LevelModel> models = (List<LevelModel>) result.getData();
-        result.setData(LevelModel.toInfoList(models));
-        return result;
+        List<LevelModel> list = questionDAO.getLevelModelList(courseId);
+        return new ResultInfo(
+                true, "成功获取等级信息",
+                LevelModel.toInfoList(list)
+        );
     }
 
     @Override
@@ -162,7 +171,16 @@ public class QuestionServiceImpl implements IQuestionService {
             );
         }
 
-        return questionDAO.updateMarkOfLevelById(LevelInfo.toModelList(levelInfoList));
+        try {
+            questionDAO.updateMarkOfLevelById(
+                    LevelInfo.toModelList(levelInfoList)
+            );
+            return new ResultInfo(true, "成功修改等级对应的分数", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(QuestionServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", false);
+        }
     }
 
     private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {
