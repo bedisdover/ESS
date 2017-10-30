@@ -13,7 +13,9 @@ public interface IQuestionDAO {
 
     ResultInfo getAllQuestions(int num);
 
-    ResultInfo deleteQuestions(List<Integer> questionIdList);
+    ResultInfo deleteQuestions(int courseId, List<Integer> questionIdList);
 
     int getCourseIdByQuestionId(int questionId);
+
+    ResultInfo setMarkOfLevel(int courseId, int examId, double[] marks);
 }

@@ -35,9 +35,9 @@
         SELECT * FROM t_question WHERE enable = 1 LIMIT #{num}
     </select>
     
-    <update id="deleteQuestions" parameterType="java.util.List">
-        UPDATE t_question SET enable = 0 WHERE id IN
-        <foreach collection="list" item="id" open="(" separator="," close=")">
+    <update id="deleteQuestions">
+        UPDATE t_question SET enable = 0 WHERE courseId = #{courseId} AND id IN
+        <foreach collection="questionIdList" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>
@@ -45,4 +45,19 @@
     <select id="getCourseIdByQuestionId" resultType="int">
         SELECT courseId FROM t_question WHERE id = #{questionId} AND enable = 1
     </select>
+    
+    <insert id="setMarkOfLevel" useGeneratedKeys="true" keyProperty="id">
+        <selectKey keyProperty="count" order="BEFORE" resultType="int">
+            SELECT COUNT(*) from t_level
+            WHERE examId = #{examId} AND courseId = #{courseId} AND level = #{level}
+        </selectKey>
+        <if test="count == 0">
+            INSERT INTO t_level(courseId, level, mark, examId)
+            VALUES (#{courseId}, #{level}, #{mark}, #{examId})
+        </if>
+        <if test="count > 0">
+            UPDATE t_level SET mark = #{mark}
+            WHERE examId = #{examId} AND courseId = #{courseId} AND level = #{level}
+        </if>
+    </insert>
 </mapper>

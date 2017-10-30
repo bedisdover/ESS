@@ -63,7 +63,15 @@ public class ExcelUtil {
             }
             String[] strings = answer.split(",");
             for (String str : strings) {
-                if (!StringUtils.isNumeric(str)) {
+                try {
+                    int lv = Integer.parseInt(str);
+                    if (lv < 1) {
+                        throw new ErrorTemplateFormatException(
+                                "第" + (i + 1) + "行题目答案中的数字应该为大于0的整数,请参照模板demo"
+                        );
+                    }
+                }
+                catch (NumberFormatException e) {
                     throw new ErrorTemplateFormatException(
                             "第" + (i + 1) + "行题目答案应该是由逗号分隔的数字组成,请参照模板demo"
                     );

@@ -50,10 +50,10 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
-    public ResultInfo deleteQuestions(List<Integer> questionIdList) {
+    public ResultInfo deleteQuestions(int courseId, List<Integer> questionIdList) {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             QuestionMapper mapper = session.getMapper(QuestionMapper.class);
-            mapper.deleteQuestions(questionIdList);
+            mapper.deleteQuestions(courseId, questionIdList);
             return new ResultInfo(true, "成功删除问题", null);
         }
         catch (Exception e) {
@@ -68,6 +68,25 @@ public class QuestionDAOImpl implements IQuestionDAO {
         try (SqlSession session = SessionFactory.getInstance().openSession()) {
             QuestionMapper mapper = session.getMapper(QuestionMapper.class);
             return mapper.getCourseIdByQuestionId(questionId);
+        }
+    }
+
+    @Override
+    public ResultInfo setMarkOfLevel(int courseId, int examId, double[] marks) {
+        try (SqlSession session = SessionFactory.getInstance().openSession()) {
+            QuestionMapper mapper = session.getMapper(QuestionMapper.class);
+            // FIXME: maybe can be optimized with a single sql
+            int level = 1;
+            for (double mark : marks) {
+                mapper.setMarkOfLevel(courseId, examId, mark, level);
+                level += 1;
+            }
+            return new ResultInfo(true, "成功设置等级对应的分数", null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(QuestionServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
         }
     }
 }

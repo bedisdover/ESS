@@ -12,4 +12,6 @@ public interface IQuestionService {
     ResultInfo getAllQuestions(Integer page, Integer size);
 
     ResultInfo deleteQuestions(int userId, List<Integer> questionIdList);
+
+    ResultInfo setMarkOfLevel(Integer userId, int courseId, int examId, double[] marks);
 }

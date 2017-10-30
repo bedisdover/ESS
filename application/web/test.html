@@ -18,43 +18,85 @@
 
 <script>
 
-    $.ajax({
-        'url': '/login',
-        'method': 'post',
-        'data': {
-            'email': '1282976747@qq.com', 'password': 'test', 'role': 1
-        },
-        'success': function(data) {
-            alert(JSON.stringify(data));
+//    $.ajax({
+//        'url': '/login',
+//        'method': 'post',
+//        'data': {
+//            'email': '1282976747@qq.com', 'password': 'test', 'role': 1
+//        },
+//        'success': function(data) {
+//            alert(JSON.stringify(data));
+//
+//            $.ajax({
+//                'url': '/question/delete',
+//                'method': 'post',
+//                'contentType': 'application/json',
+//                'data': JSON.stringify([13, 14]),
+//                'success': function (data) {
+//                    alert(JSON.stringify(data));
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
+//                },
+//                'error': function (data) {
+//                    alert(JSON.stringify(data));
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
+//                }
+//            });
+//        }
+//    });
 
-            $.ajax({
-                'url': '/question/delete',
-                'method': 'post',
-                'contentType': 'application/json',
-                'data': JSON.stringify([13, 14]),
-                'success': function (data) {
-                    alert(JSON.stringify(data));
-                    $.ajax({
-                        'url': '/logout',
-                        'method': 'post',
-                        'success': function (data) {
-                            alert(JSON.stringify(data));
-                        }
-                    });
-                },
-                'error': function (data) {
-                    alert(JSON.stringify(data));
-                    $.ajax({
-                        'url': '/logout',
-                        'method': 'post',
-                        'success': function (data) {
-                            alert(JSON.stringify(data));
-                        }
-                    });
-                }
-            });
-        }
-    });
+$.ajax({
+    'url': '/login',
+    'method': 'post',
+    'data': {
+        'email': '1282976747@qq.com', 'password': 'test', 'role': 1
+    },
+    'success': function(data) {
+        alert(JSON.stringify(data));
+
+        $.ajax({
+            'url': '/level/config',
+            'method': 'post',
+            'data': {
+                'examId': 1,
+                'courseId': 9,
+                'marks': [2.0, 4.0, 4.0, 5.0]
+            },
+            'traditional': true,
+            'success': function (data) {
+                alert(JSON.stringify(data));
+                $.ajax({
+                    'url': '/logout',
+                    'method': 'post',
+                    'success': function (data) {
+                        alert(JSON.stringify(data));
+                    }
+                });
+            },
+            'error': function (data) {
+                alert(JSON.stringify(data));
+                $.ajax({
+                    'url': '/logout',
+                    'method': 'post',
+                    'success': function (data) {
+                        alert(JSON.stringify(data));
+                    }
+                });
+            }
+        });
+    }
+});
 
 //    $('button').click(function () {
 //        var data = new FormData();

@@ -1,5 +1,6 @@
 package cn.edu.nju.service.examService;
 
+import cn.edu.nju.config.ExamConfig;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
@@ -111,7 +112,26 @@ public class QuestionServiceImpl implements IQuestionService {
             );
         }
 
-        return questionDAO.deleteQuestions(questionIdList);
+        return questionDAO.deleteQuestions(courseId, questionIdList);
+    }
+
+    @Override
+    public ResultInfo setMarkOfLevel(Integer userId, int courseId,
+                                     int examId, double[] marks) {
+        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
+            return new ResultInfo(
+                    false, "只有该门课的老师才能设置等级分数", null
+            );
+        }
+
+        if (!areMarksValid(marks)) {
+            return new ResultInfo(
+                    false, "分数应该在" + ExamConfig.MIN_MARK
+                    + "和" + ExamConfig.MAX_MARK + "之间", null
+            );
+        }
+
+        return questionDAO.setMarkOfLevel(courseId, examId, marks);
     }
 
     private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {
@@ -123,5 +143,14 @@ public class QuestionServiceImpl implements IQuestionService {
         }
         result.flush();
         return result;
+    }
+
+    private boolean areMarksValid(double[] marks) {
+        for (double m : marks) {
+            if (m <= ExamConfig.MIN_MARK || m >= ExamConfig.MAX_MARK) {
+                return false;
+            }
+        }
+        return true;
     }
 }
