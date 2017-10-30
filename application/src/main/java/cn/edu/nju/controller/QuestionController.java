@@ -2,6 +2,7 @@ package cn.edu.nju.controller;
 
 import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.LevelInfo;
 import cn.edu.nju.service.examService.IQuestionService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +98,11 @@ public class QuestionController {
                                      @RequestParam double[] marks) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return questionService.setMarkOfLevel(userId, courseId, examId, marks);
+    }
+
+    @RequestMapping(value = "/level/list", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo getLevelInfoList(@RequestParam int courseId) {
+        return questionService.getLevelInfoList(courseId);
     }
 }

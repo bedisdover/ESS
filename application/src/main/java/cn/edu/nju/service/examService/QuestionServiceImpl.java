@@ -5,6 +5,7 @@ import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
+import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.utils.ExcelUtil;
@@ -132,6 +133,19 @@ public class QuestionServiceImpl implements IQuestionService {
         }
 
         return questionDAO.setMarkOfLevel(courseId, examId, marks);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public ResultInfo getLevelInfoList(int courseId) {
+        ResultInfo result = questionDAO.getLevelModelList(courseId);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        List<LevelModel> models = (List<LevelModel>) result.getData();
+        result.setData(LevelModel.toInfoList(models));
+        return result;
     }
 
     private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {

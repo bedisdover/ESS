@@ -3,6 +3,7 @@ package cn.edu.nju.dao.examDAO;
 import cn.edu.nju.dao.SessionFactory;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.mapper.examMapper.QuestionMapper;
+import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.service.examService.QuestionServiceImpl;
 import org.apache.ibatis.session.SqlSession;
@@ -82,6 +83,20 @@ public class QuestionDAOImpl implements IQuestionDAO {
                 level += 1;
             }
             return new ResultInfo(true, "成功设置等级对应的分数", null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(QuestionServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
+    }
+
+    @Override
+    public ResultInfo getLevelModelList(int courseId) {
+        try (SqlSession session = SessionFactory.getInstance().openSession()) {
+            QuestionMapper mapper = session.getMapper(QuestionMapper.class);
+            List<LevelModel> list = mapper.getLevelModelList(courseId);
+            return new ResultInfo(true, "成功获得等级信息列表", list);
         }
         catch (Exception e) {
             e.printStackTrace();

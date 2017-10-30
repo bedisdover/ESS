@@ -18,4 +18,6 @@ public interface IQuestionDAO {
     int getCourseIdByQuestionId(int questionId);
 
     ResultInfo setMarkOfLevel(int courseId, int examId, double[] marks);
+
+    ResultInfo getLevelModelList(int courseId);
 }

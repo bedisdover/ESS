@@ -33,7 +33,7 @@ public class CourseController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo addCourse(HttpSession session,
-                                @RequestParam @ModelAttribute CourseInfo info) {
+                                @ModelAttribute CourseInfo info) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.addCourse(userId, info);
     }
@@ -47,7 +47,7 @@ public class CourseController {
     @RequestMapping(value = "/modify")
     @ResponseBody
     public ResultInfo modifyCourse(HttpSession session,
-                                   @RequestParam @ModelAttribute CourseInfo info) {
+                                   @ModelAttribute CourseInfo info) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.modifyCourse(userId, info);
     }
