@@ -4,6 +4,7 @@ import cn.edu.nju.config.ExamConfig;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.LevelInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
@@ -146,6 +147,22 @@ public class QuestionServiceImpl implements IQuestionService {
         List<LevelModel> models = (List<LevelModel>) result.getData();
         result.setData(LevelModel.toInfoList(models));
         return result;
+    }
+
+    @Override
+    public ResultInfo updateMarkOfLevel(Integer userId, List<LevelInfo> levelInfoList) {
+        if (levelInfoList.isEmpty()) {
+            return new ResultInfo(true, "等级分数修改成功", null);
+        }
+
+        int courseId = levelInfoList.get(0).getCourseId();
+        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
+            return new ResultInfo(
+                    false, "只有该门课的老师才能修改等级分数", null
+            );
+        }
+
+        return questionDAO.updateMarkOfLevel(LevelInfo.toModelList(levelInfoList));
     }
 
     private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {

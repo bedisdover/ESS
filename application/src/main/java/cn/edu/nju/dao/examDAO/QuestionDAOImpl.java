@@ -104,4 +104,18 @@ public class QuestionDAOImpl implements IQuestionDAO {
             return new ResultInfo(false, "系统异常", null);
         }
     }
+
+    @Override
+    public ResultInfo updateMarkOfLevel(List<LevelModel> levelModelList) {
+        try (SqlSession session = SessionFactory.getInstance().openSession()) {
+            QuestionMapper mapper = session.getMapper(QuestionMapper.class);
+            mapper.updateMarkOfLevel(levelModelList);
+            return new ResultInfo(true, "成功更新等级分数", null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(QuestionServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
+    }
 }

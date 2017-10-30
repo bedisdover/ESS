@@ -1,5 +1,10 @@
 package cn.edu.nju.info.examInfo;
 
+import cn.edu.nju.model.examModel.LevelModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class LevelInfo {
 
     private int levelId;
@@ -18,6 +23,18 @@ public class LevelInfo {
         this.level = level;
         this.examId = examId;
         this.mark = mark;
+    }
+
+    public static List<LevelModel> toModelList(List<LevelInfo> list) {
+        List<LevelModel> result = new ArrayList<>(list.size());
+        for (LevelInfo info : list) {
+            result.add(new LevelModel(
+                    info.getLevelId(), info.getCourseId(),
+                    info.getLevel(), info.getExamId(),
+                    info.getMark()
+            ));
+        }
+        return result;
     }
 
     public int getLevelId() {

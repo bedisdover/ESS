@@ -105,4 +105,12 @@ public class QuestionController {
     public ResultInfo getLevelInfoList(@RequestParam int courseId) {
         return questionService.getLevelInfoList(courseId);
     }
+
+    @RequestMapping(value = "/level/update", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo updateMarkOfLevel(HttpSession session,
+                                        @RequestBody List<LevelInfo> levelInfoList) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return questionService.updateMarkOfLevel(userId, levelInfoList);
+    }
 }

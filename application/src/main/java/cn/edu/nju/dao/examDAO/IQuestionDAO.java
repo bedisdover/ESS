@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.info.ResultInfo;
 
@@ -20,4 +21,6 @@ public interface IQuestionDAO {
     ResultInfo setMarkOfLevel(int courseId, int examId, double[] marks);
 
     ResultInfo getLevelModelList(int courseId);
+
+    ResultInfo updateMarkOfLevel(List<LevelModel> levelModelList);
 }

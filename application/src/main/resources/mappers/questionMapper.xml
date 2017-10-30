@@ -68,7 +68,16 @@
         <result column="mark" property="mark"/>
         <result column="examId" property="examId"/>
     </resultMap>
+
     <select id="getLevelModelList" resultMap="levelMap">
         SELECT * FROM t_level WHERE courseId = #{courseId}
     </select>
+
+    <update id="updateMarkOfLevel" parameterType="java.util.List">
+        <foreach collection="levelModelList" item="model" separator=";">
+            UPDATE t_level
+            <set> mark = #{model.mark} </set>
+            WHERE id = #{model.levelId}
+        </foreach>
+    </update>
 </mapper>

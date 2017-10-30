@@ -25,4 +25,6 @@ public interface QuestionMapper {
                         @Param("level") int level);
 
     List<LevelModel> getLevelModelList(@Param("courseId") int courseId);
+
+    void updateMarkOfLevel(@Param("levelModelList") List<LevelModel> levelModelList);
 }
