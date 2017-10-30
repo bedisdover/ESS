@@ -20,4 +20,15 @@
     <update id="updateNumOfQuestions">
         UPDATE t_exam SET num = #{num} WHERE id = #{examId}
     </update>
+
+    <resultMap id="examMap" type="cn.edu.nju.model.examModel.ExamModel">
+        <id property="examId" column="id"/>
+        <result property="courseId" column="courseId"/>
+        <result property="num" column="num"/>
+        <result property="enable" column="enable"/>
+    </resultMap>
+
+    <select id="getExamList" resultMap="examMap">
+        SELECT * FROM t_exam WHERE courseId = #{courseId}
+    </select>
 </mapper>

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service("examDAO")
 public class ExamDAOImpl implements IExamDAO {
 
@@ -37,5 +39,10 @@ public class ExamDAOImpl implements IExamDAO {
     @Override
     public void updateNumOfQuestions(int examId, String num) throws Exception {
         examMapper.updateNumOfQuestions(examId, num);
+    }
+
+    @Override
+    public List<ExamModel> getExamList(int courseId) {
+        return examMapper.getExamList(courseId);
     }
 }

@@ -3,6 +3,7 @@ package cn.edu.nju.mapper.examMapper;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,4 +35,6 @@ public interface QuestionMapper {
     void updateMarkOfLevelByUniqueKey(@Param("levelModelList")
                                               List<LevelModel> levelModelList);
 
+    int getNumOfQuestions(@Param("courseId") int courseId,
+                          @Param("level") int level);
 }

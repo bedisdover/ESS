@@ -3,6 +3,8 @@ package cn.edu.nju.dao.examDAO;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.service.examService.ExamServiceImpl;
 
+import java.util.List;
+
 public interface IExamDAO {
 
     /**
@@ -17,4 +19,6 @@ public interface IExamDAO {
     int getCourseIdByExamId(int examId);
 
     void updateNumOfQuestions(int examId, String num) throws Exception;
+
+    List<ExamModel> getExamList(int courseId);
 }

@@ -89,4 +89,9 @@
             AND level = #{model.level}
         </foreach>
     </update>
+
+    <select id="getNumOfQuestions" resultType="int">
+        SELECT COUNT(*) FROM t_question
+        WHERE courseId = #{courseId} AND level = #{level}
+    </select>
 </mapper>

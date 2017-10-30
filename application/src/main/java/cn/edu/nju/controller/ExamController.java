@@ -3,6 +3,7 @@ package cn.edu.nju.controller;
 import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.service.examService.IExamService;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,5 +41,11 @@ public class ExamController {
                                  @RequestParam String mark) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return examService.updateExam(userId, examId, num, mark);
+    }
+
+    @RequestMapping(value = "/exam/list", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo getExamList(@RequestParam int courseId) {
+        return examService.getExamList(courseId);
     }
 }

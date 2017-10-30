@@ -74,4 +74,9 @@ public class QuestionDAOImpl implements IQuestionDAO {
         questionMapper.updateMarkOfLevelByUniqueKey(levelModelList);
     }
 
+    @Override
+    public int getNumOfQuestions(int courseId, int level) {
+        return questionMapper.getNumOfQuestions(courseId, level);
+    }
+
 }

@@ -27,9 +27,9 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/update',
+                'url': '/exam/list',
                 'method': 'post',
-                'data': {'examId': 1, 'num': '3,2,3', 'mark':'2.0, 2.0, 4.0'},
+                'data': {'courseId': 9},
                 'success': function (data) {
                     alert(JSON.stringify(data));
                     $.ajax({

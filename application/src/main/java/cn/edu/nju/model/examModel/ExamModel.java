@@ -1,5 +1,10 @@
 package cn.edu.nju.model.examModel;
 
+import cn.edu.nju.info.examInfo.ExamInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ExamModel {
 
     int examId;
@@ -15,6 +20,23 @@ public class ExamModel {
         this.courseId = courseId;
         this.enable = enable;
         this.num = num;
+    }
+
+    public static List<ExamInfo> toInfoList(List<ExamModel> list,
+                                            List<Integer> maxNum) {
+        List<ExamInfo> result = new ArrayList<>(list.size());
+        for (ExamModel model : list) {
+            String[] array = model.getNum().split(",");
+            List<Integer> num = new ArrayList<>();
+            for (String str : array) {
+                num.add(Integer.parseInt(str));
+            }
+            result.add(new ExamInfo(
+                    model.getExamId(), model.getCourseId(),
+                    num, maxNum
+            ));
+        }
+        return result;
     }
 
     public int getExamId() {
