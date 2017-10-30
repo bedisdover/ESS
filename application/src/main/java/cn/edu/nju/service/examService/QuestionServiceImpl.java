@@ -162,7 +162,7 @@ public class QuestionServiceImpl implements IQuestionService {
             );
         }
 
-        return questionDAO.updateMarkOfLevel(LevelInfo.toModelList(levelInfoList));
+        return questionDAO.updateMarkOfLevelById(LevelInfo.toModelList(levelInfoList));
     }
 
     private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {

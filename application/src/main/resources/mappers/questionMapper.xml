@@ -73,11 +73,20 @@
         SELECT * FROM t_level WHERE courseId = #{courseId}
     </select>
 
-    <update id="updateMarkOfLevel" parameterType="java.util.List">
+    <update id="updateMarkOfLevelById" parameterType="java.util.List">
         <foreach collection="levelModelList" item="model" separator=";">
             UPDATE t_level
             <set> mark = #{model.mark} </set>
             WHERE id = #{model.levelId}
+        </foreach>
+    </update>
+
+    <update id="updateMarkOfLevelByUniqueKey" parameterType="java.util.List">
+        <foreach collection="levelModelList" item="model" separator=";">
+            UPDATE t_level
+            <set> mark = #{model.mark} </set>
+            WHERE examId = #{model.examId} AND courseId = #{model.courseId}
+            AND level = #{model.level}
         </foreach>
     </update>
 </mapper>

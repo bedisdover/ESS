@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nju.mapper.examMapper.ExamMapper">
+    <insert id="createExam" useGeneratedKeys="true" keyProperty="exam.examId"
+           parameterType="cn.edu.nju.model.examModel.ExamModel">
+       INSERT INTO t_exam (courseId, num, enable)
+       VALUES (#{exam.courseId}, #{exam.num}, #{exam.enable});
+    </insert>
+
+    <delete id="deleteExam">
+        DELETE FROM t_exam WHERE id = #{examId}
+    </delete>
+</mapper>

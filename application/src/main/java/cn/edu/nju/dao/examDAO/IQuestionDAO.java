@@ -22,5 +22,7 @@ public interface IQuestionDAO {
 
     ResultInfo getLevelModelList(int courseId);
 
-    ResultInfo updateMarkOfLevel(List<LevelModel> levelModelList);
+    ResultInfo updateMarkOfLevelById(List<LevelModel> levelModelList);
+
+    ResultInfo updateMarkOfLevelByUniqueKey(List<LevelModel> levelModelList);
 }
