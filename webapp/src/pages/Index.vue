@@ -8,12 +8,16 @@
         <router-link to="/register">注册</router-link>
       </span>
     </div>
+    <MyFooter class="footer"></MyFooter>
   </div>
 </template>
 
 <script>
+  import MyFooter from '../components/Footer.vue'
+
   export default {
-    name: 'Index'
+    name: 'Index',
+    components: {MyFooter}
   }
 </script>
 
@@ -78,5 +82,12 @@
     -webkit-transform: translateX(0px);
     -moz-transform: translateX(0px);
     transform: translateX(0px);
+  }
+
+  .footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
   }
 </style>
