@@ -9,4 +9,6 @@ public interface IExamService {
     ResultInfo updateExam(int userId, int examId, String num, String mark);
 
     ResultInfo getExamList(int courseId);
+
+    ResultInfo generatePaper(int examId);
 }

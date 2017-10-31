@@ -6,12 +6,13 @@ import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
+import cn.edu.nju.model.examModel.QuestionModel;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @Service(value = "examService")
 public class ExamServiceImpl implements IExamService {
@@ -22,6 +23,10 @@ public class ExamServiceImpl implements IExamService {
 
     private final IExamDAO examDAO;
 
+    private Map<Integer, List<QuestionModel>> allQuestions;
+
+    private boolean hasGetQuestions;
+
     @Autowired
     public ExamServiceImpl(IUserCourseDAO userCourseDAO,
                            IQuestionDAO questionDAO,
@@ -29,6 +34,9 @@ public class ExamServiceImpl implements IExamService {
         this.userCourseDAO = userCourseDAO;
         this.questionDAO = questionDAO;
         this.examDAO = examDAO;
+
+        allQuestions = new HashMap<>();
+        hasGetQuestions = false;
     }
 
     @Override
@@ -153,6 +161,62 @@ public class ExamServiceImpl implements IExamService {
                 true, "成功获取考试信息列表",
                 ExamModel.toInfoList(list, maxNum)
         );
+    }
+
+    @Override
+    public ResultInfo generatePaper(int examId) {
+        ExamModel examModel = examDAO.getExamModelById(examId);
+        int courseId = examModel.getCourseId();
+        String[] numArray = examModel.getNum().split(",");
+        List<Integer> numList = new ArrayList<>(numArray.length);
+        for (String str : numArray) {
+            numList.add(Integer.parseInt(str));
+        }
+
+        synchronized (this) {
+            if (!hasGetQuestions) {
+                hasGetQuestions = true;
+                initQuestionMap(courseId);
+            }
+        }
+
+        List<QuestionModel> questions = generateQuestions(numList);
+        try {
+            return new ResultInfo(true, "成功生成试卷",
+                    QuestionModel.toInfoList(questions)
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
+    }
+
+    private void initQuestionMap(int courseId) {
+        List<QuestionModel> questions = questionDAO.getAllQuestionsByCourseId(courseId);
+        for (QuestionModel q : questions) {
+            int level = q.getLevel();
+            allQuestions.computeIfAbsent(level, lv -> new ArrayList<>());
+            allQuestions.get(level).add(q);
+        }
+    }
+
+    private List<QuestionModel> generateQuestions(List<Integer> numList) {
+        List<QuestionModel> result = new ArrayList<>();
+        int size = numList.size();
+        for (int level = 1; level <= size; ++level) {
+            List<QuestionModel> list = allQuestions.get(level);
+            List<Integer> index = new ArrayList<>();
+            for (int i = 0; i < list.size(); ++i) {
+                index.add(i);
+            }
+            Collections.shuffle(index);
+            int num = numList.get(level - 1);
+            for (int i = 0; i < num; ++i) {
+                result.add(list.get(index.get(i)));
+            }
+        }
+        return result;
     }
 
     private ResultInfo isNumValid(String num, int courseId) {

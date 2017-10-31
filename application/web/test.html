@@ -27,9 +27,9 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/list',
+                'url': '/paper/create',
                 'method': 'post',
-                'data': {'courseId': 9},
+                'data': {'examId': 1},
                 'success': function (data) {
                     alert(JSON.stringify(data));
                     $.ajax({

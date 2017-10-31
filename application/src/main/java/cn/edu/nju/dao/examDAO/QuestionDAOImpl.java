@@ -75,4 +75,9 @@ public class QuestionDAOImpl implements IQuestionDAO {
         return questionMapper.getNumOfQuestions(courseId, level);
     }
 
+    @Override
+    public List<QuestionModel> getAllQuestionsByCourseId(int courseId) {
+        return questionMapper.getAllQuestionsByCourseId(courseId);
+    }
+
 }

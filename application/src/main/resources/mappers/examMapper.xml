@@ -31,4 +31,8 @@
     <select id="getExamList" resultMap="examMap">
         SELECT * FROM t_exam WHERE courseId = #{courseId}
     </select>
+
+    <select id="getExamModelById" resultMap="examMap">
+        SELECT * FROM t_exam WHERE id = #{examId}
+    </select>
 </mapper>

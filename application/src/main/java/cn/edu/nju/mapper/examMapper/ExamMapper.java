@@ -19,4 +19,6 @@ public interface ExamMapper {
                               @Param("num") String num);
 
     List<ExamModel> getExamList(@Param("courseId") int courseId);
+
+    ExamModel getExamModelById(@Param("examId") int examId);
 }

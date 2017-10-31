@@ -94,4 +94,8 @@
         SELECT COUNT(*) FROM t_question
         WHERE courseId = #{courseId} AND level = #{level}
     </select>
+
+    <select id="getAllQuestionsByCourseId" resultMap="questionMap">
+        SELECT * FROM t_question WHERE courseId = #{courseId}
+    </select>
 </mapper>

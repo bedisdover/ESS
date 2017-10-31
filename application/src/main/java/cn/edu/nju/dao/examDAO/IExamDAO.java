@@ -21,4 +21,6 @@ public interface IExamDAO {
     void updateNumOfQuestions(int examId, String num) throws Exception;
 
     List<ExamModel> getExamList(int courseId);
+
+    ExamModel getExamModelById(int examId);
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import javax.xml.transform.Result;
 
 @Controller
 public class ExamController {
@@ -47,5 +48,11 @@ public class ExamController {
     @ResponseBody
     public ResultInfo getExamList(@RequestParam int courseId) {
         return examService.getExamList(courseId);
+    }
+
+    @RequestMapping(value = "/paper/create", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo generatePaper(@RequestParam int examId) {
+        return examService.generatePaper(examId);
     }
 }

@@ -27,4 +27,6 @@ public interface IQuestionDAO {
     void updateMarkOfLevelByUniqueKey(List<LevelModel> levelModelList) throws Exception;
 
     int getNumOfQuestions(int courseId, int level);
+
+    List<QuestionModel> getAllQuestionsByCourseId(int courseId);
 }
