@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * implementation of account dao interface
  */
+@Transactional
 @Service(value = "accountDAO")
 public class AccountDAOImpl implements IAccountDAO {
 
@@ -35,7 +36,6 @@ public class AccountDAOImpl implements IAccountDAO {
         return userNum == 1;
     }
 
-    @Transactional
     @Override
     public void addUser(SigUpInfo model) throws Exception {
         accountMapper.addUser(new UserModel(

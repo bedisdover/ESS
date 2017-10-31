@@ -5,10 +5,12 @@ import cn.edu.nju.mapper.userMapper.UserMapper;
 import cn.edu.nju.model.userModel.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * implementation of user dao
  */
+@Transactional
 @Service(value = "userDAO")
 public class UserDAOImpl implements IUserDAO {
 

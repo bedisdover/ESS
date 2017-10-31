@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service(value = "questionDAO")
 public class QuestionDAOImpl implements IQuestionDAO {
 
@@ -24,7 +25,6 @@ public class QuestionDAOImpl implements IQuestionDAO {
         return questionMapper.getMD5Num(md5) > 0;
     }
 
-    @Transactional
     @Override
     public void saveQuestions(List<QuestionModel> questions) throws Exception {
         questionMapper.addQuestionList(questions);
@@ -35,7 +35,6 @@ public class QuestionDAOImpl implements IQuestionDAO {
         return questionMapper.getAllQuestions(num);
     }
 
-    @Transactional
     @Override
     public void deleteQuestions(int courseId, List<Integer> questionIdList) throws Exception {
         questionMapper.deleteQuestions(courseId, questionIdList);
@@ -46,7 +45,6 @@ public class QuestionDAOImpl implements IQuestionDAO {
         return questionMapper.getCourseIdByQuestionId(questionId);
     }
 
-    @Transactional
     @Override
     public void setMarkOfLevel(int courseId, int examId, double[] marks) throws Exception {
         // FIXME: maybe can be optimized with a single sql
@@ -62,13 +60,11 @@ public class QuestionDAOImpl implements IQuestionDAO {
         return questionMapper.getLevelModelList(courseId);
     }
 
-    @Transactional
     @Override
     public void updateMarkOfLevelById(List<LevelModel> levelModelList) throws Exception {
         questionMapper.updateMarkOfLevelById(levelModelList);
     }
 
-    @Transactional
     @Override
     public void updateMarkOfLevelByUniqueKey(List<LevelModel> levelModelList) throws Exception {
         questionMapper.updateMarkOfLevelByUniqueKey(levelModelList);

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service("examDAO")
 public class ExamDAOImpl implements IExamDAO {
 
@@ -18,14 +19,12 @@ public class ExamDAOImpl implements IExamDAO {
         this.examMapper = examMapper;
     }
 
-    @Transactional
     @Override
     public int createExam(ExamModel model) throws Exception {
         examMapper.createExam(model);
         return model.getExamId();
     }
 
-    @Transactional
     @Override
     public void deleteExam(int examId) throws Exception {
         examMapper.deleteExam(examId);

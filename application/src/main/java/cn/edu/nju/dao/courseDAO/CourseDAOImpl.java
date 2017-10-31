@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service(value = "courseDAO")
 public class CourseDAOImpl implements ICourseDAO {
 
@@ -18,7 +19,6 @@ public class CourseDAOImpl implements ICourseDAO {
         this.courseMapper = courseMapper;
     }
 
-    @Transactional
     @Override
     public void addCourse(int userId, CourseModel model) throws Exception {
         boolean isRecordExist = courseMapper.getRemovedCourseNum(model.getId()) > 0;
@@ -32,13 +32,11 @@ public class CourseDAOImpl implements ICourseDAO {
         }
     }
 
-    @Transactional
     @Override
     public void updateCourse(CourseModel model) throws Exception {
         courseMapper.updateCourse(model);
     }
 
-    @Transactional
     @Override
     public void enrollCourse(int userId, int courseId) throws Exception {
         boolean isRecordExist = courseMapper.getRemovedRecordNum(userId, courseId) > 0;
@@ -50,7 +48,6 @@ public class CourseDAOImpl implements ICourseDAO {
         }
     }
 
-    @Transactional
     @Override
     public void quitCourse(int userId, int courseId) throws Exception {
         courseMapper.removeUserCourseRecord(userId, courseId);

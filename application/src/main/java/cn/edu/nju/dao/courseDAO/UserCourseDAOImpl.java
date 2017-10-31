@@ -4,7 +4,9 @@ import cn.edu.nju.dao.SessionFactory;
 import cn.edu.nju.mapper.courseMapper.CourseMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service("userCourseDAO")
 public class UserCourseDAOImpl implements IUserCourseDAO {
 
