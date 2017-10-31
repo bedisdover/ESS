@@ -7,10 +7,11 @@ import Verify from '@/pages/Verify'
 import CourseList from '@/pages/CourseList'
 import MyCourse from '@/pages/MyCourse'
 import CreateCourse from '@/pages/CreateCourse'
+import Exam from '@/pages/Exam'
 
 // 无需登录的页面
 export const withoutLogin = [
-  'Index', 'Login', 'Register'
+  'Index', 'Login', 'Register', 'Exam'
 ]
 
 // 单独页面
@@ -46,6 +47,13 @@ const pageRouter = [
     component: Verify,
     meta: {
       title: '邮箱验证'
+    }
+  }, {
+    path: '/exam',
+    name: 'Exam',
+    component: Exam,
+    meta: {
+      title: '在线考试'
     }
   }
 ]
