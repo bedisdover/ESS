@@ -49,4 +49,9 @@ public class ExamDAOImpl implements IExamDAO {
     public ExamModel getExamModelById(int examId) {
         return examMapper.getExamModelById(examId);
     }
+
+    @Override
+    public void deletePaperById(int paperId) throws Exception {
+
+    }
 }

@@ -3,7 +3,6 @@ package cn.edu.nju.controller;
 import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.service.examService.IExamService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import javax.xml.transform.Result;
 
 @Controller
 public class ExamController {
@@ -54,5 +52,12 @@ public class ExamController {
     @ResponseBody
     public ResultInfo generatePaper(@RequestParam int examId) {
         return examService.generatePaper(examId);
+    }
+
+    // TODO finish it until iteration 3
+    @RequestMapping(value = "/paper/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo deletePaper(@RequestParam int paperId) {
+        return examService.deletePaper(paperId);
     }
 }

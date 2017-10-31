@@ -1,7 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.model.examModel.ExamModel;
-import cn.edu.nju.service.examService.ExamServiceImpl;
 
 import java.util.List;
 
@@ -23,4 +22,6 @@ public interface IExamDAO {
     List<ExamModel> getExamList(int courseId);
 
     ExamModel getExamModelById(int examId);
+
+    void deletePaperById(int paperId) throws Exception;
 }

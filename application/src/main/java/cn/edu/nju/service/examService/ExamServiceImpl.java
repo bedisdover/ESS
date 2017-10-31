@@ -192,6 +192,18 @@ public class ExamServiceImpl implements IExamService {
         }
     }
 
+    @Override
+    public ResultInfo deletePaper(int paperId) {
+        try {
+            examDAO.deletePaperById(paperId);
+            return new ResultInfo(true, "成功删除试卷", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
+    }
+
     private void initQuestionMap(int courseId) {
         List<QuestionModel> questions = questionDAO.getAllQuestionsByCourseId(courseId);
         for (QuestionModel q : questions) {

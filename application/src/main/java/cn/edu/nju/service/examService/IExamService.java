@@ -11,4 +11,6 @@ public interface IExamService {
     ResultInfo getExamList(int courseId);
 
     ResultInfo generatePaper(int examId);
+
+    ResultInfo deletePaper(int paperId);
 }
