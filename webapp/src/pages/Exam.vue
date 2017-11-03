@@ -6,19 +6,18 @@
       </div>
       <Question :question="question" :index="1" @onSubmit="onSubmit" @onNext="onNext"></Question>
       <hr/>
-      <div class="answer-sheet">
-        答题卡
-      </div>
+      <AnswerSheet :number="10"></AnswerSheet>
     </el-card>
   </div>
 </template>
 
 <script>
   import Question from '../components/Question'
+  import AnswerSheet from '../components/AnswerSheet'
 
   export default {
     name: 'Exam',
-    components: {Question},
+    components: {Question, AnswerSheet},
     data () {
       return {
         question: {
