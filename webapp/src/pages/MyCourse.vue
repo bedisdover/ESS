@@ -21,27 +21,41 @@
             <el-table-column
               label="课程名称"
               prop="name"
+              width="180"
             >
             </el-table-column>
             <el-table-column
               label="年份"
               prop="year"
+              width="180"
             >
             </el-table-column>
             <el-table-column
               label="学期"
               prop="term"
+              width="180"
             >
             </el-table-column>
             <el-table-column
               label="年级"
               prop="grade"
+              width="180"
             >
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column
+              label="操作"
+
+            >
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="editCourseHandle(scope.row)" v-if="user.role === 1">编辑课程
-                </el-button>
+                <el-button-group>
+                  <el-button type="primary" size="mini" @click="editCourseHandle(scope.row)" v-if="user.role === 1">编辑课程
+                  </el-button>
+                  <el-button type="primary" size="mini" @click="" v-if="user.role === 1">试题列表
+                  </el-button>
+                  <el-button type="primary" size="mini" @click="" v-if="user.role === 1">考试列表
+                  </el-button>
+                </el-button-group>
+
                 <el-button type="danger" size="mini" @click="dialogHandle(scope.row.name, scope.row.id)"
                            v-if="user.role === 2">退出课程
                 </el-button>
