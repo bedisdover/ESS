@@ -127,7 +127,7 @@ const navRouter = [
   }
 ]
 
-// 404 页面
+// 401 页面
 const page401 = {
   path: '/noPrivilege',
   name: 'Error401',

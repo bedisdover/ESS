@@ -2,12 +2,10 @@
   <div class="main">
     <el-row>
       <el-col :span="20" :offset="2">
-        <el-card class="box-card clearfix">
+        <el-card class="box-card">
           <div slot="header">
             <span>考试列表</span>
-            <el-button type="text" class="btn-create">
-              <router-link to="createExam">新建考试</router-link>
-            </el-button>
+            <el-button type="text" class="btn-create" @click="showDialog">新建考试</el-button>
           </div>
           <el-table :data="examList" class="table">
             <el-table-column type="expand">
@@ -35,6 +33,13 @@
             </el-table-column>
           </el-table>
         </el-card>
+        <el-dialog title="收货地址" :visible.sync="examFormVisible">
+          <ExamForm></ExamForm>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="examFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="examFormVisible = false">确 定</el-button>
+          </div>
+        </el-dialog>
       </el-col>
     </el-row>
   </div>
@@ -42,12 +47,14 @@
 
 <script>
   import ExamInfo from '../components/ExamInfo'
+  import ExamForm from '../components/ExamForm'
 
   export default {
     name: 'ExamList',
-    components: {ExamInfo},
+    components: {ExamInfo, ExamForm},
     data () {
       return {
+        examFormVisible: false,
         examList: [
           {
             name: '考试测试',
@@ -58,6 +65,11 @@
             scores: 100
           }
         ]
+      }
+    },
+    methods: {
+      showDialog: function () {
+        this.examFormVisible = true
       }
     }
   }
