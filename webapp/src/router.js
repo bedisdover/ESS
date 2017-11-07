@@ -8,6 +8,7 @@ import CourseList from '@/pages/CourseList'
 import MyCourse from '@/pages/MyCourse'
 import CreateCourse from '@/pages/CreateCourse'
 import Exam from '@/pages/Exam'
+import ExamList from '@/pages/ExamList'
 
 // 无需登录的页面
 export const withoutLogin = [
@@ -82,6 +83,14 @@ const navRouter = [
     component: MyCourse,
     meta: {
       title: '我的课程'
+    }
+  },
+  {
+    path: '/examList',
+    name: 'ExamList',
+    component: ExamList,
+    mata: {
+      title: '考试列表'
     }
   }
 ]
