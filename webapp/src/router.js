@@ -119,7 +119,7 @@ const navRouter = [
     }
   },
   {
-    path: '/examList/:courseId',
+    path: '/examList/:id',
     name: 'ExamList',
     component: ExamList,
     props: true,

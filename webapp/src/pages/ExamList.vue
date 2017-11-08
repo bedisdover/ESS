@@ -38,7 +38,8 @@
               </template>
             </el-table-column>
           </el-table>
-          <ExamForm :exam="exam" v-on:onConfirm="onConfirm" :onCancel="hideExamForm" v-show="examFormVisible"></ExamForm>
+          <ExamForm :exam="exam" v-on:onConfirm="onConfirm" :onCancel="hideExamForm"
+                    v-show="examFormVisible"></ExamForm>
         </el-card>
       </el-col>
     </el-row>
@@ -46,12 +47,13 @@
 </template>
 
 <script>
+  import request from '../lib/request'
   import ExamInfo from '../components/ExamInfo'
   import ExamForm from '../components/ExamForm'
 
   export default {
     name: 'ExamList',
-    props: ['courseId'],
+    props: ['id'],
     components: {ExamInfo, ExamForm},
     data () {
       return {
@@ -77,13 +79,20 @@
           }
         ],
         exam: {
-          courseId: this.courseId
+          courseId: this.id
         },
         index: -1
       }
     },
     created: function () {
-
+      let params = {
+        courseId: this.id
+      }
+      request('/exam/list', 'post', params, function (success, message, data) {
+        if (success) {
+          this.examList = data
+        }
+      })
     },
     methods: {
       getTitle: function () {
