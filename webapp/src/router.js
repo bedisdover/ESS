@@ -10,6 +10,7 @@ import MyCourse from '@/pages/MyCourse'
 import CreateCourse from '@/pages/CreateCourse'
 import Exam from '@/pages/Exam'
 import ExamList from '@/pages/ExamList'
+import QuestionList from '@/pages/QuestionList'
 
 // 单独页面
 const singlePage = [
@@ -123,6 +124,15 @@ const navRouter = [
     component: ExamList,
     mata: {
       title: '考试列表'
+    }
+  },
+  {
+    path: '/questionList/:id',
+    name: 'QuestionList',
+    component: QuestionList,
+    props: true,
+    mata: {
+      title: '试题列表'
     }
   }
 ]
