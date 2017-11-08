@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="考试时间">
         <el-date-picker
-          v-model="timeRange"
+          v-model="exam.time"
           type="datetimerange"
           range-separator="至"
           start-placeholder="开始时间"
@@ -14,7 +14,10 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="参加人员">
-
+        <el-input v-model="exam.num"></el-input>
+      </el-form-item>
+      <el-form-item label="试卷分数">
+        <LevelScore :courseId="exam.courseId" :test.sync="exam.scores"></LevelScore>
       </el-form-item>
       <el-form-item class="footer">
         <el-button type="primary" @click="submit">立即创建</el-button>
@@ -26,19 +29,21 @@
 
 <script>
   import Util from '../lib/util'
+  import LevelScore from './LevelScore'
 
   export default {
     name: 'ExamForm',
     props: ['exam', 'onConfirm', 'onCancel'],
+    components: {LevelScore},
     data () {
       return {
-        timeRange: [new Date(this.exam.startTime), new Date(this.exam.endTime)]
+        test: '1'
       }
     },
     methods: {
       submit: function () {
-        this.exam.startTime = Util.formatTime(this.timeRange[0])
-        this.exam.endTime = Util.formatTime(this.timeRange[1])
+        this.exam.startTime = Util.formatTime(this.exam.time[0])
+        this.exam.endTime = Util.formatTime(this.exam.time[1])
 
         this.$emit('onConfirm', this.exam)
       }

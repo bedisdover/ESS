@@ -118,9 +118,10 @@ const navRouter = [
     }
   },
   {
-    path: '/examList',
+    path: '/examList/:courseId',
     name: 'ExamList',
     component: ExamList,
+    props: true,
     mata: {
       title: '考试列表'
     }

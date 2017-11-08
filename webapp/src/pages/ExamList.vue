@@ -6,7 +6,7 @@
           <div slot="header">
             <el-button type="text" class="btn-back" @click="hideExamForm" v-show="examFormVisible">&lt;&lt; 返回
             </el-button>
-            <span>{{examFormVisible ? '新建考试' : '考试列表'}}</span>
+            <span>{{getTitle()}}</span>
             <el-button type="text" class="btn-create" @click="createExam" v-show="!examFormVisible">新建考试</el-button>
           </div>
           <el-table :data="examList" class="table" v-show="!examFormVisible">
@@ -38,7 +38,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <ExamForm :exam="exam" :onConfirm="onConfirm" :onCancel="onCancel" v-show="examFormVisible"></ExamForm>
+          <ExamForm :exam="exam" v-on:onConfirm="onConfirm" :onCancel="hideExamForm" v-show="examFormVisible"></ExamForm>
         </el-card>
       </el-col>
     </el-row>
@@ -51,6 +51,7 @@
 
   export default {
     name: 'ExamList',
+    props: ['courseId'],
     components: {ExamInfo, ExamForm},
     data () {
       return {
@@ -60,12 +61,14 @@
             name: '考试测试',
             startTime: '2017-11-07 18:00',
             endTime: '2017-11-07 20:00',
+            time: [new Date('2017-11-07 18:00'), new Date('2017-11-07 20:00')],
             students: 0,
             num: 10,
             scores: 100
           },
           {
             name: '考试测试1',
+            time: [new Date('2017-11-07 18:00'), new Date('2017-11-07 20:00')],
             startTime: '2017-11-07 18:00',
             endTime: '2017-11-07 20:00',
             students: 0,
@@ -73,17 +76,25 @@
             scores: 100
           }
         ],
-        exam: {},
+        exam: {
+          courseId: this.courseId
+        },
         index: -1
       }
     },
+    created: function () {
+
+    },
     methods: {
+      getTitle: function () {
+        return this.examFormVisible ? this.index === -1 ? '新建考试' : '编辑考试' : '考试列表'
+      },
       hideExamForm: function () {
         this.examFormVisible = false
       },
       createExam: function () {
         // 新建考试时重置数据
-        this.exam = {}
+        this.exam = {courseId: this.courseId}
         this.index = -1
 
         this.examFormVisible = true
@@ -102,6 +113,8 @@
         } else { // 编辑考试
           this.examList[this.index] = exam
         }
+
+        this.hideExamForm()
       }
     }
   }
