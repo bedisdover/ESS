@@ -4,10 +4,12 @@
       <el-col :span="20" :offset="2">
         <el-card class="box-card">
           <div slot="header">
-            <span>考试列表</span>
-            <el-button type="text" class="btn-create" @click="showDialog">新建考试</el-button>
+            <el-button type="text" class="btn-back" @click="hideExamForm" v-show="examFormVisible">&lt;&lt; 返回
+            </el-button>
+            <span>{{examFormVisible ? '新建考试' : '考试列表'}}</span>
+            <el-button type="text" class="btn-create" @click="createExam" v-show="!examFormVisible">新建考试</el-button>
           </div>
-          <el-table :data="examList" class="table">
+          <el-table :data="examList" class="table" v-show="!examFormVisible">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <ExamInfo :examList="props"></ExamInfo>
@@ -22,24 +24,22 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                   <span class="operation">
-                    <svg class="icon" aria-hidden="true">
-                        <use xlink:href="#icon-edit"></use>
-                    </svg>
-                    <svg class="icon" aria-hidden="true">
-                        <use xlink:href="#icon-delete"></use>
-                    </svg>
+                    <el-tooltip content="编辑考试" effect="light">
+                        <svg class="icon" aria-hidden="true" @click="editExam(scope.$index, scope.row)">
+                            <use xlink:href="#icon-edit"></use>
+                        </svg>
+                    </el-tooltip>
+                    <el-tooltip content="删除考试" effect="light">
+                        <svg class="icon" aria-hidden="true" @click="deleteExam(scope.$index)">
+                            <use xlink:href="#icon-delete"></use>
+                        </svg>
+                    </el-tooltip>
                   </span>
               </template>
             </el-table-column>
           </el-table>
+          <ExamForm :exam="exam" :onConfirm="onConfirm" :onCancel="onCancel" v-show="examFormVisible"></ExamForm>
         </el-card>
-        <el-dialog title="收货地址" :visible.sync="examFormVisible">
-          <ExamForm></ExamForm>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="examFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="examFormVisible = false">确 定</el-button>
-          </div>
-        </el-dialog>
       </el-col>
     </el-row>
   </div>
@@ -63,19 +63,56 @@
             students: 0,
             num: 10,
             scores: 100
+          },
+          {
+            name: '考试测试1',
+            startTime: '2017-11-07 18:00',
+            endTime: '2017-11-07 20:00',
+            students: 0,
+            num: 10,
+            scores: 100
           }
-        ]
+        ],
+        exam: {},
+        index: -1
       }
     },
     methods: {
-      showDialog: function () {
+      hideExamForm: function () {
+        this.examFormVisible = false
+      },
+      createExam: function () {
+        // 新建考试时重置数据
+        this.exam = {}
+        this.index = -1
+
         this.examFormVisible = true
+      },
+      editExam: function (index, exam) {
+        this.exam = exam
+        this.index = index
+
+        this.examFormVisible = true
+      },
+      deleteExam: function (index) {
+      },
+      onConfirm: function (exam) {
+        if (this.index === -1) { // 新建考试
+
+        } else { // 编辑考试
+          this.examList[this.index] = exam
+        }
       }
     }
   }
 </script>
 
 <style scoped>
+  .btn-back {
+    float: left;
+    padding: 3px 0;
+  }
+
   .btn-create {
     float: right;
     padding: 3px 0;
