@@ -23,7 +23,8 @@ public class ExamModel {
     }
 
     public static List<ExamInfo> toInfoList(List<ExamModel> list,
-                                            List<Integer> maxNum) {
+                                            List<Integer> maxNum,
+                                            List<Double> marks) {
         List<ExamInfo> result = new ArrayList<>(list.size());
         for (ExamModel model : list) {
             String[] array = model.getNum().split(",");
@@ -33,7 +34,7 @@ public class ExamModel {
             }
             result.add(new ExamInfo(
                     model.getExamId(), model.getCourseId(),
-                    num, maxNum
+                    num, maxNum, marks
             ));
         }
         return result;

@@ -4,6 +4,7 @@ import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IExamDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.ExamsOfCourse;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
@@ -145,21 +146,32 @@ public class ExamServiceImpl implements IExamService {
     @Override
     public ResultInfo getExamList(int courseId) {
         List<ExamModel> list = examDAO.getExamList(courseId);
-        if (list.isEmpty()) {
-            return new ResultInfo(
-                    true, "成功获取考试信息列表", new ArrayList<>()
-            );
+
+        int levelNum = questionDAO.getLevelNumByCourseId(courseId);
+        List<Integer> maxNum = new ArrayList<>(levelNum);
+        for (int i = 1; i <= levelNum; ++i) {
+            maxNum.add(questionDAO.getNumOfQuestions(courseId, i));
         }
 
-        String[] array = list.get(0).getNum().split(",");
-        List<Integer> maxNum = new ArrayList<>(array.length);
-        for (int i = 1; i <= array.length; ++i) {
-            maxNum.add(questionDAO.getNumOfQuestions(courseId, i));
+        List<ExamsOfCourse.ExamInfo> infoList = new ArrayList<>();
+        for (ExamModel exam : list) {
+            String[] array = exam.getNum().split(",");
+            List<Double> marks = new ArrayList<>(array.length);
+            List<Integer> num = new ArrayList<>(array.length);
+            for (int i = 1; i <= array.length; ++i) {
+                marks.add(questionDAO.getMarkOfQuestion(
+                        exam.getExamId(), courseId, i
+                ));
+                num.add(Integer.parseInt(array[i - 1]));
+            }
+            infoList.add(new ExamsOfCourse.ExamInfo(
+                    exam.getExamId(), num, marks
+            ));
         }
 
         return new ResultInfo(
                 true, "成功获取考试信息列表",
-                ExamModel.toInfoList(list, maxNum)
+                new ExamsOfCourse(courseId, maxNum, infoList)
         );
     }
 

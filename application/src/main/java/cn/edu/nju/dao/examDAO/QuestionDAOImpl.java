@@ -61,6 +61,11 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
+    public int getLevelNumByCourseId(int courseId) {
+        return questionMapper.getLevelNumByCourseId(courseId);
+    }
+
+    @Override
     public void updateMarkOfLevelById(List<LevelModel> levelModelList) throws Exception {
         questionMapper.updateMarkOfLevelById(levelModelList);
     }
@@ -73,6 +78,11 @@ public class QuestionDAOImpl implements IQuestionDAO {
     @Override
     public int getNumOfQuestions(int courseId, int level) {
         return questionMapper.getNumOfQuestions(courseId, level);
+    }
+
+    @Override
+    public double getMarkOfQuestion(int examId, int courseId, int level) {
+        return questionMapper.getMarkOfQuestion(examId, courseId, level);
     }
 
     @Override

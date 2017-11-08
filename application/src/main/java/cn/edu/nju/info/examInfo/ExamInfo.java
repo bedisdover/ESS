@@ -8,16 +8,19 @@ public class ExamInfo {
     private int courseId;
     private List<Integer> num;
     private List<Integer> maxNum;
+    private List<Double> marks;
 
     public ExamInfo() {
     }
 
     public ExamInfo(int examId, int courseId,
-                    List<Integer> num, List<Integer> maxNum) {
+                    List<Integer> num, List<Integer> maxNum,
+                    List<Double> marks) {
         this.examId = examId;
         this.courseId = courseId;
         this.num = num;
         this.maxNum = maxNum;
+        this.marks = marks;
     }
 
     public int getExamId() {
@@ -50,5 +53,13 @@ public class ExamInfo {
 
     public void setMaxNum(List<Integer> maxNum) {
         this.maxNum = maxNum;
+    }
+
+    public List<Double> getMarks() {
+        return marks;
+    }
+
+    public void setMarks(List<Double> marks) {
+        this.marks = marks;
     }
 }
