@@ -8,6 +8,7 @@ import Verify from '@/pages/Verify'
 import CourseList from '@/pages/CourseList'
 import MyCourse from '@/pages/MyCourse'
 import CreateCourse from '@/pages/CreateCourse'
+import MyExam from '@/pages/MyExam'
 import Exam from '@/pages/Exam'
 import ExamList from '@/pages/ExamList'
 import QuestionList from '@/pages/QuestionList'
@@ -116,6 +117,14 @@ const navRouter = [
     component: MyCourse,
     meta: {
       title: '我的课程'
+    }
+  },
+  {
+    path: '/myExam',
+    name: 'MyExam',
+    component: MyExam,
+    meta: {
+      title: '我的考试'
     }
   },
   {
