@@ -33,7 +33,7 @@ hs_err_pid*
 .DS_Store
 
 # db
-/application/src/main/resources/db.properties
+application/src/main/resources/db.properties
 
 log4j.properties
 mailSender.properties
