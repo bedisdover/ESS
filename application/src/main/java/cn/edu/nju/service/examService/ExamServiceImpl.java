@@ -173,10 +173,12 @@ public class ExamServiceImpl implements IExamService {
             numList.add(Integer.parseInt(str));
         }
 
-        synchronized (this) {
-            if (!hasGetQuestions) {
-                hasGetQuestions = true;
-                initQuestionMap(courseId);
+        if (!hasGetQuestions) {
+            synchronized (this) {
+                if (!hasGetQuestions) {
+                    hasGetQuestions = true;
+                    initQuestionMap(courseId);
+                }
             }
         }
 
