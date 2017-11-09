@@ -32,7 +32,7 @@ public class QuestionController {
     @RequestMapping("/question/download")
     public void downloadQuestionTemplate(HttpServletRequest request,
                                          HttpServletResponse response) {
-        final String fileName = "/download/questionTemplate.xlsx";
+        final String fileName = "/download/questionTemplate.xls";
         final String filePath = request.getSession().getServletContext().getRealPath("/");
         File file = new File(filePath+fileName);
         if(!file.exists()){
