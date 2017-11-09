@@ -251,7 +251,7 @@ public class ExamServiceImpl implements IExamService {
             String[] array = num.split(",");
             for (String str : array) {
                 int n = Integer.parseInt(str);
-                if (n <= 0) throw new NumberFormatException();
+                if (n < 0) throw new NumberFormatException();
                 int maxNum = questionDAO.getNumOfQuestions(courseId, level);
                 if (n > maxNum) {
                     return new ResultInfo(
@@ -263,7 +263,7 @@ public class ExamServiceImpl implements IExamService {
             return new ResultInfo(true, "数目正确", null);
         }
         catch (NumberFormatException e) {
-            return new ResultInfo(false, "每道题的数目应该为正整数", null);
+            return new ResultInfo(false, "每道题的数目应该为非负数", null);
         }
     }
 }
