@@ -14,13 +14,14 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="参加人员">
-        <el-input v-model="exam.num"></el-input>
+        <el-input></el-input>
       </el-form-item>
       <el-form-item label="试卷分数">
-        <LevelScore :courseId="exam.courseId" :test.sync="exam.scores"></LevelScore>
+        <LevelScore :maxNum="maxNum" :num="exam.num" :marks="exam.marks"
+                    v-on:onUpdateScore="onUpdateScore"></LevelScore>
       </el-form-item>
       <el-form-item class="footer">
-        <el-button type="primary" @click="submit">立即创建</el-button>
+        <el-button type="primary" @click="submit">{{exam ? '确认修改' : '立即创建'}}</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
@@ -28,12 +29,13 @@
 </template>
 
 <script>
+  import request from '../lib/request'
   import Util from '../lib/util'
   import LevelScore from './LevelScore'
 
   export default {
     name: 'ExamForm',
-    props: ['exam', 'onConfirm', 'onCancel'],
+    props: ['courseId', 'maxNum', 'exam', 'onConfirm', 'onCancel'],
     components: {LevelScore},
     data () {
       return {
@@ -41,11 +43,28 @@
       }
     },
     methods: {
+      onUpdateScore: function (num, marks) {
+        this.exam.num = num
+        this.exam.marks = marks
+      },
       submit: function () {
-        this.exam.startTime = Util.formatTime(this.exam.time[0])
-        this.exam.endTime = Util.formatTime(this.exam.time[1])
+//        this.exam.startTime = Util.formatTime(this.exam.time[0])
+//        this.exam.endTime = Util.formatTime(this.exam.time[1])
+        let params = {
+          courseId: this.courseId,
+          examId: this.exam.examId,
+          num: this.exam.num.join(','),
+          mark: this.exam.marks.join(',')
+        }
 
-        this.$emit('onConfirm', this.exam)
+        let url = '/exam' + (params.examId ? '/update' : '/add')
+        request(url, 'post', params, (success, message) => {
+          if (success) {
+            this.$emit('onConfirm', this.exam)
+          } else {
+            Util.notifyError(message)
+          }
+        })
       }
     }
   }
