@@ -91,9 +91,15 @@ public class EmailServiceImpl implements IEmailService {
 
         // set receivers email addresses
         if (info.getAddressTo() != null) {
-            message.setRecipient(
-                    MimeMessage.RecipientType.TO,
-                    new InternetAddress(info.getAddressTo(), true)
+            String[] addressTo = info.getAddressTo();
+            int num = addressTo.length;
+            InternetAddress[] addresses = new InternetAddress[num];
+            for (int i = 0; i < num; ++i) {
+                addresses[i] = new InternetAddress(addressTo[i], true);
+                System.out.println(addressTo[i]);
+            }
+            message.setRecipients(
+                    MimeMessage.RecipientType.TO, addresses
             );
         }
         else {

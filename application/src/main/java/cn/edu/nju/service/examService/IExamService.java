@@ -1,10 +1,13 @@
 package cn.edu.nju.service.examService;
 
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.ExamInfo;
+
+import java.io.InputStream;
 
 public interface IExamService {
 
-    ResultInfo createExam(int userId, int courseId, String num, String mark);
+    ResultInfo createExam(int userId, ExamInfo examInfo, InputStream students);
 
     ResultInfo updateExam(int userId, int examId, String num, String mark);
 

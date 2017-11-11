@@ -4,15 +4,22 @@ import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IExamDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.info.examInfo.ExamsOfCourse;
+import cn.edu.nju.info.userInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
+import cn.edu.nju.utils.DateTimeUtil;
+import cn.edu.nju.utils.EmailUtil;
+import cn.edu.nju.utils.RandomUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.util.*;
 
 @Service(value = "examService")
@@ -41,59 +48,63 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
-    public ResultInfo createExam(int userId, int courseId,
-                                 String num, String mark) {
+    public ResultInfo createExam(int userId, ExamInfo examInfo, InputStream students) {
+        int courseId = examInfo.getCourseId();
         if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
             return new ResultInfo(
                     false, "只有该门课的老师才能生成该门课的考试", null
             );
         }
 
+        // check whether numbers of questions are valid
+        List<Integer> num = examInfo.getNum();
         ResultInfo numValidResult = isNumValid(num,courseId);
         if (!numValidResult.isSuccess()) {
             return numValidResult;
         }
 
+        // check whether start time and end time are valid
+        String startTime = examInfo.getStartTime();
+        String endTime = examInfo.getEndTime();
+        ResultInfo timeValidResult = areTimeValid(startTime, endTime);
+        if (!timeValidResult.isSuccess()) {
+            return timeValidResult;
+        }
+
         // add an exam record to database
         int examId;
+        String examPassword = RandomUtil.randomString();
         try {
-            examId = examDAO.createExam(new ExamModel(0, courseId, 1, num));
+            examId = examDAO.createExam(new ExamModel(
+                    0 /* placeholder */, courseId, 1,
+                    examInfo.getName(), examPassword,
+                    numListToString(examInfo.getNum()),
+                    startTime, endTime,
+                    extractEmailString(examInfo.getStudents())
+            ));
         } catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
 
-        // extract mark of level
+        // add level setting to database
+        List<Double> marks = examInfo.getMarks();
+        List<LevelModel> levelModels = new ArrayList<>(marks.size());
         int level = 1;
-        String[] marks = mark.split(",");
-        List<LevelModel> levelModels = new ArrayList<>(marks.length);
-        try {
-            for (String str : marks) {
-                double m = Double.parseDouble(str);
-                levelModels.add(new LevelModel(0, courseId, level, examId, m));
-                level += 1;
-            }
-            questionDAO.addLevelsOfExam(levelModels);
-            return new ResultInfo(true, "成功创建考试", null);
+        for (double mark : marks) {
+            levelModels.add(new LevelModel(/* placeholder */0, courseId, level, examId, mark));
+            level += 1;
         }
-        catch (NumberFormatException e) {
-            try {
-                examDAO.deleteExam(examId);
-                return new ResultInfo(
-                        false, "等级分数应该是由逗号隔开的小数组成", null
-                );
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Logger.getLogger(ExamServiceImpl.class).error(e);
-                return new ResultInfo(false, "系统异常", null);
-            }
+        try {
+            questionDAO.addLevelsOfExam(levelModels);
         }
         catch (Exception e) {
             e.printStackTrace();
             Logger logger = Logger.getLogger(ExamServiceImpl.class);
             logger.error(e);
             try {
+                // if catch an unknown exception, roll back
                 examDAO.deleteExam(examId);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -101,6 +112,15 @@ public class ExamServiceImpl implements IExamService {
             }
             return new ResultInfo(false, "系统异常", null);
         }
+
+        // send email to student, tell them basic information of the exam
+        ResultInfo emailResult = EmailUtil.sendExamNotificationEmail(examInfo);
+        if (!emailResult.isSuccess()) {
+            return emailResult;
+        }
+
+        return new ResultInfo(true, "成功创建考试", null);
+
     }
 
     @Override
@@ -112,10 +132,10 @@ public class ExamServiceImpl implements IExamService {
             );
         }
 
-        ResultInfo numValidResult = isNumValid(num,courseId);
-        if (!numValidResult.isSuccess()) {
-            return numValidResult;
-        }
+//        ResultInfo numValidResult = isNumValid(num,courseId);
+//        if (!numValidResult.isSuccess()) {
+//            return numValidResult;
+//        }
 
         try {
             examDAO.updateNumOfQuestions(examId, num);
@@ -245,12 +265,10 @@ public class ExamServiceImpl implements IExamService {
         return result;
     }
 
-    private ResultInfo isNumValid(String num, int courseId) {
+    private ResultInfo isNumValid(List<Integer> num, int courseId) {
         try {
             int level = 1;
-            String[] array = num.split(",");
-            for (String str : array) {
-                int n = Integer.parseInt(str);
+            for (int n : num) {
                 if (n < 0) throw new NumberFormatException();
                 int maxNum = questionDAO.getNumOfQuestions(courseId, level);
                 if (n > maxNum) {
@@ -266,4 +284,65 @@ public class ExamServiceImpl implements IExamService {
             return new ResultInfo(false, "每道题的数目应该为非负数", null);
         }
     }
+
+    private ResultInfo areTimeValid(String startTime, String endTime) {
+        if (startTime == null) {
+            return new ResultInfo(false, "考试开始时间不能为空", null);
+        }
+
+        Date start;
+        try {
+            start = DateTimeUtil.toDateTime(startTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamServiceImpl.class).error(e);
+            return new ResultInfo(false, "开始考试时间格式错误", null);
+        }
+
+        if (endTime == null) {
+            return new ResultInfo(false, "考试结束时间不能为空", null);
+        }
+
+        Date end;
+        try {
+            end = DateTimeUtil.toDateTime(endTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamServiceImpl.class).error(e);
+            return new ResultInfo(false, "结束考试时间格式错误", null);
+        }
+
+        if (DateTimeUtil.compareDateTime(start, new Date()) <= 0) {
+            return new ResultInfo(false, "考试考试时间应该大于当前时间", null);
+        }
+
+        if (DateTimeUtil.compareDateTime(start, end) >= 0) {
+            return new ResultInfo(false, "开始考试时间应该小于结束考试时间", null);
+        }
+
+        return new ResultInfo(true, null, null);
+    }
+
+    private String numListToString(List<Integer> num) {
+        StringBuilder builder = new StringBuilder(num.size() << 1);
+        int size = num.size();
+        if (size == 0) return "";
+        for (int i = 0; i < size - 1; ++i) {
+            builder.append(num.get(i)).append(",");
+        }
+        builder.append(num.get(size - 1));
+        return builder.toString();
+    }
+
+    private String extractEmailString(List<StudentInfo> students) {
+        StringBuilder builder = new StringBuilder(students.size() * 20);
+        int size = students.size();
+        if (size == 0) return "";
+        for (int i = 0; i < size - 1; ++i) {
+            builder.append(students.get(i).getEmail()).append(",");
+        }
+        builder.append(students.get(size - 1).getEmail());
+        return builder.toString();
+    }
+
 }

@@ -2,12 +2,12 @@ package cn.edu.nju.model;
 
 public class EmailInfo {
 
-    private String addressFrom;
-    private String addressTo;
-    private String senderName;
-    private String senderPassword;
-    private String subject;
-    private String content;
+    private String   addressFrom;
+    private String[] addressTo;
+    private String   senderName;
+    private String   senderPassword;
+    private String   subject;
+    private String   content;
 
     public EmailInfo() {
     }
@@ -15,7 +15,7 @@ public class EmailInfo {
     public EmailInfo(String addressFrom, String addressTo, String senderName,
                      String senderPassword, String subject, String content) {
         this.addressFrom = addressFrom;
-        this.addressTo = addressTo;
+        this.addressTo = addressTo.split(",");
         this.senderName = senderName;
         this.senderPassword = senderPassword;
         this.subject = subject;
@@ -30,12 +30,12 @@ public class EmailInfo {
         this.addressFrom = addressFrom;
     }
 
-    public String getAddressTo() {
+    public String[] getAddressTo() {
         return addressTo;
     }
 
     public void setAddressTo(String addressTo) {
-        this.addressTo = addressTo;
+        this.addressTo = addressTo.split(",");
     }
 
     public String getSenderName() {

@@ -2,13 +2,11 @@ package cn.edu.nju.controller;
 
 import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.service.examService.IExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,11 +23,17 @@ public class ExamController {
     @RequestMapping(value = "/exam/add", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo createExam(HttpSession session,
-                                 @RequestParam int courseId,
-                                 @RequestParam String num,
-                                 @RequestParam String mark) {
+                                 @RequestBody ExamInfo examInfo) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-        return examService.createExam(userId, courseId, num, mark);
+//        try {
+            return examService.createExam(
+                    userId, examInfo, null
+            );
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Logger.getLogger(ExamController.class);
+//            return new ResultInfo(false, "无法打开考生名单文件", null);
+//        }
     }
 
     @RequestMapping(value = "/exam/update", method = RequestMethod.POST)

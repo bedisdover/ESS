@@ -5,8 +5,12 @@
 <mapper namespace="cn.edu.nju.mapper.examMapper.ExamMapper">
     <insert id="createExam" useGeneratedKeys="true" keyProperty="exam.examId"
            parameterType="cn.edu.nju.model.examModel.ExamModel">
-       INSERT INTO t_exam (courseId, num, enable)
-       VALUES (#{exam.courseId}, #{exam.num}, #{exam.enable});
+        INSERT INTO t_exam (courseId, name, password, startTime,
+                            endTime, students, num, enable)
+        VALUES (#{exam.courseId}, #{exam.name}, #{exam.password},
+                STR_TO_DATE(#{exam.startTime},'%Y-%m-%d %H:%i:%s'),
+                STR_TO_DATE(#{exam.endTime},'%Y-%m-%d %H:%i:%s'),
+                #{exam.students}, #{exam.num}, #{exam.enable});
     </insert>
 
     <update id="deleteExam">
@@ -24,6 +28,10 @@
     <resultMap id="examMap" type="cn.edu.nju.model.examModel.ExamModel">
         <id property="examId" column="id"/>
         <result property="courseId" column="courseId"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="startTime" column="startTime"/>
+        <result property="endTime" column="endTime"/>
         <result property="num" column="num"/>
         <result property="enable" column="enable"/>
     </resultMap>

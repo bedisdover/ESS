@@ -27,9 +27,13 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/list',
+                'url': '/exam/add',
                 'method': 'post',
-                'data': {'courseId': 9},
+                'contentType': 'application/json',
+                'data': JSON.stringify({'courseId': 9, 'name': '数据结构',
+                        'password': '', 'startTime': '2018-01-01 00:00:00',
+                        'endTime': '2018-01-02 00:00:00', 'num': [1,1,0,1], 'marks': [10,10,10,10],
+                        'students': [{'email':'1282976747@qq.com'}, {'email':'1483809252@qq.com'}]}),
                 'success': function (data) {
                     alert(JSON.stringify(data));
                     $.ajax({
