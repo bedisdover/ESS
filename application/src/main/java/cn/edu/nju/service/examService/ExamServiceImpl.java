@@ -74,7 +74,7 @@ public class ExamServiceImpl implements IExamService {
                 levelModels.add(new LevelModel(0, courseId, level, examId, m));
                 level += 1;
             }
-            questionDAO.updateMarkOfLevelByUniqueKey(levelModels);
+            questionDAO.addLevelsOfExam(levelModels);
             return new ResultInfo(true, "成功创建考试", null);
         }
         catch (NumberFormatException e) {
@@ -95,9 +95,9 @@ public class ExamServiceImpl implements IExamService {
             logger.error(e);
             try {
                 examDAO.deleteExam(examId);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                logger.error(e1);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                logger.error(ex);
             }
             return new ResultInfo(false, "系统异常", null);
         }
@@ -128,7 +128,7 @@ public class ExamServiceImpl implements IExamService {
                 levelModels.add(new LevelModel(0, courseId, level, examId, m));
                 level += 1;
             }
-            questionDAO.updateMarkOfLevelByUniqueKey(levelModels);
+            questionDAO.addLevelsOfExam(levelModels);
             return new ResultInfo(true, "成功修改考试信息", null);
         }
         catch (NumberFormatException e) {

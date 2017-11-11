@@ -29,10 +29,10 @@
     </resultMap>
 
     <select id="getExamList" resultMap="examMap">
-        SELECT * FROM t_exam WHERE courseId = #{courseId}
+        SELECT * FROM t_exam WHERE courseId = #{courseId} AND enable = 1
     </select>
 
     <select id="getExamModelById" resultMap="examMap">
-        SELECT * FROM t_exam WHERE id = #{examId}
+        SELECT * FROM t_exam WHERE id = #{examId} AND enable = 1
     </select>
 </mapper>

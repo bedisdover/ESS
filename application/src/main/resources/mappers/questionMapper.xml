@@ -73,7 +73,7 @@
         SELECT * FROM t_level WHERE courseId = #{courseId}
     </select>
 
-      <select id="getLevelNumByCourseId" resultType="int">
+    <select id="getLevelNumByCourseId" resultType="int">
         SELECT COUNT(DISTINCT level) FROM t_question WHERE courseId = #{courseId}
     </select>
 
@@ -86,14 +86,12 @@
         </foreach>
     </update>
 
-    <update id="updateMarkOfLevelByUniqueKey" parameterType="java.util.List">
-        <foreach collection="levelModelList" item="model" separator=";">
-            UPDATE t_level
-            <set> mark = #{model.mark} </set>
-            WHERE examId = #{model.examId} AND courseId = #{model.courseId}
-            AND level = #{model.level}
+    <insert id="addLevelsOfExam" useGeneratedKeys="true" parameterType="java.util.List">
+        INSERT INTO t_level(courseId, level, mark, examId) VALUES
+        <foreach collection="levelModelList" item="model" separator=",">
+            (#{model.courseId}, #{model.level}, #{model.mark}, #{model.examId})
         </foreach>
-    </update>
+    </insert>
 
     <select id="getNumOfQuestions" resultType="int">
         SELECT COUNT(*) FROM t_question
