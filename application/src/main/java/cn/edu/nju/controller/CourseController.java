@@ -1,8 +1,9 @@
 package cn.edu.nju.controller;
 
+import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.service.courseService.ICourseService;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseInfo;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.courseInfo.CourseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,11 +32,9 @@ public class CourseController {
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo addCourse(HttpSession session, @ModelAttribute CourseInfo info) {
-        Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
+    public ResultInfo addCourse(HttpSession session,
+                                @ModelAttribute CourseInfo info) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.addCourse(userId, info);
     }
 
@@ -47,11 +46,9 @@ public class CourseController {
      */
     @RequestMapping(value = "/modify")
     @ResponseBody
-    public ResultInfo modifyCourse(HttpSession session, @ModelAttribute CourseInfo info) {
-        Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
+    public ResultInfo modifyCourse(HttpSession session,
+                                   @ModelAttribute CourseInfo info) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.modifyCourse(userId, info);
     }
 
@@ -66,10 +63,7 @@ public class CourseController {
     @ResponseBody
     public ResultInfo enrollCourse(HttpSession session, @RequestParam int courseId,
                                    @RequestParam String courseKey) {
-        Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.enrollCourse(userId, courseId, courseKey);
     }
 
@@ -82,10 +76,7 @@ public class CourseController {
     @RequestMapping(value = "/drop", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo quitCourse(HttpSession session, @RequestParam int courseId) {
-        Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.quitCourse(userId, courseId);
     }
 
@@ -97,10 +88,7 @@ public class CourseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public ResultInfo getCourseList(HttpSession session) {
-        Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.getNotSelectCourses(userId);
     }
 
@@ -112,10 +100,7 @@ public class CourseController {
     @RequestMapping(value = "/my")
     @ResponseBody
     public ResultInfo getMyCourses(HttpSession session) {
-        Integer userId = AccountController.getUserId(session);
-        if (userId == null) {
-            return new ResultInfo(false, "请先登录", null);
-        }
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return courseService.getSelectCourses(userId);
     }
 }

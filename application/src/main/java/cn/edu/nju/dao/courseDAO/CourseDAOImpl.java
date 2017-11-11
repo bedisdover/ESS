@@ -1,160 +1,75 @@
 package cn.edu.nju.dao.courseDAO;
 
-import cn.edu.nju.dao.SessionFactory;
-import cn.edu.nju.mapper.IdMapper;
 import cn.edu.nju.mapper.courseMapper.CourseMapper;
-import cn.edu.nju.po.coursePO.CourseModel;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.courseVO.CourseInfo;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.log4j.Logger;
+import cn.edu.nju.model.courseModel.CourseModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service(value = "courseDAO")
 public class CourseDAOImpl implements ICourseDAO {
 
-    @Transactional
+    private final CourseMapper courseMapper;
+
+    @Autowired
+    public CourseDAOImpl(CourseMapper courseMapper) {
+        this.courseMapper = courseMapper;
+    }
+
     @Override
-    public ResultInfo addCourse(int userId, CourseInfo info) {
-        try(SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper courseMapper = session.getMapper(CourseMapper.class);
-            boolean isRecordExist = courseMapper.getRemovedCourseNum(info.getId()) > 0;
-            if (isRecordExist) {
-                courseMapper.recoverRemovedRecord(info.getId());
-            }
-            else {
-                courseMapper.addCourse(new CourseModel(info));
-                IdMapper idMapper = session.getMapper(IdMapper.class);
-                int courseId = idMapper.getLastInsertId();
-                courseMapper.addUserCourseRecord(userId, courseId);
-            }
-            return new ResultInfo(true, "添加课程成功", null);
+    public void addCourse(int userId, CourseModel model) throws Exception {
+        boolean isRecordExist = courseMapper.getRemovedCourseNum(model.getId()) > 0;
+        if (isRecordExist) {
+            courseMapper.recoverRemovedRecord(model.getId());
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
+        else {
+            courseMapper.addCourse(model);
+            int courseId = model.getId();
+            courseMapper.addUserCourseRecord(userId, courseId);
         }
     }
 
     @Override
-    public ResultInfo updateCourse(CourseInfo info) {
-        try(SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper courseMapper = session.getMapper(CourseMapper.class);
-            courseMapper.updateCourse(new CourseModel(info));
-            return new ResultInfo(true, "课程信息修改成功", null);
+    public void updateCourse(CourseModel model) throws Exception {
+        courseMapper.updateCourse(model);
+    }
+
+    @Override
+    public void enrollCourse(int userId, int courseId) throws Exception {
+        boolean isRecordExist = courseMapper.getRemovedRecordNum(userId, courseId) > 0;
+        if (isRecordExist) {
+            courseMapper.recoverRemovedRecord(userId, courseId);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
+        else {
+            courseMapper.addUserCourseRecord(userId, courseId);
         }
     }
 
     @Override
-    public ResultInfo enrollCourse(int userId, int courseId) {
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper mapper = session.getMapper(CourseMapper.class);
-            boolean isRecordExist = mapper.getRemovedRecordNum(userId, courseId) > 0;
-            if (isRecordExist) {
-                mapper.recoverRemovedRecord(userId, courseId);
-            }
-            else {
-                mapper.addUserCourseRecord(userId, courseId);
-            }
-            return new ResultInfo(true, "选课成功", null);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
-    }
-
-    @Override
-    public ResultInfo quitCourse(int userId, int courseId) {
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper mapper = session.getMapper(CourseMapper.class);
-            mapper.removeUserCourseRecord(userId, courseId);
-            return new ResultInfo(true, "退课成功", null);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
+    public void quitCourse(int userId, int courseId) throws Exception {
+        courseMapper.removeUserCourseRecord(userId, courseId);
     }
 
     @Override
     public int getCourseUserRecordNum(int courseId, int userId) {
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper mapper = session.getMapper(CourseMapper.class);
-            return mapper.getCourseUserRecordNum(userId, courseId);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return -1;
-        }
+        return courseMapper.getCourseUserRecordNum(userId, courseId);
     }
 
     @Override
     public String getCourseKeyById(int courseId) {
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper mapper = session.getMapper(CourseMapper.class);
-            return mapper.getCourseKeyById(courseId);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return "";
-        }
+        return courseMapper.getCourseKeyById(courseId);
     }
 
     @Override
-    public ResultInfo getNotSelectCourses(int userId) {
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper mapper = session.getMapper(CourseMapper.class);
-            List<CourseModel> list = mapper.getNotSelectCourses(userId);
-            return new ResultInfo(
-                    true, "成功获取课程信息列表",
-                    toCourseInfoList(list)
-            );
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
+    public List<CourseModel> getNotSelectCourses(int userId) {
+        return courseMapper.getNotSelectCourses(userId);
     }
 
     @Override
-    public ResultInfo getSelectCourses(int userId) {
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            CourseMapper mapper = session.getMapper(CourseMapper.class);
-            List<CourseModel> list = mapper.getSelectCourses(userId);
-            return new ResultInfo(
-                    true, "成功获取课程信息列表",
-                    toCourseInfoList(list)
-            );
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(CourseDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
-
-    }
-
-    private List<CourseInfo> toCourseInfoList(List<CourseModel> list) {
-        List<CourseInfo> result = new ArrayList<>(list.size());
-        for (CourseModel model : list) {
-            result.add(model.toCourseInfo());
-        }
-        return result;
+    public List<CourseModel> getSelectCourses(int userId) {
+        return courseMapper.getSelectCourses(userId);
     }
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nju.mapper.examMapper.ExamMapper">
+    <insert id="createExam" useGeneratedKeys="true" keyProperty="exam.examId"
+           parameterType="cn.edu.nju.model.examModel.ExamModel">
+       INSERT INTO t_exam (courseId, num, enable)
+       VALUES (#{exam.courseId}, #{exam.num}, #{exam.enable});
+    </insert>
+
+    <update id="deleteExam">
+        UPDATE t_exam SET enable = 0 WHERE id = #{examId}
+    </update>
+
+    <select id="getCourseIdByExamId" resultType="int">
+        SELECT courseId FROM t_exam WHERE id = #{examId} AND enable = 1
+    </select>
+
+    <update id="updateNumOfQuestions">
+        UPDATE t_exam SET num = #{num} WHERE id = #{examId}
+    </update>
+
+    <resultMap id="examMap" type="cn.edu.nju.model.examModel.ExamModel">
+        <id property="examId" column="id"/>
+        <result property="courseId" column="courseId"/>
+        <result property="num" column="num"/>
+        <result property="enable" column="enable"/>
+    </resultMap>
+
+    <select id="getExamList" resultMap="examMap">
+        SELECT * FROM t_exam WHERE courseId = #{courseId}
+    </select>
+
+    <select id="getExamModelById" resultMap="examMap">
+        SELECT * FROM t_exam WHERE id = #{examId}
+    </select>
+</mapper>

@@ -1,5 +1,5 @@
 import cn.edu.nju.utils.EmailUtil;
-import cn.edu.nju.vo.ResultInfo;
+import cn.edu.nju.info.ResultInfo;
 
 public class EmailTest {
 

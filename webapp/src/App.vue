@@ -62,6 +62,11 @@
     text-decoration: none;
   }
 
+  pre {
+    display: inline-block;
+    margin: 0;
+  }
+
   .icon {
     width: 1em;
     height: 1em;

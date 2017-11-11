@@ -1,57 +1,46 @@
 package cn.edu.nju.dao.accountDAO;
 
-import cn.edu.nju.dao.SessionFactory;
+import cn.edu.nju.info.accountInfo.LoginInfo;
+import cn.edu.nju.info.accountInfo.SigUpInfo;
 import cn.edu.nju.mapper.accountMapper.AccountMapper;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.accountVO.LoginInfo;
-import cn.edu.nju.vo.accountVO.SigUpInfo;
-import cn.edu.nju.po.userPO.UserModel;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.log4j.Logger;
+import cn.edu.nju.model.userModel.UserModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * implementation of account dao interface
  */
+@Transactional
 @Service(value = "accountDAO")
 public class AccountDAOImpl implements IAccountDAO {
 
+    private final AccountMapper accountMapper;
+
+    @Autowired
+    public AccountDAOImpl(AccountMapper accountMapper) {
+        this.accountMapper = accountMapper;
+    }
+
     @Override
     public boolean isAccountValid(LoginInfo model) {
-        int userNum;
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            AccountMapper mapper = session.getMapper(AccountMapper.class);
-            userNum = mapper.getVerifiedAccountNumByEmailAndPassword(
-                    model.getEmail(), model.getPassword()
-            );
-        }
+        int userNum = accountMapper.getVerifiedAccountNumByEmailAndPassword(
+                model.getEmail(), model.getPassword()
+        );
         return userNum == 1;
     }
 
     @Override
     public boolean isAccountExist(String email) {
-        int userNum;
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            AccountMapper mapper = session.getMapper(AccountMapper.class);
-            userNum = mapper.getAccountNumByEmail(email);
-        }
+        int userNum = accountMapper.getAccountNumByEmail(email);
         return userNum == 1;
     }
 
     @Override
-    public ResultInfo addUser(SigUpInfo model) {
-        try (SqlSession session = SessionFactory.getInstance().openSession()) {
-            AccountMapper mapper = session.getMapper(AccountMapper.class);
-            mapper.addUser(new UserModel(
-                    model.getName(), model.getEmail(), model.getPassword(),
-                    model.getRole(), 1, 1
-            ));
-            return new ResultInfo(true, "已成功注册账号", null);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(AccountDAOImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
+    public void addUser(SigUpInfo model) throws Exception {
+        accountMapper.addUser(new UserModel(
+                model.getName(), model.getEmail(), model.getPassword(),
+                model.getRole(), 1, 1
+        ));
     }
 }

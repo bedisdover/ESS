@@ -1,6 +1,6 @@
 package cn.edu.nju.utils;
 
-import cn.edu.nju.vo.ResultInfo;
+import cn.edu.nju.info.ResultInfo;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

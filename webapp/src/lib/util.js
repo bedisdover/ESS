@@ -91,4 +91,41 @@ util.validateEmail = (rule, value, callback) => {
   }
 }
 
+/**
+ * 根据参数名称获取url中的参数
+ */
+util.getParamByName = function (name) {
+  let regex = new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)')
+  let result = (regex.exec(location.search) || [null, ''])[1].replace(/\+/g, ' ')
+
+  return decodeURIComponent(result) || null
+}
+
+/**
+ * 格式化时间
+ */
+util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm') {
+  const time = {
+    'M+': date.getMonth() + 1, // 月份
+    'd+': date.getDate(), // 日
+    'h+': date.getHours(), // 小时
+    'm+': date.getMinutes(), // 分
+    's+': date.getSeconds(), // 秒
+    'q+': Math.floor((date.getMonth() + 3) / 3), // 季度
+    'S': date.getMilliseconds() // 毫秒
+  }
+
+  if (/(y+)/.test(format)) {
+    format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+  }
+
+  for (let key in time) {
+    if (new RegExp('(' + key + ')').test(format)) {
+      format = format.replace(RegExp.$1, (RegExp.$1.length === 1) ? (time[key]) : (('00' + time[key]).substr(('' + time[key]).length)))
+    }
+  }
+
+  return format
+}
+
 export default util

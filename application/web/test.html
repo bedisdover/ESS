@@ -5,6 +5,11 @@
     <title>Test</title>
 </head>
 <body>
+<form>
+    <input type="file" id="questions" name="questions">
+    <button type="button">upload</button>
+</form>
+
 <script
         src="http://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -12,43 +17,262 @@
 </script>
 
 <script>
+
     $.ajax({
         'url': '/login',
         'method': 'post',
         'data': {
-            'email': '1282976747@qq.com', 'password': 'test', 'role': 2
+            'email': '1282976747@qq.com', 'password': 'test', 'role': 1
         },
-        'success': function (data) {
-            alert('success:' + JSON.stringify(data));
-
+        'success': function(data) {
+            alert(JSON.stringify(data));
             $.ajax({
-                'url': '/course/my',
+                'url': '/exam/list',
                 'method': 'post',
-                'data': {
-//                    'id': 9, 'name': 'Spring MVC', 'grade': 4, 'cls': '1,2,3,4',
-//                    'year': 2017, 'term': 1, 'password': 'grade14'
-//                    'courseId': 9, 'courseKey': 'grade14'
-//                    'courseId': 9
-//                    'page': 1, 'size': 10
-                },
+                'data': {'courseId': 9},
                 'success': function (data) {
-                    alert('success:' + JSON.stringify(data));
-
+                    alert(JSON.stringify(data));
                     $.ajax({
                         'url': '/logout',
-                        'method': 'post'
+                        'method': 'post',
+                        'success': function (data) {
+                            alert(JSON.stringify(data));
+                        }
                     });
                 },
-                'error': function (reason) {
-                    alert('error:' + reason.responseText);
+                'error': function (data) {
+                    alert(JSON.stringify(data));
+                    $.ajax({
+                        'url': '/logout',
+                        'method': 'post',
+                        'success': function (data) {
+                            alert(JSON.stringify(data));
+                        }
+                    });
                 }
             });
-
         },
-        'error': function (reason) {
-            alert('error:' + reason.responseText);
+        'error': function (data) {
+            alert(JSON.stringify(data));
         }
     });
+
+//$.ajax({
+//    'url': '/login',
+//    'method': 'post',
+//    'data': {
+//        'email': '1282976747@qq.com', 'password': 'test', 'role': 1
+//    },
+//    'success': function(data) {
+//        alert(JSON.stringify(data));
+//        $.ajax({
+//            'url': '/level/list',
+//            'method': 'post',
+//            'data': {'courseId': 9},
+//            'success': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/level/update',
+//                    'method': 'post',
+//                    'contentType': 'application/json',
+//                    'data': JSON.stringify(data.data),
+//                    'success': function (result) {
+//                        alert(JSON.stringify(result));
+//                        $.ajax({
+//                            'url': '/logout',
+//                            'method': 'post',
+//                            'success': function (data) {
+//                                alert(JSON.stringify(data));
+//                            }
+//                        });
+//                    },
+//                    'error': function (result) {
+//                        alert(JSON.stringify(result));
+//                        $.ajax({
+//                            'url': '/logout',
+//                            'method': 'post',
+//                            'success': function (data) {
+//                                alert(JSON.stringify(data));
+//                            }
+//                        });
+//                    }
+//                });
+//
+//            },
+//            'error': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            }
+//        });
+//    },
+//    'error': function (data) {
+//        alert(JSON.stringify(data));
+//    }
+//});
+
+//    $.ajax({
+//        'url': '/login',
+//        'method': 'post',
+//        'data': {
+//            'email': '1282976747@qq.com', 'password': 'test', 'role': 1
+//        },
+//        'success': function(data) {
+//            alert(JSON.stringify(data));
+//
+//            $.ajax({
+//                'url': '/question/delete',
+//                'method': 'post',
+//                'contentType': 'application/json',
+//                'data': JSON.stringify([13, 14]),
+//                'success': function (data) {
+//                    alert(JSON.stringify(data));
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
+//                },
+//                'error': function (data) {
+//                    alert(JSON.stringify(data));
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
+//                }
+//            });
+//        },
+//        'error': function (data) {
+//            alert(JSON.stringify(data));
+//        }
+//    });
+
+//$.ajax({
+//    'url': '/login',
+//    'method': 'post',
+//    'data': {
+//        'email': '1282976747@qq.com', 'password': 'test', 'role': 1
+//    },
+//    'success': function(data) {
+//        alert(JSON.stringify(data));
+//
+//        $.ajax({
+//            'url': '/level/config',
+//            'method': 'post',
+//            'data': {
+//                'examId': 1,
+//                'courseId': 9,
+//                'marks': [2.0, 4.0, 4.0, 5.0]
+//            },
+//            'traditional': true,
+//            'success': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            },
+//            'error': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            }
+//        });
+//    }
+//});
+
+//    $('button').click(function () {
+//        var data = new FormData();
+//        data.append('courseId', 9);
+//        data.append('questions', $('#questions')[0].files[0]);
+//        $.ajax({
+//            'url': '/question/upload',
+//            'method': 'post',
+//            'data': data,
+//            'processData': false,
+//            'contentType': false,
+//            'cache': false,
+//            'success': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            },
+//            'error': function() {
+//                alert("上传失败");
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            }
+//        });
+//    });
+
+//    $.ajax({
+//        'url': '/login',
+//        'method': 'post',
+//        'data': {
+//            'email': '1282976747@qq.com', 'password': 'test', 'role': 2
+//        },
+//        'success': function (data) {
+//            alert('success:' + JSON.stringify(data));
+
+//            $.ajax({
+//                'url': '/course/my',
+//                'method': 'post',
+//                'data': {
+////                    'id': 9, 'name': 'Spring MVC', 'grade': 4, 'cls': '1,2,3,4',
+////                    'year': 2017, 'term': 1, 'password': 'grade14'
+////                    'courseId': 9, 'courseKey': 'grade14'
+////                    'courseId': 9
+////                    'page': 1, 'size': 10
+//                },
+//                'success': function (data) {
+//                    alert('success:' + JSON.stringify(data));
+
+//                    $.ajax({
+//                        'url': '/logout',
+//                        'method': 'post',
+//                        'success': function (data) {
+//                            alert(JSON.stringify(data));
+//                        }
+//                    });
+//                },
+//                'error': function (reason) {
+//                    alert('error:' + reason.responseText);
+//                }
+//            });
+
+//        },
+//        'error': function (reason) {
+//            alert('error:' + reason.responseText);
+//        }
+//    });
 
 </script>
 </body>

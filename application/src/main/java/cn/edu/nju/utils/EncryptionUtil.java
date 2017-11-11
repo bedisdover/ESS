@@ -1,5 +1,10 @@
 package cn.edu.nju.utils;
 
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,6 +21,23 @@ public class EncryptionUtil {
             e.printStackTrace();
         }
         return encyptStr;
+    }
+
+    public static String md5(InputStream stream) {
+        byte buffer[] = new byte[1024];
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            int len;
+            while ((len = stream.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+            return new BigInteger(1, digest.digest()).toString(16);
+        } catch (NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+            Logger.getLogger(EncryptionUtil.class).error(e);
+            return "";
+        }
     }
 
     private static String bytes2Hex(byte[] bytes) {

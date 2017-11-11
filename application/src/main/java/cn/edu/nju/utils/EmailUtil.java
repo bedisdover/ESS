@@ -1,6 +1,6 @@
 package cn.edu.nju.utils;
 
-import cn.edu.nju.vo.ResultInfo;
+import cn.edu.nju.info.ResultInfo;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;

@@ -2,9 +2,10 @@ package cn.edu.nju.service.accountService;
 
 import cn.edu.nju.dao.accountDAO.IAccountDAO;
 import cn.edu.nju.utils.EmailUtil;
-import cn.edu.nju.vo.ResultInfo;
-import cn.edu.nju.vo.accountVO.LoginInfo;
-import cn.edu.nju.vo.accountVO.SigUpInfo;
+import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.accountInfo.LoginInfo;
+import cn.edu.nju.info.accountInfo.SigUpInfo;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +74,14 @@ public class AccountServiceImpl implements IAccountService {
         SigUpInfo info = uuidMap.get(key);
         emailMap.remove(info.getEmail());
         uuidMap.remove(key);
-        return accountDAO.addUser(info);
+
+        try {
+            accountDAO.addUser(info);
+            return new ResultInfo(true, "成功添加用户", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(AccountServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 }
