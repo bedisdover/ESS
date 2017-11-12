@@ -44,7 +44,7 @@
         SELECT COUNT(*) FROM t_student WHERE md5Value = #{md5Value} AND enable = 1
     </select>
 
-    <resultMap id="studentMap" type="cn.edu.nju.model.userModel.StudentModel">
+    <resultMap id="studentMap" type="cn.edu.nju.model.examModel.StudentModel">
         <id property="studentId" column="id"/>
         <result property="courseId" column="courseId"/>
         <result property="email" column="email"/>
@@ -54,15 +54,15 @@
     </resultMap>
 
     <insert id="updateStudent" useGeneratedKeys="true"
-            parameterType="cn.edu.nju.model.userModel.StudentModel">
+            parameterType="cn.edu.nju.model.examModel.StudentModel">
         <selectKey keyProperty="count" order="BEFORE" resultType="int">
             SELECT COUNT(*) from t_student
             WHERE email = #{student.email} AND courseId = #{student.courseId} AND enable = 1
         </selectKey>
         <if test="count == 0">
-            INSERT INTO t_student(courseId, email, name, class, enable)
-            VALUES (#{student.courseId}, #{student.email},
-                    #{student.name}, #{student.cls}, #{student.enable})
+            INSERT INTO t_student(courseId, email, name, md5Value, class, enable)
+            VALUES (#{student.courseId}, #{student.email}, #{student.name},
+                    #{student.md5Value}, #{student.cls}, #{student.enable})
         </if>
         <if test="count > 0">
             UPDATE t_student SET name = #{name}, class = #{cls}

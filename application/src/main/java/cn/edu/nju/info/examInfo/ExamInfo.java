@@ -1,7 +1,5 @@
 package cn.edu.nju.info.examInfo;
 
-import cn.edu.nju.info.userInfo.StudentInfo;
-
 import java.util.List;
 
 public class ExamInfo {

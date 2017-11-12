@@ -1,8 +1,7 @@
 package cn.edu.nju.mapper.examMapper;
 
-import cn.edu.nju.info.userInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
-import cn.edu.nju.model.userModel.StudentModel;
+import cn.edu.nju.model.examModel.StudentModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public interface ExamMapper {
     void createJoinExamRecordIfNotExist(@Param("examId") int examId,
                                         @Param("email") String email);
 
-    void updateStudent(@Param("students") StudentModel student);
+    void updateStudent(@Param("student") StudentModel student);
 
     int getStudentMD5Count(@Param("md5Value") String md5Value);
 

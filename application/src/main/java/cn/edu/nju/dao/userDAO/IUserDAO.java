@@ -8,11 +8,6 @@ import cn.edu.nju.model.userModel.UserModel;
  */
 public interface IUserDAO {
 
-    /**
-     * get user id by email
-     * @param email user email
-     * @return user id
-     */
     int getUserIdByEmail(String email);
 
     Role getRoleById(int userId);

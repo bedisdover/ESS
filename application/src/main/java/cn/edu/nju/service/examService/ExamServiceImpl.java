@@ -6,7 +6,7 @@ import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.info.examInfo.ExamsOfCourse;
-import cn.edu.nju.info.userInfo.StudentInfo;
+import cn.edu.nju.info.examInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -83,11 +85,21 @@ public class ExamServiceImpl implements IExamService {
 
         // if students are not null, update student list of the exam
         if (students != null) {
-            String md5Value = EncryptionUtil.md5(students);
+            ByteArrayOutputStream bufferStream = IOUtil.toByteArrayOutputStream(students);
+            byte[] data = bufferStream.toByteArray();
+
+            InputStream stream1 = new ByteArrayInputStream(data);
+            String md5Value = EncryptionUtil.md5(stream1);
+            stream1.close();
+
             if (!examDAO.isStudentFileMD5Exist(md5Value)) {
-                List<StudentInfo> studentList = ExcelUtil.extractStudents(
-                        examInfo.getCourseId(), students
-                );
+                InputStream stream2 = new ByteArrayInputStream(data);
+                List<StudentInfo> studentList = ExcelUtil.extractStudents(stream2);
+                stream2.close();
+
+                studentList.forEach(info -> {
+                    info.setCourseId(courseId);
+                });
                 examDAO.updateExamStudents(examId, StudentInfo.toModelList(studentList, md5Value));
             }
         }
@@ -103,6 +115,8 @@ public class ExamServiceImpl implements IExamService {
         questionDAO.addLevelsOfExam(levelModels);
 
         // add student-join-in-exam relationship in database
+        // assume that students here are all in t_student
+        // this is guaranteed by frontend
         examDAO.joinInExam(examId, extractEmails(examInfo.getStudents()));
 
         // send email to student, tell them basic information of the exam

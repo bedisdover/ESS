@@ -4,6 +4,7 @@ import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.service.examService.IExamService;
+import cn.edu.nju.utils.HttpUtil;
 import cn.edu.nju.utils.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 @Controller
 public class ExamController {
@@ -36,7 +42,6 @@ public class ExamController {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         try {
             ExamInfo examInfo = JsonUtil.toObject(examInfoStr, ExamInfo.class);
-            System.out.println(studentFile.getName());
             return examService.createExam(
                     userId, examInfo, studentFile == null ?
                             null : studentFile.getInputStream()
@@ -79,5 +84,11 @@ public class ExamController {
     @ResponseBody
     public ResultInfo deletePaper(@RequestParam int paperId) {
         return examService.deletePaper(paperId);
+    }
+
+    @RequestMapping(value = "/student/download")
+    public void downStudentTemplate(HttpServletRequest request,
+                                    HttpServletResponse response) {
+        HttpUtil.fileDownload("/download/studentTemplate.xls", request, response);
     }
 }

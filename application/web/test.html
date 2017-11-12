@@ -51,10 +51,10 @@
         $.ajax({
             'url': '/exam/add',
             'method': 'post',
+            'data': data,
             'processData': false,
             'contentType': false,
             'cache': false,
-            'data': data,
             'success': function (data) {
                 alert(JSON.stringify(data));
                 $.ajax({

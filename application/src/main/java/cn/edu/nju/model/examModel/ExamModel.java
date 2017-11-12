@@ -1,7 +1,7 @@
 package cn.edu.nju.model.examModel;
 
 import cn.edu.nju.info.examInfo.ExamInfo;
-import cn.edu.nju.info.userInfo.StudentInfo;
+import cn.edu.nju.info.examInfo.StudentInfo;
 
 import java.util.ArrayList;
 import java.util.List;

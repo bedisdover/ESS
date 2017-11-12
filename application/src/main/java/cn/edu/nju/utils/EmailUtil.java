@@ -2,7 +2,7 @@ package cn.edu.nju.utils;
 
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
-import cn.edu.nju.info.userInfo.StudentInfo;
+import cn.edu.nju.info.examInfo.StudentInfo;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;

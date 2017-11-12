@@ -1,47 +1,32 @@
-package cn.edu.nju.info.userInfo;
-
-import cn.edu.nju.model.userModel.StudentModel;
-
-import java.util.ArrayList;
-import java.util.List;
+package cn.edu.nju.model.examModel;
 
 /**
- * Created by Jiayiwu on 17/11/11.
+ * Created by Jiayiwu on 17/11/12.
  * Mail:wujiayi@lgdreamer.com
  * Change everywhere
  */
-public class StudentInfo {
+public class StudentModel {
 
     private String email;
     private String name;
+    private String md5Value;
     private int studentId;
     private int cls;        //1, 2, 3, 4
     private int courseId;
+    private int enable;
 
-    public StudentInfo() {
+    public StudentModel() {
     }
 
-    public StudentInfo(String email, String name,
-                       int studentId, int cls, int courseId) {
+    public StudentModel(String email, String name, String md5Value,
+                        int studentId, int cls, int courseId, int enable) {
         this.email = email;
         this.name = name;
+        this.md5Value = md5Value;
         this.studentId = studentId;
         this.cls = cls;
         this.courseId = courseId;
-    }
-
-    public static List<StudentModel> toModelList(List<StudentInfo> infoList,
-                                                 String md5Value) {
-        List<StudentModel> models = new ArrayList<>(infoList.size());
-        infoList.forEach((info) -> models.add(info.toModel(md5Value)));
-        return models;
-    }
-
-    public StudentModel toModel(String md5Value) {
-        return new StudentModel(
-                email, name, md5Value,
-                studentId, cls, courseId, 1
-        );
+        this.enable = enable;
     }
 
     public String getEmail() {
@@ -58,6 +43,14 @@ public class StudentInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMd5Value() {
+        return md5Value;
+    }
+
+    public void setMd5Value(String md5Value) {
+        this.md5Value = md5Value;
     }
 
     public int getStudentId() {
@@ -82,5 +75,13 @@ public class StudentInfo {
 
     public void setCourseId(int courseId) {
         this.courseId = courseId;
+    }
+
+    public int getEnable() {
+        return enable;
+    }
+
+    public void setEnable(int enable) {
+        this.enable = enable;
     }
 }

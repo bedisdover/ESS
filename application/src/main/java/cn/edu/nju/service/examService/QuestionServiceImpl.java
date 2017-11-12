@@ -10,6 +10,7 @@ import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.utils.ExcelUtil;
+import cn.edu.nju.utils.IOUtil;
 import jxl.read.biff.BiffException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class QuestionServiceImpl implements IQuestionService {
         }
 
         try {
-            ByteArrayOutputStream bufferStream = toByteArrayOutputStream(excelStream);
+            ByteArrayOutputStream bufferStream = IOUtil.toByteArrayOutputStream(excelStream);
             byte[] data = bufferStream.toByteArray();
 
             InputStream stream1 = new ByteArrayInputStream(data);
@@ -57,7 +58,10 @@ public class QuestionServiceImpl implements IQuestionService {
             }
 
             InputStream stream2 = new ByteArrayInputStream(data);
-            List<QuestionInfo> list = ExcelUtil.extractQuestions(courseId, stream2);
+            List<QuestionInfo> list = ExcelUtil.extractQuestions(
+                    new ByteArrayInputStream(data)
+            );
+            list.forEach(info -> info.setCourseId(courseId));
             stream2.close();
 
             excelStream.close();
@@ -181,17 +185,6 @@ public class QuestionServiceImpl implements IQuestionService {
             Logger.getLogger(QuestionServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", false);
         }
-    }
-
-    private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[2048];
-        int len;
-        while ((len = inputStream.read(buffer)) != -1) {
-            result.write(buffer, 0, len);
-        }
-        result.flush();
-        return result;
     }
 
     private boolean areMarksValid(double[] marks) {

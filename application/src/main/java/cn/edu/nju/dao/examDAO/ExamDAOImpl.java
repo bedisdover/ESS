@@ -2,7 +2,7 @@ package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.mapper.examMapper.ExamMapper;
 import cn.edu.nju.model.examModel.ExamModel;
-import cn.edu.nju.model.userModel.StudentModel;
+import cn.edu.nju.model.examModel.StudentModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

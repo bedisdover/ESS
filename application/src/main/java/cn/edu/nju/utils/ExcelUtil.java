@@ -1,6 +1,6 @@
 package cn.edu.nju.utils;
 
-import cn.edu.nju.info.userInfo.StudentInfo;
+import cn.edu.nju.info.examInfo.StudentInfo;
 import cn.edu.nju.service.examService.ErrorTemplateFormatException;
 import cn.edu.nju.info.examInfo.OptionInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ExcelUtil {
 
-    public static List<QuestionInfo> extractQuestions(int courseId, InputStream excelStream)
+    public static List<QuestionInfo> extractQuestions(InputStream excelStream)
             throws IOException, BiffException, ErrorTemplateFormatException {
         List<QuestionInfo> result = new ArrayList<>();
         Workbook workbook = Workbook.getWorkbook(excelStream);
@@ -44,7 +44,6 @@ public class ExcelUtil {
 
             QuestionInfo vo = new QuestionInfo();
             result.add(vo);
-            vo.setCourseId(courseId);
 
             // add content
             String content = cells[0].getContents().trim();
@@ -108,7 +107,7 @@ public class ExcelUtil {
         return result;
     }
 
-    public static List<StudentInfo> extractStudents(int courseId, InputStream excelStream)
+    public static List<StudentInfo> extractStudents(InputStream excelStream)
             throws IOException, BiffException, ErrorTemplateFormatException {
         List<StudentInfo> result = new ArrayList<>();
         Workbook workbook = Workbook.getWorkbook(excelStream);
@@ -133,7 +132,6 @@ public class ExcelUtil {
             }
 
             StudentInfo info = new StudentInfo();
-            info.setCourseId(courseId);
 
             String email = cells[0].getContents().trim();
             if (email.isEmpty()) {
