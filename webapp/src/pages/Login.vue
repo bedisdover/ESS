@@ -3,7 +3,8 @@
     <el-row type="flex" justify="center" align="middle">
       <el-col>
         <el-card>
-          <el-form :model="loginForm" :rules="rules" ref="loginForm" :label-width="'60px'" class="form">
+          <el-form :model="loginForm" :rules="rules" ref="loginForm" :label-width="'60px'" class="form"
+                   @keyup.native.enter="login('loginForm')">
             <el-form-item label="邮箱" prop="email" required>
               <el-input type="email" v-model="loginForm.email"></el-input>
             </el-form-item>
@@ -51,14 +52,14 @@
     },
     methods: {
       login (formName) {
-        this.loginForm.loading = true
-
         let params = {
           email: this.loginForm.email,
           password: this.loginForm.password
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loginForm.loading = true
+
             request('/login', 'post', params, (success, message, data) => {
               this.loginForm.loading = false
 
