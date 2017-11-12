@@ -7,7 +7,8 @@
           <div class="tab-item" :class="{active: role === 1}" @click="changeRole(1)">教师注册</div>
         </div>
         <el-card>
-          <el-form :model="registerForm" ref="registerForm" :rules="rules" :label-width="'80px'" class="form">
+          <el-form :model="registerForm" ref="registerForm" :rules="rules" :label-width="'80px'" class="form"
+                   @keyup.native.enter="register('registerForm')">
             <el-form-item label="姓名" prop="name">
               <el-input v-model="registerForm.name"></el-input>
             </el-form-item>
