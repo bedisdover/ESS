@@ -34,49 +34,65 @@
         },
         'success': function(data) {
             alert(JSON.stringify(data));
+            $.ajax({
+                'url': '/exam/update',
+                'method': 'post',
+                'contentType': 'application/json',
+                'data': JSON.stringify({
+                    'examId': 14, 'courseId': 9, 'name': '操作系统',
+                    'startTime': '2018-01-01 00:00:00',
+                    'endTime': '2018-01-02 02:00:00', 'num': [1,1,0],
+                    'marks': [10,10,10]}),
+                'success': function(data) {
+                    alert(JSON.stringify(data));
+                },
+                'error': function(data) {
+                    alert(JSON.stringify(data));
+                }
+            });
         },
         'error': function (data) {
             alert(JSON.stringify(data));
         }
     });
 
-    $('#studentBtn').click(function() {
-        var data = new FormData();
-        data.append("examInfoStr", JSON.stringify({'courseId': 9, 'name': '数据结构',
-            'password': '', 'startTime': '2018-01-01 00:00:00',
-            'endTime': '2018-01-02 00:00:00', 'num': [1,1,0], 'marks': [10,10,10,10],
-            'students': [{'email':'1282976747@qq.com'}, {'email':'1483809252@qq.com'}]}));
-        data.append("studentFile", $('#students')[0].files[0]);
-
-        $.ajax({
-            'url': '/exam/add',
-            'method': 'post',
-            'data': data,
-            'processData': false,
-            'contentType': false,
-            'cache': false,
-            'success': function (data) {
-                alert(JSON.stringify(data));
-                $.ajax({
-                    'url': '/logout',
-                    'method': 'post',
-                    'success': function (data) {
-                        alert(JSON.stringify(data));
-                    }
-                });
-            },
-            'error': function (data) {
-                alert(JSON.stringify(data));
-                $.ajax({
-                    'url': '/logout',
-                    'method': 'post',
-                    'success': function (data) {
-                        alert(JSON.stringify(data));
-                    }
-                });
-            }
-        });
-    });
+//    $('#studentBtn').click(function() {
+//        var data = new FormData();
+//        data.append("examInfoStr", JSON.stringify({'courseId': 9, 'name': '数据结构',
+//            'password': '', 'startTime': '2018-01-01 00:00:00',
+//            'endTime': '2018-01-02 00:00:00', 'num': [1,1,0], 'marks': [10,10,10,10],
+//            'students': [{'email':'1282976747@qq.com'}, {'email':'1483809252@qq.com'}]}));
+//        data.append("studentFile", $('#students')[0].files[0]);
+//
+//        $.ajax({
+//            'url': '/exam/add',
+//            'method': 'post',
+//            'data': data,
+//            'processData': false,
+//            'contentType': false,
+//            'cache': false,
+//            'success': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            },
+//            'error': function (data) {
+//                alert(JSON.stringify(data));
+//                $.ajax({
+//                    'url': '/logout',
+//                    'method': 'post',
+//                    'success': function (data) {
+//                        alert(JSON.stringify(data));
+//                    }
+//                });
+//            }
+//        });
+//    });
 
 //$.ajax({
 //    'url': '/login',

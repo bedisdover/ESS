@@ -17,6 +17,12 @@
         UPDATE t_exam SET enable = 0 WHERE id = #{examId}
     </update>
 
+    <update id="updateExam" parameterType="cn.edu.nju.model.examModel.ExamModel">
+        UPDATE t_exam SET name = #{exam.name}, startTime = #{exam.startTime},
+                          endTime = #{exam.endTime}, num = #{exam.num}
+        WHERE id = #{exam.examId}
+    </update>
+
     <update id="updateNumOfQuestions">
         UPDATE t_exam SET num = #{num} WHERE id = #{examId} AND enable = 1
     </update>

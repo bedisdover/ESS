@@ -7,9 +7,12 @@ import java.util.List;
 
 public interface IExamDAO {
 
+    // return exam id
     int createExam(ExamModel model) throws Exception;
 
     void deleteExam(int examId) throws Exception;
+
+    void updateExam(ExamModel model) throws Exception;
 
     void joinInExam(int examId, List<String> emails) throws Exception;
 

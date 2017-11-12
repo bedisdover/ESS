@@ -9,10 +9,7 @@ import cn.edu.nju.utils.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -38,7 +35,8 @@ public class ExamController {
     @ResponseBody
     public ResultInfo createExam(HttpSession session,
                                  @RequestParam String examInfoStr,
-                                 @RequestParam CommonsMultipartFile studentFile) {
+                                 @RequestParam(required = false)
+                                     CommonsMultipartFile studentFile) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         try {
             ExamInfo examInfo = JsonUtil.toObject(examInfoStr, ExamInfo.class);
@@ -60,11 +58,29 @@ public class ExamController {
     @RequestMapping(value = "/exam/update", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo updateExam(HttpSession session,
-                                 @RequestParam int examId,
-                                 @RequestParam String num,
-                                 @RequestParam String mark) {
+                                 @RequestBody ExamInfo examInfo) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-        return examService.updateExam(userId, examId, num, mark);
+        try {
+            return examService.updateExam(userId, examInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamController.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
+    }
+
+    @RequestMapping(value = "/exam/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo deleteExam(HttpSession session,
+                                 @RequestParam int examId) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        try {
+            return examService.deleteExam(userId, examId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamController.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 
     @RequestMapping(value = "/exam/list", method = RequestMethod.POST)

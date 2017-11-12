@@ -32,6 +32,11 @@ public class ExamDAOImpl implements IExamDAO {
     }
 
     @Override
+    public void updateExam(ExamModel model) throws Exception {
+        examMapper.updateExam(model);
+    }
+
+    @Override
     public void joinInExam(int examId, List<String> emails) throws Exception {
         examMapper.createJoinExamRecords(examId, emails);
     }

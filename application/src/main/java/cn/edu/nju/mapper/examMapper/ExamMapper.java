@@ -14,6 +14,8 @@ public interface ExamMapper {
 
     void deleteExam(@Param("examId")int examId);
 
+    void updateExam(@Param("exam")ExamModel exam);
+
     void updateNumOfQuestions(@Param("examId") int examId,
                               @Param("num") String num);
 

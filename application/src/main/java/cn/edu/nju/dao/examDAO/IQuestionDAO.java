@@ -24,7 +24,7 @@ public interface IQuestionDAO {
 
     int getLevelNumByCourseId(int courseId);
 
-    void updateMarkOfLevelById(List<LevelModel> levelModelList) throws Exception;
+    void updateMarkOfLevel(List<LevelModel> levelModelList) throws Exception;
 
     void addLevelsOfExam(List<LevelModel> levelModelList) throws Exception;
 

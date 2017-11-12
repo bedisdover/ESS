@@ -66,8 +66,8 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
-    public void updateMarkOfLevelById(List<LevelModel> levelModelList) throws Exception {
-        questionMapper.updateMarkOfLevelById(levelModelList);
+    public void updateMarkOfLevel(List<LevelModel> levelModelList) throws Exception {
+        questionMapper.updateMarkOfLevel(levelModelList);
     }
 
     @Override

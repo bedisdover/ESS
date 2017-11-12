@@ -78,7 +78,7 @@
     </select>
 
 
-    <update id="updateMarkOfLevelById" parameterType="java.util.List">
+    <update id="updateMarkOfLevel" parameterType="java.util.List">
         <foreach collection="levelModelList" item="model" separator=";">
             UPDATE t_level
             <set> mark = #{model.mark} </set>

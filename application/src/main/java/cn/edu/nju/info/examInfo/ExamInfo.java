@@ -1,5 +1,8 @@
 package cn.edu.nju.info.examInfo;
 
+import cn.edu.nju.model.examModel.ExamModel;
+import cn.edu.nju.utils.StringUtil;
+
 import java.util.List;
 
 public class ExamInfo {
@@ -30,6 +33,13 @@ public class ExamInfo {
         this.maxNum = maxNum;
         this.marks = marks;
         this.students = students;
+    }
+
+    public ExamModel toModel() {
+        return new ExamModel(
+                examId, courseId, 1, name, password,
+                StringUtil.stringify(num, ","), startTime, endTime
+        );
     }
 
     public int getExamId() {

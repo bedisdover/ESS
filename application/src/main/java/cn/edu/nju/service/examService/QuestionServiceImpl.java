@@ -176,7 +176,7 @@ public class QuestionServiceImpl implements IQuestionService {
         }
 
         try {
-            questionDAO.updateMarkOfLevelById(
+            questionDAO.updateMarkOfLevel(
                     LevelInfo.toModelList(levelInfoList)
             );
             return new ResultInfo(true, "成功修改等级对应的分数", null);

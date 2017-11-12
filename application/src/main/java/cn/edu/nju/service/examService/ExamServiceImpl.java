@@ -51,13 +51,13 @@ public class ExamServiceImpl implements IExamService {
     @Override
     @Transactional
     public ResultInfo createExam(int userId, ExamInfo examInfo, InputStream students) throws Exception {
-        int courseId = examInfo.getCourseId();
-        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
-            return new ResultInfo(
-                    false, "只有该门课的老师才能生成该门课的考试", null
-            );
+        ResultInfo checkResult = checkExamInfo(userId, examInfo,
+                "只有该门课的老师才能生成该门课的考试");
+        if (!checkResult.isSuccess()) {
+            return checkResult;
         }
 
+        int courseId = examInfo.getCourseId();
         // check whether numbers of questions are valid
         List<Integer> num = examInfo.getNum();
         ResultInfo numValidResult = isNumValid(num,courseId);
@@ -97,9 +97,7 @@ public class ExamServiceImpl implements IExamService {
                 List<StudentInfo> studentList = ExcelUtil.extractStudents(stream2);
                 stream2.close();
 
-                studentList.forEach(info -> {
-                    info.setCourseId(courseId);
-                });
+                studentList.forEach(info -> info.setCourseId(courseId));
                 examDAO.updateExamStudents(examId, StudentInfo.toModelList(studentList, md5Value));
             }
         }
@@ -127,43 +125,47 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
-    public ResultInfo updateExam(int userId, int examId, String num, String mark) {
-        int courseId = examDAO.getCourseIdByExamId(examId);
-        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
-            return new ResultInfo(
-                    false, "只有该门课的老师才能修改该门课的考试信息", null
-            );
+    @Transactional
+    public ResultInfo updateExam(int userId, ExamInfo examInfo) throws Exception {
+        ResultInfo checkResult = checkExamInfo(userId, examInfo,
+                "只有该门课的老师才能修改该门课的考试信息");
+        if (!checkResult.isSuccess()) {
+            return checkResult;
         }
 
-//        ResultInfo numValidResult = isNumValid(num,courseId);
-//        if (!numValidResult.isSuccess()) {
-//            return numValidResult;
-//        }
+        examDAO.updateExam(examInfo.toModel());
 
-        try {
-            examDAO.updateNumOfQuestions(examId, num);
+        int examId = examInfo.getExamId();
+        List<Integer> num = examInfo.getNum();
+        examDAO.updateNumOfQuestions(examId,
+                StringUtil.stringify(num, ","));
 
-            int level = 1;
-            String[] marks = mark.split(",");
-            List<LevelModel> levelModels = new ArrayList<>(marks.length);
-            for (String str : marks) {
-                double m = Double.parseDouble(str);
-                levelModels.add(new LevelModel(0, courseId, level, examId, m));
-                level += 1;
-            }
-            questionDAO.addLevelsOfExam(levelModels);
-            return new ResultInfo(true, "成功修改考试信息", null);
+        int level = 1;
+        int courseId = examInfo.getCourseId();
+        List<Double> marks = examInfo.getMarks();
+        List<LevelModel> levelModels = new ArrayList<>(marks.size());
+        for (double mark : marks) {
+            levelModels.add(new LevelModel(0, courseId, level, examId, mark));
+            level += 1;
         }
-        catch (NumberFormatException e) {
-            return new ResultInfo(
-                    false, "等级分数应该是由逗号隔开的小数组成", null
-            );
+        questionDAO.updateMarkOfLevel(levelModels);
+
+        return new ResultInfo(true, "成功修改考试信息", null);
+    }
+
+    @Override
+    @Transactional
+    public ResultInfo deleteExam(int userId, int examId) throws Exception {
+        ResultInfo permissionResult = checkPermission(
+                userId, examDAO.getCourseIdByExamId(examId),
+                "只有该门课的老师才能删除该门课的考试信息"
+        );
+        if (!permissionResult.isSuccess()) {
+            return permissionResult;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
+
+        examDAO.deleteExam(examId);
+        return new ResultInfo(true, "成功删除考试", null);
     }
 
     @Override
@@ -188,7 +190,9 @@ public class ExamServiceImpl implements IExamService {
                 num.add(Integer.parseInt(array[i - 1]));
             }
             infoList.add(new ExamsOfCourse.ExamInfo(
-                    exam.getExamId(), num, marks
+                    exam.getExamId(), exam.getName(),
+                    exam.getPassword(), exam.getStartTime(),
+                    exam.getEndTime(), num, marks
             ));
         }
 
@@ -239,6 +243,40 @@ public class ExamServiceImpl implements IExamService {
             Logger.getLogger(ExamServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
+    }
+
+    private ResultInfo checkExamInfo(int userId, ExamInfo examInfo,
+                                     String permissionErrorMsg) {
+        int courseId = examInfo.getCourseId();
+        ResultInfo permissionResult = checkPermission(
+                userId, courseId, permissionErrorMsg
+        );
+        if (!permissionResult.isSuccess()) {
+            return permissionResult;
+        }
+
+        // check whether numbers of questions are valid
+        ResultInfo numValidResult = isNumValid(examInfo.getNum(), courseId);
+        if (!numValidResult.isSuccess()) {
+            return numValidResult;
+        }
+
+        // check whether start time and end time are valid
+        String startTime = examInfo.getStartTime();
+        String endTime = examInfo.getEndTime();
+        ResultInfo timeValidResult = areTimeValid(startTime, endTime);
+        if (!timeValidResult.isSuccess()) {
+            return timeValidResult;
+        }
+
+        return new ResultInfo(true, null, null);
+    }
+
+    private ResultInfo checkPermission(int userId, int courseId, String pemissionErrorMsg) {
+        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
+            return new ResultInfo(false, pemissionErrorMsg, null);
+        }
+        return new ResultInfo(true, null, null);
     }
 
     private void sendNotificationEmail(final ExamInfo examInfo) {

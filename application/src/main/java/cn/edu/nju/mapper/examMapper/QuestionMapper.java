@@ -31,7 +31,7 @@ public interface QuestionMapper {
 
     int getLevelNumByCourseId(@Param("courseId") int courseId);
 
-    void updateMarkOfLevelById(@Param("levelModelList")
+    void updateMarkOfLevel(@Param("levelModelList")
                                        List<LevelModel> levelModelList);
 
     void addLevelsOfExam(@Param("levelModelList")
