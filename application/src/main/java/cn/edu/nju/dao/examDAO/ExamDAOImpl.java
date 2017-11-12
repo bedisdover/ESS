@@ -2,6 +2,7 @@ package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.mapper.examMapper.ExamMapper;
 import cn.edu.nju.model.examModel.ExamModel;
+import cn.edu.nju.model.userModel.StudentModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +32,31 @@ public class ExamDAOImpl implements IExamDAO {
     }
 
     @Override
-    public int getCourseIdByExamId(int examId) {
-        return examMapper.getCourseIdByExamId(examId);
+    public void joinInExam(int examId, List<String> emails) throws Exception {
+        examMapper.createJoinExamRecords(examId, emails);
+    }
+
+    @Override
+    public void updateExamStudents(int examId, List<StudentModel> students) throws Exception {
+        students.forEach((student) -> {
+            examMapper.updateStudent(student);
+            examMapper.createJoinExamRecordIfNotExist(examId, student.getEmail());
+        });
+    }
+
+    @Override
+    public boolean isStudentFileMD5Exist(String md5Value) {
+        return examMapper.getStudentMD5Count(md5Value) > 0;
     }
 
     @Override
     public void updateNumOfQuestions(int examId, String num) throws Exception {
         examMapper.updateNumOfQuestions(examId, num);
+    }
+
+    @Override
+    public int getCourseIdByExamId(int examId) {
+        return examMapper.getCourseIdByExamId(examId);
     }
 
     @Override

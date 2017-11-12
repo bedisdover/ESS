@@ -4,11 +4,19 @@ import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.service.examService.IExamService;
+import cn.edu.nju.utils.JsonUtil;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Controller
 public class ExamController {
@@ -23,17 +31,25 @@ public class ExamController {
     @RequestMapping(value = "/exam/add", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo createExam(HttpSession session,
-                                 @RequestBody ExamInfo examInfo) {
+                                 @RequestParam String examInfoStr,
+                                 @RequestParam CommonsMultipartFile studentFile) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-//        try {
+        try {
+            ExamInfo examInfo = JsonUtil.toObject(examInfoStr, ExamInfo.class);
+            System.out.println(studentFile.getName());
             return examService.createExam(
-                    userId, examInfo, null
+                    userId, examInfo, studentFile == null ?
+                            null : studentFile.getInputStream()
             );
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Logger.getLogger(ExamController.class);
-//            return new ResultInfo(false, "无法打开考生名单文件", null);
-//        }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamController.class).error(e);
+            return new ResultInfo(false, "考生名单文件无法打开", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamController.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 
     @RequestMapping(value = "/exam/update", method = RequestMethod.POST)

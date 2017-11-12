@@ -2,7 +2,6 @@ package cn.edu.nju.model.examModel;
 
 import cn.edu.nju.info.examInfo.OptionInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
-import cn.edu.nju.mapper.examMapper.QuestionMapper;
 import cn.edu.nju.utils.JsonUtil;
 
 import java.io.IOException;
@@ -38,7 +37,9 @@ public class QuestionModel {
     public static List<QuestionInfo> toInfoList(List<QuestionModel> list) throws IOException {
         List<QuestionInfo> result = new ArrayList<>(list.size());
         for (QuestionModel model : list) {
-            List<OptionInfo> options = JsonUtil.toOptionInfoList(model.getOptionJson());
+            List<OptionInfo> options = JsonUtil.toCollection(
+                    model.getOptionJson(), ArrayList.class, OptionInfo.class
+            );
             result.add(new QuestionInfo(
                     model.getQuestionId(), model.getCourseId(),
                     model.getContent(), model.getLevel(),

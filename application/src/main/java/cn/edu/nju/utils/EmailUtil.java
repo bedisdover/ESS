@@ -17,21 +17,33 @@ import java.util.Properties;
 public class EmailUtil {
 
     private static final String sendUrl;
-    private static final String verifyUrl;
-    private static final String subject;
-    private static final String content;
     private static final String subjectKey;
     private static final String contentKey;
     private static final String emailKey;
 
+    // email of account verification
+    private static final String verifyUrl;
+    private static final String verifySubject;
+    private static final String verifyContent;
+
+    // email of exam notification
+    private static final String noticeUrl;
+    private static final String noticeSubject;
+    private static final String noticeContent;
+
     static {
         String sendUrlTemp = null;
-        String verifyUrlTemp = null;
-        String subjectTemp = null;
-        String contentTemp = null;
         String subKey = null;
         String ctnKey = null;
         String emKey = null;
+
+        String verifyUrlTemp = null;
+        String verifySubjectTemp = null;
+        String verifyContentTemp = null;
+
+        String noticeUrlTemp = null;
+        String noticeSubjectTemp = null;
+        String noticeContentTemp = null;
 
         Properties properties = new Properties();
         InputStream inputStream = EmailUtil.class.getClassLoader()
@@ -39,24 +51,34 @@ public class EmailUtil {
         try {
             properties.load(new InputStreamReader(inputStream, "UTF-8"));
             sendUrlTemp = properties.getProperty("sendUrl");
-            verifyUrlTemp = properties.getProperty("verifyUrl");
-            subjectTemp = properties.getProperty("subject");
-            contentTemp = properties.getProperty("content");
             subKey = properties.getProperty("subjectKey");
             ctnKey = properties.getProperty("contentKey");
             emKey = properties.getProperty("emailKey");
+
+            verifyUrlTemp = properties.getProperty("verifyEmail.url");
+            verifySubjectTemp = properties.getProperty("verifyEmail.subject");
+            verifyContentTemp = properties.getProperty("verifyEmail.content");
+
+            noticeUrlTemp = properties.getProperty("examNotification.startExamUrl");
+            noticeContentTemp = properties.getProperty("examNotification.content");
+            noticeSubjectTemp = properties.getProperty("examNotification.subject");
         } catch (IOException e) {
             e.printStackTrace();
             Logger.getLogger(EmailUtil.class).error(e);
         }
 
         sendUrl = sendUrlTemp;
-        verifyUrl = verifyUrlTemp;
-        subject = subjectTemp;
-        content = contentTemp;
         subjectKey = subKey;
         contentKey = ctnKey;
         emailKey = emKey;
+
+        verifyUrl = verifyUrlTemp;
+        verifySubject = verifySubjectTemp;
+        verifyContent = verifyContentTemp;
+
+        noticeUrl = noticeUrlTemp;
+        noticeSubject = noticeSubjectTemp;
+        noticeContent = noticeContentTemp;
     }
 
     /**
@@ -66,10 +88,10 @@ public class EmailUtil {
      * @return result
      */
     public static ResultInfo sendVerifyEmail(String emailTo, String key) {
-        String newContent = content + verifyUrl + "?key=" + key;
+        String newContent = verifyContent + verifyUrl + "?key=" + key;
         List<NameValuePair> data = new ArrayList <>();
         data.add(new BasicNameValuePair(emailKey, emailTo));
-        data.add(new BasicNameValuePair(subjectKey, subject));
+        data.add(new BasicNameValuePair(subjectKey, verifySubject));
         data.add(new BasicNameValuePair(contentKey, newContent));
 
         ResultInfo result = HttpUtil.post(sendUrl, data);
@@ -80,35 +102,39 @@ public class EmailUtil {
     }
 
     public static ResultInfo sendExamNotificationEmail(ExamInfo examInfo) {
-        List<NameValuePair> data = new ArrayList<>();
-        data.add(new BasicNameValuePair(emailKey, emailListToString(examInfo.getStudents())));
-        data.add(new BasicNameValuePair(subject, "考试通知"));
-        data.add(new BasicNameValuePair(contentKey, generateExamEmailContent(examInfo)));
+        List<StudentInfo> students = examInfo.getStudents();
+        for (StudentInfo info : students) {
+            String newContent = noticeContent + generateExamInfoContent(
+                    examInfo.getName(), examInfo.getStartTime(), examInfo.getEndTime(),
+                    EncryptionUtil.base64Encode(info.getEmail()),
+                    EncryptionUtil.base64Encode(examInfo.getPassword())
+            );
 
-        ResultInfo result = HttpUtil.post(sendUrl, data);
-        if (!result.isSuccess()) {
-            return result;
+            List<NameValuePair> data = new ArrayList<>();
+            data.add(new BasicNameValuePair(emailKey, info.getEmail()));
+            data.add(new BasicNameValuePair(subjectKey, noticeSubject));
+            data.add(new BasicNameValuePair(contentKey, newContent));
+
+            ResultInfo result = HttpUtil.post(sendUrl, data);
+            if (!result.isSuccess()) {
+                return result;
+            }
         }
 
         return new ResultInfo(true, "考试通知发送成功", null);
     }
 
-    private static String emailListToString(List<StudentInfo> students) {
-        int size = students.size();
-        if (size == 0) return "";
-        StringBuilder builder = new StringBuilder(size * 20);
-        for (int i = 0; i < size - 1; ++i) {
-            builder.append(students.get(i).getEmail()).append(",");
-        }
-        builder.append(students.get(size - 1).getEmail());
-        return builder.toString();
-    }
+    private static String generateExamInfoContent(String name,
+                                                  String startTime,
+                                                  String endTime,
+                                                  String email,
+                                                  String password) {
+        String url = noticeUrl + "?email=" + email + "&amp;password=" + password;
+        return  "<br/>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;考试名称: " + name + "<br/>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;开始时间: " + startTime + "<br/>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;结束时间: " + endTime + "<br/>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;考试链接: " + url + "<br/>";
 
-    private static String generateExamEmailContent(ExamInfo examInfo) {
-        return "亲爱的同学,您好:<br/>&nbsp;&nbsp;&nbsp;&nbsp;您将于" +
-                examInfo.getStartTime() + "至" + examInfo.getEndTime() +
-                "有一场名为" + examInfo.getName() + "的考试," +
-                "考试密码为" + examInfo.getPassword() + "," +
-                "请务必准时参加,祝您生活愉快!<br/>";
     }
 }

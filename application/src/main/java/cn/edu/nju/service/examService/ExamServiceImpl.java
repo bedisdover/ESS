@@ -10,12 +10,11 @@ import cn.edu.nju.info.userInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
-import cn.edu.nju.utils.DateTimeUtil;
-import cn.edu.nju.utils.EmailUtil;
-import cn.edu.nju.utils.RandomUtil;
+import cn.edu.nju.utils.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +47,8 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
-    public ResultInfo createExam(int userId, ExamInfo examInfo, InputStream students) {
+    @Transactional
+    public ResultInfo createExam(int userId, ExamInfo examInfo, InputStream students) throws Exception {
         int courseId = examInfo.getCourseId();
         if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
             return new ResultInfo(
@@ -72,20 +72,24 @@ public class ExamServiceImpl implements IExamService {
         }
 
         // add an exam record to database
-        int examId;
         String examPassword = RandomUtil.randomString();
-        try {
-            examId = examDAO.createExam(new ExamModel(
-                    0 /* placeholder */, courseId, 1,
-                    examInfo.getName(), examPassword,
-                    numListToString(examInfo.getNum()),
-                    startTime, endTime,
-                    extractEmailString(examInfo.getStudents())
-            ));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
+        examInfo.setPassword(examPassword);
+        int examId = examDAO.createExam(new ExamModel(
+                0 /* placeholder */, courseId, 1,
+                examInfo.getName(), examPassword,
+                numListToString(examInfo.getNum()),
+                startTime, endTime
+        ));
+
+        // if students are not null, update student list of the exam
+        if (students != null) {
+            String md5Value = EncryptionUtil.md5(students);
+            if (!examDAO.isStudentFileMD5Exist(md5Value)) {
+                List<StudentInfo> studentList = ExcelUtil.extractStudents(
+                        examInfo.getCourseId(), students
+                );
+                examDAO.updateExamStudents(examId, StudentInfo.toModelList(studentList, md5Value));
+            }
         }
 
         // add level setting to database
@@ -96,28 +100,13 @@ public class ExamServiceImpl implements IExamService {
             levelModels.add(new LevelModel(/* placeholder */0, courseId, level, examId, mark));
             level += 1;
         }
-        try {
-            questionDAO.addLevelsOfExam(levelModels);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Logger logger = Logger.getLogger(ExamServiceImpl.class);
-            logger.error(e);
-            try {
-                // if catch an unknown exception, roll back
-                examDAO.deleteExam(examId);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                logger.error(ex);
-            }
-            return new ResultInfo(false, "系统异常", null);
-        }
+        questionDAO.addLevelsOfExam(levelModels);
+
+        // add student-join-in-exam relationship in database
+        examDAO.joinInExam(examId, extractEmails(examInfo.getStudents()));
 
         // send email to student, tell them basic information of the exam
-        ResultInfo emailResult = EmailUtil.sendExamNotificationEmail(examInfo);
-        if (!emailResult.isSuccess()) {
-            return emailResult;
-        }
+        sendNotificationEmail(examInfo);
 
         return new ResultInfo(true, "成功创建考试", null);
 
@@ -238,6 +227,16 @@ public class ExamServiceImpl implements IExamService {
         }
     }
 
+    private void sendNotificationEmail(final ExamInfo examInfo) {
+        Runnable task = () -> {
+            ResultInfo emailResult = EmailUtil.sendExamNotificationEmail(examInfo);
+            if (!emailResult.isSuccess()) {
+                Logger.getLogger(ExamServiceImpl.class).error("Fail to send email of exam notification");
+            }
+        };
+        new Thread(task).start();
+    }
+
     private void initQuestionMap(int courseId) {
         List<QuestionModel> questions = questionDAO.getAllQuestionsByCourseId(courseId);
         for (QuestionModel q : questions) {
@@ -334,15 +333,12 @@ public class ExamServiceImpl implements IExamService {
         return builder.toString();
     }
 
-    private String extractEmailString(List<StudentInfo> students) {
-        StringBuilder builder = new StringBuilder(students.size() * 20);
+    private List<String> extractEmails(List<StudentInfo> students) {
         int size = students.size();
-        if (size == 0) return "";
-        for (int i = 0; i < size - 1; ++i) {
-            builder.append(students.get(i).getEmail()).append(",");
-        }
-        builder.append(students.get(size - 1).getEmail());
-        return builder.toString();
+        if (size == 0) return new ArrayList<>();
+        List<String> emails = new ArrayList<>(size);
+        students.forEach((info) -> emails.add(info.getEmail()));
+        return emails;
     }
 
 }

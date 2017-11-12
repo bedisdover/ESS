@@ -1,5 +1,6 @@
 package cn.edu.nju.utils;
 
+import cn.edu.nju.info.userInfo.StudentInfo;
 import cn.edu.nju.service.examService.ErrorTemplateFormatException;
 import cn.edu.nju.info.examInfo.OptionInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
@@ -107,17 +108,80 @@ public class ExcelUtil {
         return result;
     }
 
-    public static void print(List<QuestionInfo> list) {
-        String gap = "\t\t\t";
-        System.out.println("题目" + gap + "答案" + gap + "等级" + gap + "选项");
-        for (QuestionInfo vo : list) {
-            System.out.print(vo.getContent() + gap);
-            System.out.print(vo.getAnswer() + gap);
-            System.out.print(vo.getLevel() + gap);
-            for (OptionInfo opt : vo.getOptions()) {
-                System.out.print(opt.getOptionId() + "." + opt.getContent() + gap);
-            }
-            System.out.println();
+    public static List<StudentInfo> extractStudents(int courseId, InputStream excelStream)
+            throws IOException, BiffException, ErrorTemplateFormatException {
+        List<StudentInfo> result = new ArrayList<>();
+        Workbook workbook = Workbook.getWorkbook(excelStream);
+        Sheet sheet = workbook.getSheet(0);
+
+        // check if template is modified
+        int col = sheet.getColumns();
+        Cell[] header = sheet.getRow(0);
+        if (col < 3 || !header[0].getContents().trim().equals("邮箱")
+                || !header[1].getContents().trim().equals("姓名")
+                || !header[2].getContents().trim().equals("班级")) {
+            throw new ErrorTemplateFormatException(
+                    "请不要修改模板的标题,从下一行开始填入题目信息"
+            );
         }
+
+        int row = sheet.getRows();
+        for (int i = 1; i < row; ++i) {
+            Cell[] cells = sheet.getRow(i);
+            if (cells.length == 0 || cells[0].getContents().trim().isEmpty()) {
+                break;
+            }
+
+            StudentInfo info = new StudentInfo();
+            info.setCourseId(courseId);
+
+            String email = cells[0].getContents().trim();
+            if (email.isEmpty()) {
+                throw new ErrorTemplateFormatException(
+                        "第" + (i + 1) + "行邮箱不能为空"
+                );
+            }
+            info.setEmail(email);
+
+            String name = cells[1].getContents().trim();
+            if (name.isEmpty()) {
+                throw new ErrorTemplateFormatException(
+                        "第" + (i + 1) + "行姓名不能为空"
+                );
+            }
+            info.setName(name);
+
+            String classStr = cells[2].getContents().trim();
+            try {
+                int cls = Integer.parseInt(classStr);
+                if (cls < 1 || cls > 4) {
+                    throw new NumberFormatException();
+                }
+                info.setCls(cls);
+            } catch (NumberFormatException e) {
+                throw new ErrorTemplateFormatException(
+                        "第" + (i + 1) + "行班级应该为1~4的整数"
+                );
+            }
+
+            result.add(info);
+        }
+
+        return result;
     }
+
+
+//    public static void print(List<QuestionInfo> list) {
+//        String gap = "\t\t\t";
+//        System.out.println("题目" + gap + "答案" + gap + "等级" + gap + "选项");
+//        for (QuestionInfo vo : list) {
+//            System.out.print(vo.getContent() + gap);
+//            System.out.print(vo.getAnswer() + gap);
+//            System.out.print(vo.getLevel() + gap);
+//            for (OptionInfo opt : vo.getOptions()) {
+//                System.out.print(opt.getOptionId() + "." + opt.getContent() + gap);
+//            }
+//            System.out.println();
+//        }
+//    }
 }

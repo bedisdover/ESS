@@ -16,14 +16,13 @@ public class ExamModel {
     private String num;             // num of questions with each level, separated by ','
     private String startTime;       // yyyy-MM-dd HH:mm:ss
     private String endTime;         // yyyy-MM-dd HH:mm:ss
-    private String students;        // list of email of student involved in the exam, separated by ','
 
     public ExamModel() {
     }
 
     public ExamModel(int examId, int courseId, int enable,
                      String name, String password, String num,
-                     String startTime, String endTime, String students) {
+                     String startTime, String endTime) {
         this.examId = examId;
         this.courseId = courseId;
         this.enable = enable;
@@ -32,7 +31,6 @@ public class ExamModel {
         this.num = num;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.students = students;
     }
 
     public static List<ExamInfo> toInfoList(List<ExamModel> list,
@@ -119,11 +117,4 @@ public class ExamModel {
         this.endTime = endTime;
     }
 
-    public String getStudents() {
-        return students;
-    }
-
-    public void setStudents(String students) {
-        this.students = students;
-    }
 }
