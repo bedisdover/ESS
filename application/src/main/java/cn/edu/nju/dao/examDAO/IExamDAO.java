@@ -24,6 +24,8 @@ public interface IExamDAO {
 
     int getCourseIdByExamId(int examId);
 
+    List<StudentModel> getExamStudents(int courseId);
+
     List<ExamModel> getExamList(int courseId);
 
     ExamModel getExamModelById(int examId);

@@ -35,14 +35,9 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/update',
+                'url': '/exam/student',
                 'method': 'post',
-                'contentType': 'application/json',
-                'data': JSON.stringify({
-                    'examId': 14, 'courseId': 9, 'name': '操作系统',
-                    'startTime': '2018-01-01 00:00:00',
-                    'endTime': '2018-01-02 02:00:00', 'num': [1,1,0],
-                    'marks': [10,10,10]}),
+                'data': {'courseId': 9},
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },

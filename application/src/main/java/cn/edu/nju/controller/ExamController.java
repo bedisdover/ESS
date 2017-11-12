@@ -89,6 +89,17 @@ public class ExamController {
         return examService.getExamList(courseId);
     }
 
+    @RequestMapping(value = "/exam/all")
+    public ResultInfo getAllExams() {
+        return null;
+    }
+
+    @RequestMapping(value = "/exam/student", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo getExamStudents(@RequestParam int courseId) {
+        return examService.getExamStudents(courseId);
+    }
+
     @RequestMapping(value = "/paper/create", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo generatePaper(@RequestParam int examId) {

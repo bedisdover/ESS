@@ -27,6 +27,8 @@ public interface ExamMapper {
 
     void updateStudent(@Param("student") StudentModel student);
 
+    List<StudentModel> getExamStudents(@Param("courseId") int courseId);
+
     int getStudentMD5Count(@Param("md5Value") String md5Value);
 
     int getCourseIdByExamId(@Param("examId") int examId);

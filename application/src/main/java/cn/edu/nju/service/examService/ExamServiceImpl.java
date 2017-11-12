@@ -10,6 +10,7 @@ import cn.edu.nju.info.examInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
+import cn.edu.nju.model.examModel.StudentModel;
 import cn.edu.nju.utils.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,6 +201,13 @@ public class ExamServiceImpl implements IExamService {
                 true, "成功获取考试信息列表",
                 new ExamsOfCourse(courseId, maxNum, infoList)
         );
+    }
+
+    @Override
+    public ResultInfo getExamStudents(int courseId) {
+        List<StudentModel> list = examDAO.getExamStudents(courseId);
+        return new ResultInfo(true, "成功获取学生列表信息",
+                StudentModel.toInfoList(list));
     }
 
     @Override

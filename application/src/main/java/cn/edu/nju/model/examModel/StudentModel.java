@@ -1,5 +1,10 @@
 package cn.edu.nju.model.examModel;
 
+import cn.edu.nju.info.examInfo.StudentInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jiayiwu on 17/11/12.
  * Mail:wujiayi@lgdreamer.com
@@ -27,6 +32,16 @@ public class StudentModel {
         this.cls = cls;
         this.courseId = courseId;
         this.enable = enable;
+    }
+
+    public static List<StudentInfo> toInfoList(List<StudentModel> list) {
+        List<StudentInfo> result = new ArrayList<>(list.size());
+        list.forEach(model -> result.add(new StudentInfo(
+                model.getEmail(), model.getName(),
+                model.getStudentId(), model.getCls(),
+                model.getCourseId()
+        )));
+        return result;
     }
 
     public String getEmail() {
