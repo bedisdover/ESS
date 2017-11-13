@@ -33,4 +33,7 @@ public interface QuestionMapper {
 
     List<QuestionModel> getAllQuestionsByCourseId(
                         @Param("courseId") int courseId);
+
+    QuestionModel getQuestionById(
+                        @Param("questionId") int questionId);
 }

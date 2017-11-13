@@ -1,5 +1,11 @@
 package cn.edu.nju.info.examInfo;
 
+import cn.edu.nju.model.examModel.PaperModel;
+import cn.edu.nju.utils.JsonUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,6 +32,19 @@ public class AnsweredPaperInfo {
         this.mark = mark;
         this.studentEmail = studentEmail;
         this.answeredQuestions = answeredQuestions;
+    }
+
+    public PaperModel toModel() throws IOException {
+        return new PaperModel(
+                paperId, examId, studentEmail, mark, 1,
+                createAnswerContent(answeredQuestions)
+        );
+    }
+
+    private String createAnswerContent(
+            List<AnsweredQuestion> answeredQuestions) throws IOException {
+        List<AnsweredItem> answeredItems = AnsweredQuestion.toAnsweredItem(answeredQuestions);
+        return JsonUtil.toJson(answeredItems);
     }
 
     public int getPaperId() {
