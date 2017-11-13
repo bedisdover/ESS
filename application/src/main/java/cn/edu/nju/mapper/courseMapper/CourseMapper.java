@@ -1,6 +1,7 @@
 package cn.edu.nju.mapper.courseMapper;
 
 import cn.edu.nju.model.courseModel.CourseModel;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,27 +9,15 @@ import java.util.List;
 @Service("courseMapper")
 public interface CourseMapper {
 
-    void addCourse(CourseModel model);
+    void addCourse(@Param("course") CourseModel course);
 
-    void addUserCourseRecord(int userId, int courseId);
+    void updateCourse(@Param("course") CourseModel course);
 
-    void updateCourse(CourseModel model);
+    int getRemovedCourseNum(@Param("courseId") int courseId);
 
-    void removeUserCourseRecord(int userId, int courseId);
+    String getCourseKeyById(@Param("courseId") int courseId);
 
-    int getCourseUserRecordNum(int userId, int courseId);
+    List<CourseModel> getNotSelectCourses(@Param("userId") int userId);
 
-    int getRemovedRecordNum(int userId, int courseId);
-
-    int getRemovedCourseNum(int courseId);
-
-    void recoverRemovedRecord(int courseId);
-
-    void recoverRemovedRecord(int userId, int courseId);
-
-    String getCourseKeyById(int courseId);
-
-    List<CourseModel> getNotSelectCourses(int userId);
-
-    List<CourseModel> getSelectCourses(int userId);
+    List<CourseModel> getSelectCourses(@Param("userId") int userId);
 }
