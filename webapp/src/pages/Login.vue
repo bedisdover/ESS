@@ -69,10 +69,7 @@
                   name: 'MyCourse'
                 })
               } else {
-                this.$notify.error({
-                  title: '错误',
-                  message: message
-                })
+                Util.notifyError(message)
               }
             }, () => {
               this.loginForm.loading = false

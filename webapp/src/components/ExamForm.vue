@@ -53,12 +53,13 @@
         let params = {
           courseId: this.courseId,
           examId: this.exam.examId,
-          num: this.exam.num.join(','),
-          mark: this.exam.marks.join(',')
+          name: this.exam.name,
+          num: this.exam.num,
+          marks: this.exam.marks
         }
 
         let url = '/exam' + (params.examId ? '/update' : '/add')
-        request(url, 'post', params, (success, message) => {
+        request(url, 'post', JSON.stringify(params), (success, message) => {
           if (success) {
             this.$emit('onConfirm', this.exam)
           } else {
