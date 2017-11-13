@@ -15,8 +15,23 @@ const request = function (url, type, data, success, error) {
   // 允许跨域, 使用cookie
   xhr.withCredentials = true
 
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8')
   xhr.responseType = 'json'
+
+  let params = ''
+
+  if (data instanceof Object) {
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8')
+
+    for (let key in data) {
+      params += key + '=' + data[key] + '&'
+    }
+  } else if (typeof data === 'string') {
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+
+    params = data
+  }
+
+  xhr.send(params)
 
   xhr.onload = function () {
     success(xhr.response.success, xhr.response.message, xhr.response.data)
@@ -31,18 +46,6 @@ const request = function (url, type, data, success, error) {
       console.log('error')
     }
   }
-
-  let params = ''
-
-  if (data instanceof Object) {
-    for (let key in data) {
-      params += key + '=' + data[key] + '&'
-    }
-  } else if (data instanceof String) {
-    params = data
-  }
-
-  xhr.send(params)
 
   return xhr
 }
