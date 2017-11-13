@@ -30,14 +30,13 @@
         'url': '/login',
         'method': 'post',
         'data': {
-            'email': '1282976747@qq.com', 'password': 'test', 'role': 1
+            'email': '1483809252@qq.com', 'password': 'test', 'role': 1
         },
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/list',
+                'url': '/exam/all',
                 'method': 'post',
-                'data': {'courseId': 9},
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },

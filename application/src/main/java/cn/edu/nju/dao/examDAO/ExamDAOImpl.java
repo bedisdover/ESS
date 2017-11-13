@@ -53,12 +53,12 @@ public class ExamDAOImpl implements IExamDAO {
 
     @Override
     public List<ExamModel> getJoinExam(String email) {
-        return null;
+        return examMapper.getJoinExam(email);
     }
 
     @Override
     public List<ExamModel> getCreateExam(List<Integer> courseIdList) {
-        return null;
+        return examMapper.getCreateExam(courseIdList);
     }
 
     @Override

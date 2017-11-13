@@ -28,4 +28,8 @@
         WHERE user = #{userId} AND course = #{courseId}
     </update>
 
+    <select id="getCourseIdsByUserId" resultType="int">
+        SELECT course FROM r_user_course WHERE user = #{userId} AND enable = 1
+    </select>
+
 </mapper>

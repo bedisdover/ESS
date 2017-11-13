@@ -7,8 +7,7 @@ import java.io.InputStream;
 
 public interface IExamService {
 
-    ResultInfo createExam(int userId, ExamInfo examInfo,
-                          InputStream students) throws Exception;
+    ResultInfo createExam(int userId, ExamInfo examInfo) throws Exception;
 
     ResultInfo updateExam(int userId,ExamInfo examInfo) throws Exception;
 

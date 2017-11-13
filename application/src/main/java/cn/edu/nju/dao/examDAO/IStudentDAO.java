@@ -15,5 +15,5 @@ public interface IStudentDAO {
 
     boolean isStudentFileMD5Exist(String md5Value);
 
-    void updateExamStudents(int examId, List<StudentModel> students) throws Exception;
+    void updateStudents(List<StudentModel> students) throws Exception;
 }

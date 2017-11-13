@@ -4,22 +4,12 @@ import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.service.examService.IExamService;
-import cn.edu.nju.utils.HttpUtil;
-import cn.edu.nju.utils.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 @Controller
 public class ExamController {
@@ -34,20 +24,10 @@ public class ExamController {
     @RequestMapping(value = "/exam/add", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo createExam(HttpSession session,
-                                 @RequestParam String examInfoStr,
-                                 @RequestParam(required = false)
-                                     CommonsMultipartFile studentFile) {
+                                 @RequestBody ExamInfo examInfo) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         try {
-            ExamInfo examInfo = JsonUtil.toObject(examInfoStr, ExamInfo.class);
-            return examService.createExam(
-                    userId, examInfo, studentFile == null ?
-                            null : studentFile.getInputStream()
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-            Logger.getLogger(ExamController.class).error(e);
-            return new ResultInfo(false, "考生名单文件无法打开", null);
+            return examService.createExam(userId, examInfo);
         } catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(ExamController.class).error(e);
@@ -90,6 +70,7 @@ public class ExamController {
     }
 
     @RequestMapping(value = "/exam/all")
+    @ResponseBody
     public ResultInfo getAllExams(HttpSession session) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return examService.getAllExams(userId);

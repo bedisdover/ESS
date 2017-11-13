@@ -33,6 +33,6 @@ public class UserCourseDAOImpl implements IUserCourseDAO {
 
     @Override
     public List<Integer> getCourseIdsByUserId(int userId) {
-        return null;
+        return userCourseMapper.getCourseIdsByUserId(userId);
     }
 }

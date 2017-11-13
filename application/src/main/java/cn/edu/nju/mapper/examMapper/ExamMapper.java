@@ -23,5 +23,10 @@ public interface ExamMapper {
 
     List<ExamModel> getExamList(@Param("courseId") int courseId);
 
+    List<ExamModel> getJoinExam(@Param("email") String email);
+
+    List<ExamModel> getCreateExam(@Param("courseIdList")
+                                  List<Integer> courseIdList);
+
     ExamModel getExamModelById(@Param("examId") int examId);
 }

@@ -62,7 +62,7 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     @Transactional
-    public ResultInfo createExam(int userId, ExamInfo examInfo, InputStream students) throws Exception {
+    public ResultInfo createExam(int userId, ExamInfo examInfo) throws Exception {
         ResultInfo checkResult = checkExamInfo(userId, examInfo,
                 "只有该门课的老师才能生成该门课的考试");
         if (!checkResult.isSuccess()) {
@@ -94,25 +94,6 @@ public class ExamServiceImpl implements IExamService {
                 numListToString(examInfo.getNum()),
                 startTime, endTime
         ));
-
-        // if students are not null, update student list of the exam
-        if (students != null) {
-            ByteArrayOutputStream bufferStream = IOUtil.toByteArrayOutputStream(students);
-            byte[] data = bufferStream.toByteArray();
-
-            InputStream stream1 = new ByteArrayInputStream(data);
-            String md5Value = EncryptionUtil.md5(stream1);
-            stream1.close();
-
-            if (!studentDAO.isStudentFileMD5Exist(md5Value)) {
-                InputStream stream2 = new ByteArrayInputStream(data);
-                List<StudentInfo> studentList = ExcelUtil.extractStudents(stream2);
-                stream2.close();
-
-                studentList.forEach(info -> info.setCourseId(courseId));
-                studentDAO.updateExamStudents(examId, StudentInfo.toModelList(studentList, md5Value));
-            }
-        }
 
         // add level setting to database
         List<Double> marks = examInfo.getMarks();

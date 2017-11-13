@@ -18,13 +18,9 @@ public class StudentDAOImpl implements IStudentDAO {
 
     private final StudentMapper studentMapper;
 
-    private final StudentExamMapper studentExamMapper;
-
     @Autowired
-    public StudentDAOImpl(StudentMapper studentMapper,
-                          StudentExamMapper studentExamMapper) {
+    public StudentDAOImpl(StudentMapper studentMapper) {
         this.studentMapper = studentMapper;
-        this.studentExamMapper = studentExamMapper;
     }
 
     @Override
@@ -38,10 +34,9 @@ public class StudentDAOImpl implements IStudentDAO {
     }
 
     @Override
-    public void updateExamStudents(int examId, List<StudentModel> students) throws Exception {
+    public void updateStudents(List<StudentModel> students) throws Exception {
         students.forEach((student) -> {
             studentMapper.updateStudent(student);
-            studentExamMapper.createJoinExamRecordIfNotExist(examId, student.getEmail());
         });
     }
 }

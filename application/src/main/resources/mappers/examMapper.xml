@@ -78,6 +78,18 @@
         SELECT * FROM t_exam WHERE courseId = #{courseId} AND enable = 1
     </select>
 
+    <select id="getJoinExam" resultMap="examMap">
+        SELECT * FROM t_exam WHERE enable = 1 AND id IN
+        (SELECT examId FROM r_exam_student WHERE email = #{email} AND enable = 1)
+    </select>
+
+    <select id="getCreateExam" resultMap="examMap">
+        SELECT * FROM t_exam WHERE enable = 1 AND courseId IN
+        <foreach collection="courseIdList" item="courseId" open="(" close=")" separator=",">
+            #{courseId}
+        </foreach>
+    </select>
+
     <select id="getExamModelById" resultMap="examMap">
         SELECT * FROM t_exam WHERE id = #{examId} AND enable = 1
     </select>
