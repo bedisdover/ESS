@@ -14,7 +14,6 @@ public class ExamDAOImpl implements IExamDAO {
 
     private final ExamMapper examMapper;
 
-
     @Autowired
     public ExamDAOImpl(ExamMapper examMapper) {
         this.examMapper = examMapper;
@@ -53,22 +52,33 @@ public class ExamDAOImpl implements IExamDAO {
 
     @Override
     public List<ExamModel> getExamList(int courseId) {
-        return examMapper.getExamList(courseId);
+        return roundTime(examMapper.getExamList(courseId));
     }
 
     @Override
     public List<ExamModel> getJoinExam(String email) {
-        return examMapper.getJoinExam(email);
+        return roundTime(examMapper.getJoinExam(email));
     }
 
     @Override
     public List<ExamModel> getCreateExam(List<Integer> courseIdList) {
-        return examMapper.getCreateExam(courseIdList);
+        return roundTime(examMapper.getCreateExam(courseIdList));
     }
 
     @Override
     public ExamModel getExamModelById(int examId) {
-        return examMapper.getExamModelById(examId);
+        return roundTime(examMapper.getExamModelById(examId));
+    }
+
+    private ExamModel roundTime(ExamModel model) {
+        model.setStartTime(model.getStartTime().split("\\.")[0]);
+        model.setEndTime(model.getEndTime().split("\\.")[0]);
+        return model;
+    }
+
+    private List<ExamModel> roundTime(List<ExamModel> models) {
+        models.forEach(this::roundTime);
+        return models;
     }
 
 }

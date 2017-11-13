@@ -20,4 +20,5 @@ public class DateTimeUtil {
     public static int compareDateTime(Date date1, Date date2) {
         return date1.compareTo(date2);
     }
+
 }
