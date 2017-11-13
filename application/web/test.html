@@ -29,14 +29,16 @@
     $.ajax({
         'url': '/login',
         'method': 'post',
-        'data': {
+        'contentType': 'application/json',
+        'data': JSON.stringify({
             'email': '1483809252@qq.com', 'password': 'test', 'role': 1
-        },
+        }),
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/all',
+                'url': '/exam/list',
                 'method': 'post',
+                'data': {'courseId': 9},
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },

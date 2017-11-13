@@ -1,13 +1,11 @@
 package cn.edu.nju.controller;
 
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
 import cn.edu.nju.service.examService.IPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Jiayiwu on 17/11/13.
@@ -26,8 +24,14 @@ public class PaperController {
 
     @RequestMapping(value = "/paper/create", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo generatePaper(@RequestParam int examId) {
-        return paperService.generatePaper(examId);
+    public ResultInfo generatePaper(@RequestParam int examId,
+                                    @RequestParam String email,
+                                    @RequestParam String password) {
+        return paperService.generatePaper(examId, email, password);
+    }
+
+    public ResultInfo submitPaper(@RequestBody AnsweredPaperInfo paper) {
+        return null;
     }
 
     // TODO finish it until iteration 3

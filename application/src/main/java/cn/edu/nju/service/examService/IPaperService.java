@@ -9,7 +9,7 @@ import cn.edu.nju.info.ResultInfo;
  */
 public interface IPaperService {
 
-    ResultInfo generatePaper(int examId);
+    ResultInfo generatePaper(int examId, String email, String password);
 
     ResultInfo deletePaper(int paperId);
 }

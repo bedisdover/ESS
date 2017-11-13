@@ -26,4 +26,9 @@ public class StudentExamDAOImpl implements IStudentExamDAO {
         studentExamMapper.createJoinExamRecords(examId, emails);
     }
 
+    @Override
+    public boolean doesStudentJoinExam(String email, int examId) {
+        return studentExamMapper.getStudentExamRecordNum(examId, email) > 0;
+    }
+
 }

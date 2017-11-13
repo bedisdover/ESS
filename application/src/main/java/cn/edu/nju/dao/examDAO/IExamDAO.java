@@ -18,6 +18,8 @@ public interface IExamDAO {
 
     int getCourseIdByExamId(int examId);
 
+    String getPasswordByExamId(int examId);
+
     List<ExamModel> getExamList(int courseId);
 
     List<ExamModel> getJoinExam(String email);

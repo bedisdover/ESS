@@ -3,9 +3,11 @@ package cn.edu.nju.service.examService;
 import cn.edu.nju.dao.examDAO.IExamDAO;
 import cn.edu.nju.dao.examDAO.IPaperDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
+import cn.edu.nju.dao.examDAO.IStudentExamDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.QuestionModel;
+import cn.edu.nju.utils.EncryptionUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class PaperServiceImpl implements IPaperService {
 
     private final IQuestionDAO questionDAO;
 
+    private final IStudentExamDAO studentExamDAO;
+
     private Map<Integer, List<QuestionModel>> allQuestions;
 
     private boolean hasGetQuestions;
@@ -34,17 +38,30 @@ public class PaperServiceImpl implements IPaperService {
     @Autowired
     public PaperServiceImpl(IExamDAO examDAO,
                             IPaperDAO paperDAO,
-                            IQuestionDAO questionDAO) {
+                            IQuestionDAO questionDAO,
+                            IStudentExamDAO studentExamDAO) {
         this.examDAO = examDAO;
         this.paperDAO = paperDAO;
         this.questionDAO = questionDAO;
+        this.studentExamDAO = studentExamDAO;
 
         allQuestions = new HashMap<>();
         hasGetQuestions = false;
     }
 
     @Override
-    public ResultInfo generatePaper(int examId) {
+    public ResultInfo generatePaper(int examId, String email, String password) {
+        String originalEmail = EncryptionUtil.base64Decode(email);
+        if (!studentExamDAO.doesStudentJoinExam(originalEmail, examId)) {
+            return new ResultInfo(false, "该学生没有参加这场考试", null);
+        }
+
+        String originalPassword = EncryptionUtil.base64Decode(password);
+        String examPassword = examDAO.getPasswordByExamId(examId);
+        if (!originalPassword.equals(examPassword)) {
+            return new ResultInfo(false, "考试密码错误", null);
+        }
+
         ExamModel examModel = examDAO.getExamModelById(examId);
         int courseId = examModel.getCourseId();
         String[] numArray = examModel.getNum().split(",");

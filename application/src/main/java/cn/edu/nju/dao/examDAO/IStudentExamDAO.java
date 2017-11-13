@@ -13,4 +13,5 @@ public interface IStudentExamDAO {
 
     void joinInExam(int examId, List<String> emails) throws Exception;
 
+    boolean doesStudentJoinExam(String email, int examId);
 }

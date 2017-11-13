@@ -63,6 +63,10 @@
         SELECT courseId FROM t_exam WHERE id = #{examId} AND enable = 1
     </select>
 
+    <select id="getPasswordByExamId" resultType="string">
+        SELECT password FROM t_exam WHERE id = #{examId} AND enable = 1
+    </select>
+
     <resultMap id="examMap" type="cn.edu.nju.model.examModel.ExamModel">
         <id property="examId" column="id"/>
         <result property="courseId" column="courseId"/>

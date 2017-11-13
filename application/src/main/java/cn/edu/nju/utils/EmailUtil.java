@@ -105,7 +105,8 @@ public class EmailUtil {
         List<StudentInfo> students = examInfo.getStudents();
         for (StudentInfo info : students) {
             String newContent = noticeContent + generateExamInfoContent(
-                    examInfo.getName(), examInfo.getStartTime(), examInfo.getEndTime(),
+                    examInfo.getExamId(), examInfo.getName(),
+                    examInfo.getStartTime(), examInfo.getEndTime(),
                     EncryptionUtil.base64Encode(info.getEmail()),
                     EncryptionUtil.base64Encode(examInfo.getPassword())
             );
@@ -124,12 +125,15 @@ public class EmailUtil {
         return new ResultInfo(true, "考试通知发送成功", null);
     }
 
-    private static String generateExamInfoContent(String name,
+    private static String generateExamInfoContent(int examId,
+                                                  String name,
                                                   String startTime,
                                                   String endTime,
                                                   String email,
                                                   String password) {
-        String url = noticeUrl + "?email=" + email + "&amp;password=" + password;
+        String url = noticeUrl + "?email=" + email
+                + "&amp;password=" + password
+                + "&amp;examId=" + examId;
         return  "<br/>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;考试名称: " + name + "<br/>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;开始时间: " + startTime + "<br/>" +

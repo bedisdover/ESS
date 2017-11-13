@@ -19,4 +19,7 @@ public interface StudentExamMapper {
     void createJoinExamRecordIfNotExist(
                                 @Param("examId") int examId,
                                 @Param("email") String email);
+
+    int getStudentExamRecordNum(@Param("examId") int examId,
+                                @Param("email") String email);
 }
