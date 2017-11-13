@@ -28,6 +28,10 @@ public interface IExamDAO {
 
     List<ExamModel> getExamList(int courseId);
 
+    List<ExamModel> getJoinExam(String email);
+
+    List<ExamModel> getCreateExam(List<Integer> courseIdList);
+
     ExamModel getExamModelById(int examId);
 
     void deletePaperById(int paperId) throws Exception;

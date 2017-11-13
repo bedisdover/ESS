@@ -54,11 +54,6 @@ public class CourseDAOImpl implements ICourseDAO {
     }
 
     @Override
-    public int getCourseUserRecordNum(int courseId, int userId) {
-        return courseMapper.getCourseUserRecordNum(userId, courseId);
-    }
-
-    @Override
     public String getCourseKeyById(int courseId) {
         return courseMapper.getCourseKeyById(courseId);
     }

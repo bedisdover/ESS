@@ -75,6 +75,16 @@ public class ExamDAOImpl implements IExamDAO {
     }
 
     @Override
+    public List<ExamModel> getJoinExam(String email) {
+        return null;
+    }
+
+    @Override
+    public List<ExamModel> getCreateExam(List<Integer> courseIdList) {
+        return null;
+    }
+
+    @Override
     public ExamModel getExamModelById(int examId) {
         return examMapper.getExamModelById(examId);
     }

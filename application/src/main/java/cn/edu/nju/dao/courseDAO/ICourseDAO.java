@@ -14,8 +14,6 @@ public interface ICourseDAO {
 
     void quitCourse(int userId, int courseId) throws Exception;
 
-    int getCourseUserRecordNum(int courseId, int userId);
-
     String getCourseKeyById(int courseId);
 
     List<CourseModel> getNotSelectCourses(int userId);

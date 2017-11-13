@@ -90,8 +90,9 @@ public class ExamController {
     }
 
     @RequestMapping(value = "/exam/all")
-    public ResultInfo getAllExams() {
-        return null;
+    public ResultInfo getAllExams(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return examService.getAllExams(userId);
     }
 
     @RequestMapping(value = "/exam/student", method = RequestMethod.POST)

@@ -1,16 +1,20 @@
 package cn.edu.nju.service.examService;
 
+import cn.edu.nju.config.Role;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IExamDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
+import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.info.examInfo.ExamsOfCourse;
 import cn.edu.nju.info.examInfo.StudentInfo;
+import cn.edu.nju.info.userInfo.UserInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.model.examModel.StudentModel;
+import cn.edu.nju.model.userModel.UserModel;
 import cn.edu.nju.utils.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,8 @@ public class ExamServiceImpl implements IExamService {
 
     private final IExamDAO examDAO;
 
+    private final IUserDAO userDAO;
+
     private Map<Integer, List<QuestionModel>> allQuestions;
 
     private boolean hasGetQuestions;
@@ -40,10 +46,12 @@ public class ExamServiceImpl implements IExamService {
     @Autowired
     public ExamServiceImpl(IUserCourseDAO userCourseDAO,
                            IQuestionDAO questionDAO,
-                           IExamDAO examDAO) {
+                           IExamDAO examDAO,
+                           IUserDAO userDAO) {
         this.userCourseDAO = userCourseDAO;
         this.questionDAO = questionDAO;
         this.examDAO = examDAO;
+        this.userDAO = userDAO;
 
         allQuestions = new HashMap<>();
         hasGetQuestions = false;
@@ -201,6 +209,24 @@ public class ExamServiceImpl implements IExamService {
                 true, "成功获取考试信息列表",
                 new ExamsOfCourse(courseId, maxNum, infoList)
         );
+    }
+
+    @Override
+    public ResultInfo getAllExams(int userId) {
+        Role role = userDAO.getRoleById(userId);
+        if (role == Role.student) {
+            UserModel userInfo = userDAO.getUserInfoById(userId);
+            String email = userInfo.getEmail();
+            List<ExamModel> examModelList = examDAO.getJoinExam(email);
+            return new ResultInfo(true, "成功获取考试信息列表", examModelList);
+        } else if (role == Role.teacher) {
+            List<Integer> courseIds = userCourseDAO.getCourseIdsByUserId(userId);
+            List<ExamModel> examModelList = examDAO.getCreateExam(courseIds);
+            return new ResultInfo(true, "成功获取考试信息列表", examModelList);
+        } else {
+            Logger.getLogger(ExamServiceImpl.class).error("Unexpected role of user");
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cn.edu.nju.service.courseService;
 
 import cn.edu.nju.dao.courseDAO.ICourseDAO;
+import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.config.Role;
 import cn.edu.nju.info.ResultInfo;
@@ -19,10 +20,15 @@ public class CourseServiceImpl implements ICourseService {
 
     private final IUserDAO userDAO;
 
+    private final IUserCourseDAO userCourseDAO;
+
     @Autowired
-    public CourseServiceImpl(ICourseDAO courseDAO, IUserDAO userDAO) {
+    public CourseServiceImpl(ICourseDAO courseDAO,
+                             IUserDAO userDAO,
+                             IUserCourseDAO userCourseDAO) {
         this.courseDAO = courseDAO;
         this.userDAO = userDAO;
+        this.userCourseDAO = userCourseDAO;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public ResultInfo modifyCourse(int userId, CourseInfo info) {
-        boolean doTeachTheCourse = courseDAO.getCourseUserRecordNum(info.getId(), userId) > 0;
+        boolean doTeachTheCourse = userCourseDAO.getCourseUserRecordNum(info.getId(), userId) > 0;
         if (!doTeachTheCourse) {
             return new ResultInfo(false, "只有授课老师才能需改课程信息", null);
         }
@@ -65,7 +71,7 @@ public class CourseServiceImpl implements ICourseService {
             return new ResultInfo(false, "教师无法选课", null);
         }
 
-        boolean doSelectTheCourse = courseDAO.getCourseUserRecordNum(courseId, userId) > 0;
+        boolean doSelectTheCourse = userCourseDAO.getCourseUserRecordNum(courseId, userId) > 0;
         if (doSelectTheCourse) {
             return new ResultInfo(false, "已经选择了这门课,无需重新加入", null);
         }
@@ -92,7 +98,7 @@ public class CourseServiceImpl implements ICourseService {
             return new ResultInfo(false, "教师无法退课", null);
         }
 
-        boolean doSelectTheCourse = courseDAO.getCourseUserRecordNum(courseId, userId) > 0;
+        boolean doSelectTheCourse = userCourseDAO.getCourseUserRecordNum(courseId, userId) > 0;
         if (!doSelectTheCourse) {
             return new ResultInfo(false, "没有选择这门课,无需退出", null);
         }
