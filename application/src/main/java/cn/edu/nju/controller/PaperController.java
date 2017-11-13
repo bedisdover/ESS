@@ -36,7 +36,6 @@ public class PaperController {
         return paperService.submitPaper(paper);
     }
 
-    // TODO finish it until iteration 3
     @RequestMapping(value = "/paper/delete", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo deletePaper(@RequestParam int paperId) {

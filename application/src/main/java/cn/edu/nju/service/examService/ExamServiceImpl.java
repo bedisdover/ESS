@@ -2,7 +2,10 @@ package cn.edu.nju.service.examService;
 
 import cn.edu.nju.config.Role;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
-import cn.edu.nju.dao.examDAO.*;
+import cn.edu.nju.dao.examDAO.IExamDAO;
+import cn.edu.nju.dao.examDAO.ILevelDAO;
+import cn.edu.nju.dao.examDAO.IQuestionDAO;
+import cn.edu.nju.dao.examDAO.IStudentExamDAO;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
@@ -11,15 +14,15 @@ import cn.edu.nju.info.examInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.userModel.UserModel;
-import cn.edu.nju.utils.*;
+import cn.edu.nju.utils.DateTimeUtil;
+import cn.edu.nju.utils.EmailUtil;
+import cn.edu.nju.utils.RandomUtil;
+import cn.edu.nju.utils.StringUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,8 +41,6 @@ public class ExamServiceImpl implements IExamService {
 
     private final IUserDAO userDAO;
 
-    private final IStudentDAO studentDAO;
-
     private final IStudentExamDAO studentExamDAO;
 
 
@@ -49,14 +50,12 @@ public class ExamServiceImpl implements IExamService {
                            ILevelDAO levelDAO,
                            IExamDAO examDAO,
                            IUserDAO userDAO,
-                           IStudentDAO studentDAO,
                            IStudentExamDAO studentExamDAO) {
         this.userCourseDAO = userCourseDAO;
         this.questionDAO = questionDAO;
         this.levelDAO = levelDAO;
         this.examDAO = examDAO;
         this.userDAO = userDAO;
-        this.studentDAO = studentDAO;
         this.studentExamDAO = studentExamDAO;
     }
 
@@ -174,14 +173,15 @@ public class ExamServiceImpl implements IExamService {
         List<ExamsOfCourse.ExamInfo> infoList = new ArrayList<>();
         for (ExamModel exam : list) {
             String[] array = exam.getNum().split(",");
-            List<Double> marks = new ArrayList<>(array.length);
             List<Integer> num = new ArrayList<>(array.length);
+            List<Integer> levels = new ArrayList<>(array.length);
             for (int i = 1; i <= array.length; ++i) {
-                marks.add(levelDAO.getMarkOfQuestion(
-                        exam.getExamId(), courseId, i
-                ));
                 num.add(Integer.parseInt(array[i - 1]));
+                levels.add(i);
             }
+            List<Double> marks = levelDAO.getMarksOfQuestions(
+                    exam.getExamId(), courseId, levels
+            );
             infoList.add(new ExamsOfCourse.ExamInfo(
                     exam.getExamId(), exam.getName(),
                     exam.getPassword(), exam.getStartTime(),
