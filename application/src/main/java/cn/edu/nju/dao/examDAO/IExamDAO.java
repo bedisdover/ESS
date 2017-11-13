@@ -14,17 +14,9 @@ public interface IExamDAO {
 
     void updateExam(ExamModel model) throws Exception;
 
-    void joinInExam(int examId, List<String> emails) throws Exception;
-
-    void updateExamStudents(int examId, List<StudentModel> students) throws Exception;
-
-    boolean isStudentFileMD5Exist(String md5Value);
-
     void updateNumOfQuestions(int examId, String num) throws Exception;
 
     int getCourseIdByExamId(int examId);
-
-    List<StudentModel> getExamStudents(int courseId);
 
     List<ExamModel> getExamList(int courseId);
 
@@ -34,5 +26,4 @@ public interface IExamDAO {
 
     ExamModel getExamModelById(int examId);
 
-    void deletePaperById(int paperId) throws Exception;
 }

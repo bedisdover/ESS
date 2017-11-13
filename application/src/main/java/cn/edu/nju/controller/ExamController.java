@@ -95,28 +95,4 @@ public class ExamController {
         return examService.getAllExams(userId);
     }
 
-    @RequestMapping(value = "/exam/student", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo getExamStudents(@RequestParam int courseId) {
-        return examService.getExamStudents(courseId);
-    }
-
-    @RequestMapping(value = "/paper/create", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo generatePaper(@RequestParam int examId) {
-        return examService.generatePaper(examId);
-    }
-
-    // TODO finish it until iteration 3
-    @RequestMapping(value = "/paper/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo deletePaper(@RequestParam int paperId) {
-        return examService.deletePaper(paperId);
-    }
-
-    @RequestMapping(value = "/student/download")
-    public void downStudentTemplate(HttpServletRequest request,
-                                    HttpServletResponse response) {
-        HttpUtil.fileDownload("/download/studentTemplate.xls", request, response);
-    }
 }

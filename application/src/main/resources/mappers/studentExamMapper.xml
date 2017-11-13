@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nju.mapper.examMapper.StudentExamMapper">
+
+    <insert id="createJoinExamRecords" useGeneratedKeys="true"
+            parameterType="java.util.List">
+        INSERT INTO r_exam_student(examId, email, enable) VALUES
+        <foreach collection="emails" item="email" separator=",">
+            (#{examId}, #{email}, 1)
+        </foreach>
+    </insert>
+
+    <insert id="createJoinExamRecordIfNotExist" useGeneratedKeys="true">
+        <selectKey keyProperty="count" order="BEFORE" resultType="int">
+            SELECT COUNT(*) from r_exam_student
+            WHERE email = #{email} AND examId = #{examId} AND enable = 1
+        </selectKey>
+        <if test="count == 0">
+            INSERT INTO r_exam_student(email, examId, enable)
+            VALUES (#{email}, #{examId}, 1)
+        </if>
+    </insert>
+
+</mapper>

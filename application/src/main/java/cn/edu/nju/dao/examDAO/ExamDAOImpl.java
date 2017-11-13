@@ -2,7 +2,6 @@ package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.mapper.examMapper.ExamMapper;
 import cn.edu.nju.model.examModel.ExamModel;
-import cn.edu.nju.model.examModel.StudentModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import java.util.List;
 public class ExamDAOImpl implements IExamDAO {
 
     private final ExamMapper examMapper;
+
 
     @Autowired
     public ExamDAOImpl(ExamMapper examMapper) {
@@ -37,24 +37,6 @@ public class ExamDAOImpl implements IExamDAO {
     }
 
     @Override
-    public void joinInExam(int examId, List<String> emails) throws Exception {
-        examMapper.createJoinExamRecords(examId, emails);
-    }
-
-    @Override
-    public void updateExamStudents(int examId, List<StudentModel> students) throws Exception {
-        students.forEach((student) -> {
-            examMapper.updateStudent(student);
-            examMapper.createJoinExamRecordIfNotExist(examId, student.getEmail());
-        });
-    }
-
-    @Override
-    public boolean isStudentFileMD5Exist(String md5Value) {
-        return examMapper.getStudentMD5Count(md5Value) > 0;
-    }
-
-    @Override
     public void updateNumOfQuestions(int examId, String num) throws Exception {
         examMapper.updateNumOfQuestions(examId, num);
     }
@@ -62,11 +44,6 @@ public class ExamDAOImpl implements IExamDAO {
     @Override
     public int getCourseIdByExamId(int examId) {
         return examMapper.getCourseIdByExamId(examId);
-    }
-
-    @Override
-    public List<StudentModel> getExamStudents(int courseId) {
-        return examMapper.getExamStudents(courseId);
     }
 
     @Override
@@ -89,8 +66,4 @@ public class ExamDAOImpl implements IExamDAO {
         return examMapper.getExamModelById(examId);
     }
 
-    @Override
-    public void deletePaperById(int paperId) throws Exception {
-
-    }
 }

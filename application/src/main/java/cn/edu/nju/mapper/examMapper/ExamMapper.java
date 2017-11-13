@@ -19,18 +19,6 @@ public interface ExamMapper {
     void updateNumOfQuestions(@Param("examId") int examId,
                               @Param("num") String num);
 
-    void createJoinExamRecords(@Param("examId") int examId,
-                               @Param("emails") List<String> emails);
-
-    void createJoinExamRecordIfNotExist(@Param("examId") int examId,
-                                        @Param("email") String email);
-
-    void updateStudent(@Param("student") StudentModel student);
-
-    List<StudentModel> getExamStudents(@Param("courseId") int courseId);
-
-    int getStudentMD5Count(@Param("md5Value") String md5Value);
-
     int getCourseIdByExamId(@Param("examId") int examId);
 
     List<ExamModel> getExamList(@Param("courseId") int courseId);

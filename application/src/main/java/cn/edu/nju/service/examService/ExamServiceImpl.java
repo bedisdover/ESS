@@ -2,19 +2,14 @@ package cn.edu.nju.service.examService;
 
 import cn.edu.nju.config.Role;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
-import cn.edu.nju.dao.examDAO.IExamDAO;
-import cn.edu.nju.dao.examDAO.ILevelDAO;
-import cn.edu.nju.dao.examDAO.IQuestionDAO;
+import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.info.examInfo.ExamsOfCourse;
 import cn.edu.nju.info.examInfo.StudentInfo;
-import cn.edu.nju.info.userInfo.UserInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
-import cn.edu.nju.model.examModel.QuestionModel;
-import cn.edu.nju.model.examModel.StudentModel;
 import cn.edu.nju.model.userModel.UserModel;
 import cn.edu.nju.utils.*;
 import org.apache.log4j.Logger;
@@ -24,10 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service(value = "examService")
 public class ExamServiceImpl implements IExamService {
@@ -42,24 +38,26 @@ public class ExamServiceImpl implements IExamService {
 
     private final IUserDAO userDAO;
 
-    private Map<Integer, List<QuestionModel>> allQuestions;
+    private final IStudentDAO studentDAO;
 
-    private boolean hasGetQuestions;
+    private final IStudentExamDAO studentExamDAO;
+
 
     @Autowired
     public ExamServiceImpl(IUserCourseDAO userCourseDAO,
                            IQuestionDAO questionDAO,
                            ILevelDAO levelDAO,
                            IExamDAO examDAO,
-                           IUserDAO userDAO) {
+                           IUserDAO userDAO,
+                           IStudentDAO studentDAO,
+                           IStudentExamDAO studentExamDAO) {
         this.userCourseDAO = userCourseDAO;
         this.questionDAO = questionDAO;
         this.levelDAO = levelDAO;
         this.examDAO = examDAO;
         this.userDAO = userDAO;
-
-        allQuestions = new HashMap<>();
-        hasGetQuestions = false;
+        this.studentDAO = studentDAO;
+        this.studentExamDAO = studentExamDAO;
     }
 
     @Override
@@ -106,13 +104,13 @@ public class ExamServiceImpl implements IExamService {
             String md5Value = EncryptionUtil.md5(stream1);
             stream1.close();
 
-            if (!examDAO.isStudentFileMD5Exist(md5Value)) {
+            if (!studentDAO.isStudentFileMD5Exist(md5Value)) {
                 InputStream stream2 = new ByteArrayInputStream(data);
                 List<StudentInfo> studentList = ExcelUtil.extractStudents(stream2);
                 stream2.close();
 
                 studentList.forEach(info -> info.setCourseId(courseId));
-                examDAO.updateExamStudents(examId, StudentInfo.toModelList(studentList, md5Value));
+                studentDAO.updateExamStudents(examId, StudentInfo.toModelList(studentList, md5Value));
             }
         }
 
@@ -129,7 +127,7 @@ public class ExamServiceImpl implements IExamService {
         // add student-join-in-exam relationship in database
         // assume that students here are all in t_student
         // this is guaranteed by frontend
-        examDAO.joinInExam(examId, extractEmails(examInfo.getStudents()));
+        studentExamDAO.joinInExam(examId, extractEmails(examInfo.getStudents()));
 
         // send email to student, tell them basic information of the exam
         sendNotificationEmail(examInfo);
@@ -234,56 +232,6 @@ public class ExamServiceImpl implements IExamService {
         }
     }
 
-    @Override
-    public ResultInfo getExamStudents(int courseId) {
-        List<StudentModel> list = examDAO.getExamStudents(courseId);
-        return new ResultInfo(true, "成功获取学生列表信息",
-                StudentModel.toInfoList(list));
-    }
-
-    @Override
-    public ResultInfo generatePaper(int examId) {
-        ExamModel examModel = examDAO.getExamModelById(examId);
-        int courseId = examModel.getCourseId();
-        String[] numArray = examModel.getNum().split(",");
-        List<Integer> numList = new ArrayList<>(numArray.length);
-        for (String str : numArray) {
-            numList.add(Integer.parseInt(str));
-        }
-
-        if (!hasGetQuestions) {
-            synchronized (this) {
-                if (!hasGetQuestions) {
-                    hasGetQuestions = true;
-                    initQuestionMap(courseId);
-                }
-            }
-        }
-
-        List<QuestionModel> questions = generateQuestions(numList);
-        try {
-            return new ResultInfo(true, "成功生成试卷",
-                    QuestionModel.toInfoList(questions)
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-            Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
-    }
-
-    @Override
-    public ResultInfo deletePaper(int paperId) {
-        try {
-            examDAO.deletePaperById(paperId);
-            return new ResultInfo(true, "成功删除试卷", null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
-    }
-
     private ResultInfo checkExamInfo(int userId, ExamInfo examInfo,
                                      String permissionErrorMsg) {
         int courseId = examInfo.getCourseId();
@@ -326,33 +274,6 @@ public class ExamServiceImpl implements IExamService {
             }
         };
         new Thread(task).start();
-    }
-
-    private void initQuestionMap(int courseId) {
-        List<QuestionModel> questions = questionDAO.getAllQuestionsByCourseId(courseId);
-        for (QuestionModel q : questions) {
-            int level = q.getLevel();
-            allQuestions.computeIfAbsent(level, lv -> new ArrayList<>());
-            allQuestions.get(level).add(q);
-        }
-    }
-
-    private List<QuestionModel> generateQuestions(List<Integer> numList) {
-        List<QuestionModel> result = new ArrayList<>();
-        int size = numList.size();
-        for (int level = 1; level <= size; ++level) {
-            List<QuestionModel> list = allQuestions.get(level);
-            List<Integer> index = new ArrayList<>();
-            for (int i = 0; i < list.size(); ++i) {
-                index.add(i);
-            }
-            Collections.shuffle(index);
-            int num = numList.get(level - 1);
-            for (int i = 0; i < num; ++i) {
-                result.add(list.get(index.get(i)));
-            }
-        }
-        return result;
     }
 
     private ResultInfo isNumValid(List<Integer> num, int courseId) {
