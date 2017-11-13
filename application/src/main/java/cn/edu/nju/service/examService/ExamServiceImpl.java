@@ -215,6 +215,18 @@ public class ExamServiceImpl implements IExamService {
 
     private ResultInfo checkExamInfo(int userId, ExamInfo examInfo,
                                      String permissionErrorMsg) {
+        if (examInfo.getName() == null) {
+            return new ResultInfo(false, "考试名称不能为空", null);
+        }
+
+        if (examInfo.getMarks() == null) {
+            return new ResultInfo(false, "题目分数列表不能为空", null);
+        }
+
+        if (examInfo.getStudents() == null) {
+            return new ResultInfo(false, "考试名单不能为空", null);
+        }
+
         int courseId = examInfo.getCourseId();
         ResultInfo permissionResult = checkPermission(
                 userId, courseId, permissionErrorMsg
@@ -258,6 +270,10 @@ public class ExamServiceImpl implements IExamService {
     }
 
     private ResultInfo isNumValid(List<Integer> num, int courseId) {
+        if (num == null) {
+            return new ResultInfo(false, "题目数量不能为空", null);
+        }
+
         try {
             int level = 1;
             for (int n : num) {
