@@ -6,7 +6,7 @@
           <div slot="header">
             <el-button type="text" class="btn-back" @click="hideExamForm" v-show="examFormVisible">&lt;&lt; 返回
             </el-button>
-            <span>{{getTitle()}}</span>
+            <span>{{title}}</span>
             <el-button type="text" class="btn-create" @click="createExam" v-show="!examFormVisible">新建考试</el-button>
           </div>
           <el-table :data="examListShow" class="table" v-show="!examFormVisible">
@@ -25,21 +25,25 @@
               <template slot-scope="scope">
                   <span class="operation">
                     <el-tooltip content="编辑考试" effect="light">
-                        <svg class="icon" aria-hidden="true" @click="editExam(scope.row)">
+                        <span>
+                          <svg class="icon" aria-hidden="true" @click="editExam(scope.row)">
                             <use xlink:href="#icon-edit"></use>
-                        </svg>
+                          </svg>
+                        </span>
                     </el-tooltip>
                     <el-tooltip content="删除考试" effect="light">
-                        <svg class="icon" aria-hidden="true" @click="deleteExam(scope.$index)">
+                        <span>
+                          <svg class="icon" aria-hidden="true" @click="deleteExam(scope.$index)">
                             <use xlink:href="#icon-delete"></use>
-                        </svg>
+                          </svg>
+                        </span>
                     </el-tooltip>
                   </span>
               </template>
             </el-table-column>
           </el-table>
-          <ExamForm :courseId="id" :maxNum="maxNum" :exam="exam" v-on:onConfirm="onConfirm" :onCancel="hideExamForm"
-                    v-if="examFormVisible"></ExamForm>
+          <ExamForm :courseId="id" :maxNum="maxNum" :exam="exam" :students="students" v-on:onConfirm="onConfirm"
+                    :onCancel="hideExamForm" v-if="examFormVisible"></ExamForm>
         </el-card>
       </el-col>
     </el-row>
@@ -61,10 +65,15 @@
         examList: [],
         // 各难度级别试题数目
         maxNum: [],
+        // 课程学生列表
+        students: [],
         exam: {}
       }
     },
     computed: {
+      title: function () {
+        return this.examFormVisible ? (this.exam ? '新建考试' : '编辑考试') : '考试列表'
+      },
       /**
        * 展示数据
        */
@@ -95,14 +104,16 @@
           this.initData(data)
         }
       })
+      request('/student/exam', 'post', params, (success, message, data) => {
+        if (success) {
+          this.students = data
+        }
+      })
     },
     methods: {
       initData: function (data) {
         this.examList = data.examInfoList
         this.maxNum = data.maxNum
-      },
-      getTitle: function () {
-        return this.examFormVisible ? this.index === -1 ? '新建考试' : '编辑考试' : '考试列表'
       },
       hideExamForm: function () {
         this.examFormVisible = false
@@ -119,6 +130,7 @@
         this.examFormVisible = true
       },
       deleteExam: function (index) {
+        console.log(index)
       },
       onConfirm: function (exam) {
         if (exam.examId) { // 编辑考试

@@ -1,12 +1,12 @@
 <template>
   <div class="main">
-    <el-form ref="examForm" :model="exam" labelWidth="80px">
+    <el-form ref="examForm" :model="examInfo" labelWidth="80px">
       <el-form-item label="考试名称">
-        <el-input v-model="exam.name"></el-input>
+        <el-input v-model="examInfo.name"></el-input>
       </el-form-item>
       <el-form-item label="考试时间">
         <el-date-picker
-          v-model="exam.time"
+          v-model="examInfo.time"
           type="datetimerange"
           range-separator="至"
           start-placeholder="开始时间"
@@ -17,7 +17,7 @@
         <el-input></el-input>
       </el-form-item>
       <el-form-item label="试卷分数">
-        <LevelScore :maxNum="maxNum" :num="exam.num" :marks="exam.marks"
+        <LevelScore :maxNum="maxNum" :num="examInfo.num" :marks="examInfo.marks"
                     v-on:onUpdateScore="onUpdateScore"></LevelScore>
       </el-form-item>
       <el-form-item class="footer">
@@ -35,12 +35,19 @@
 
   export default {
     name: 'ExamForm',
-    props: ['courseId', 'maxNum', 'exam', 'onConfirm', 'onCancel'],
+    props: ['courseId', 'maxNum', 'exam', 'students', 'onConfirm', 'onCancel'],
     components: {LevelScore},
     data () {
       return {
-        test: '1'
+        examInfo: {
+          name: this.exam.name,
+          time: [new Date(), new Date()],
+          num: this.exam.num,
+          marks: this.exam.marks
+        }
       }
+    },
+    computed: {
     },
     methods: {
       onUpdateScore: function (num, marks) {
@@ -48,14 +55,17 @@
         this.exam.marks = marks
       },
       submit: function () {
-//        this.exam.startTime = Util.formatTime(this.exam.time[0])
-//        this.exam.endTime = Util.formatTime(this.exam.time[1])
         let params = {
           courseId: this.courseId,
           examId: this.exam.examId,
-          name: this.exam.name,
-          num: this.exam.num,
-          marks: this.exam.marks
+          name: this.examInfo.name,
+//          startTime: Util.formatTime(this.exam.time[0]),
+//          endTime: Util.formatTime(this.exam.time[1]),
+          startTime: '2017-11-14 12:00:00',
+          endTime: '2017-11-14 14:00:00',
+          num: this.examInfo.num,
+          marks: this.examInfo.marks,
+          students: this.students
         }
 
         let url = '/exam' + (params.examId ? '/update' : '/add')
