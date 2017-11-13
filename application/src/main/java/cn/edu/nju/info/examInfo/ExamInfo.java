@@ -7,7 +7,9 @@ import java.util.List;
 
 public class ExamInfo {
 
-    private int examId;
+    private Integer examId;     // set Integer instead of int
+                                // because we need to check
+                                // whether this field is set
     private int courseId;
     private String name;
     private String password;
@@ -22,7 +24,7 @@ public class ExamInfo {
     public ExamInfo() {
     }
 
-    public ExamInfo(int examId, int courseId, String name, String password,
+    public ExamInfo(Integer examId, int courseId, String name, String password,
                     List<Integer> num, List<Integer> maxNum,
                     List<Double> marks, List<StudentInfo> students) {
         this.examId = examId;
@@ -42,11 +44,11 @@ public class ExamInfo {
         );
     }
 
-    public int getExamId() {
+    public Integer getExamId() {
         return examId;
     }
 
-    public void setExamId(int examId) {
+    public void setExamId(Integer examId) {
         this.examId = examId;
     }
 

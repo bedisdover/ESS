@@ -23,7 +23,8 @@
         <foreach collection="levelModelList" item="model" separator=";">
             UPDATE t_level
             <set> mark = #{model.mark} </set>
-            WHERE id = #{model.levelId}
+            WHERE courseId = #{model.courseId} AND level = #{model.level}
+                  AND examId = #{model.examId}
         </foreach>
     </update>
 
