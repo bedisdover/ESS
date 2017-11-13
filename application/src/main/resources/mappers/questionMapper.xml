@@ -45,62 +45,14 @@
     <select id="getCourseIdByQuestionId" resultType="int">
         SELECT courseId FROM t_question WHERE id = #{questionId} AND enable = 1
     </select>
-    
-    <insert id="setMarkOfLevel" useGeneratedKeys="true" keyProperty="id">
-        <selectKey keyProperty="count" order="BEFORE" resultType="int">
-            SELECT COUNT(*) from t_level
-            WHERE examId = #{examId} AND courseId = #{courseId} AND level = #{level}
-        </selectKey>
-        <if test="count == 0">
-            INSERT INTO t_level(courseId, level, mark, examId)
-            VALUES (#{courseId}, #{level}, #{mark}, #{examId})
-        </if>
-        <if test="count > 0">
-            UPDATE t_level SET mark = #{mark}
-            WHERE examId = #{examId} AND courseId = #{courseId} AND level = #{level}
-        </if>
-    </insert>
-
-    <resultMap id="levelMap" type="cn.edu.nju.model.examModel.LevelModel">
-        <id column="id" property="levelId"/>
-        <result column="courseId" property="courseId"/>
-        <result column="level" property="level"/>
-        <result column="mark" property="mark"/>
-        <result column="examId" property="examId"/>
-    </resultMap>
-
-    <select id="getLevelModelList" resultMap="levelMap">
-        SELECT * FROM t_level WHERE courseId = #{courseId}
-    </select>
 
     <select id="getLevelNumByCourseId" resultType="int">
         SELECT COUNT(DISTINCT level) FROM t_question WHERE courseId = #{courseId}
     </select>
 
-
-    <update id="updateMarkOfLevel" parameterType="java.util.List">
-        <foreach collection="levelModelList" item="model" separator=";">
-            UPDATE t_level
-            <set> mark = #{model.mark} </set>
-            WHERE id = #{model.levelId}
-        </foreach>
-    </update>
-
-    <insert id="addLevelsOfExam" useGeneratedKeys="true" parameterType="java.util.List">
-        INSERT INTO t_level(courseId, level, mark, examId) VALUES
-        <foreach collection="levelModelList" item="model" separator=",">
-            (#{model.courseId}, #{model.level}, #{model.mark}, #{model.examId})
-        </foreach>
-    </insert>
-
     <select id="getNumOfQuestions" resultType="int">
         SELECT COUNT(*) FROM t_question
         WHERE courseId = #{courseId} AND level = #{level}
-    </select>
-
-    <select id="getMarkOfQuestion" resultType="double">
-        SELECT mark FROM t_level
-        WHERE examId = #{examId} AND courseId = #{courseId} AND level = #{level}
     </select>
 
     <select id="getAllQuestionsByCourseId" resultMap="questionMap">

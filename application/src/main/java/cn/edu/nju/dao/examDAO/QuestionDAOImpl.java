@@ -46,43 +46,13 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
-    public void setMarkOfLevel(int courseId, int examId, double[] marks) throws Exception {
-        // FIXME: maybe can be optimized with a single sql
-        int level = 1;
-        for (double mark : marks) {
-            questionMapper.setMarkOfLevel(courseId, examId, mark, level);
-            level += 1;
-        }
-    }
-
-    @Override
-    public List<LevelModel> getLevelModelList(int courseId) {
-        return questionMapper.getLevelModelList(courseId);
-    }
-
-    @Override
     public int getLevelNumByCourseId(int courseId) {
         return questionMapper.getLevelNumByCourseId(courseId);
     }
 
     @Override
-    public void updateMarkOfLevel(List<LevelModel> levelModelList) throws Exception {
-        questionMapper.updateMarkOfLevel(levelModelList);
-    }
-
-    @Override
-    public void addLevelsOfExam(List<LevelModel> levelModelList) throws Exception {
-        questionMapper.addLevelsOfExam(levelModelList);
-    }
-
-    @Override
     public int getNumOfQuestions(int courseId, int level) {
         return questionMapper.getNumOfQuestions(courseId, level);
-    }
-
-    @Override
-    public double getMarkOfQuestion(int examId, int courseId, int level) {
-        return questionMapper.getMarkOfQuestion(examId, courseId, level);
     }
 
     @Override

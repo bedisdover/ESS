@@ -67,30 +67,4 @@ public class QuestionController {
         return questionService.deleteQuestions(userId, questionIdList);
     }
 
-    /**
-     * mark should between ExamConfig.MIN_MARK and ExamConfig.MAX_MARK exclusively
-     */
-    @RequestMapping(value = "/level/config", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo setMarkOfLevel(HttpSession session,
-                                     @RequestParam int examId,
-                                     @RequestParam int courseId,
-                                     @RequestParam double[] marks) {
-        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-        return questionService.setMarkOfLevel(userId, courseId, examId, marks);
-    }
-
-    @RequestMapping(value = "/level/list", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo getLevelInfoList(@RequestParam int courseId) {
-        return questionService.getLevelInfoList(courseId);
-    }
-
-    @RequestMapping(value = "/level/update", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo updateMarkOfLevel(HttpSession session,
-                                        @RequestBody List<LevelInfo> levelInfoList) {
-        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-        return questionService.updateMarkOfLevel(userId, levelInfoList);
-    }
 }

@@ -3,6 +3,7 @@ package cn.edu.nju.service.examService;
 import cn.edu.nju.config.Role;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IExamDAO;
+import cn.edu.nju.dao.examDAO.ILevelDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.ResultInfo;
@@ -35,6 +36,8 @@ public class ExamServiceImpl implements IExamService {
 
     private final IQuestionDAO questionDAO;
 
+    private final ILevelDAO levelDAO;
+
     private final IExamDAO examDAO;
 
     private final IUserDAO userDAO;
@@ -46,10 +49,12 @@ public class ExamServiceImpl implements IExamService {
     @Autowired
     public ExamServiceImpl(IUserCourseDAO userCourseDAO,
                            IQuestionDAO questionDAO,
+                           ILevelDAO levelDAO,
                            IExamDAO examDAO,
                            IUserDAO userDAO) {
         this.userCourseDAO = userCourseDAO;
         this.questionDAO = questionDAO;
+        this.levelDAO = levelDAO;
         this.examDAO = examDAO;
         this.userDAO = userDAO;
 
@@ -119,7 +124,7 @@ public class ExamServiceImpl implements IExamService {
             levelModels.add(new LevelModel(/* placeholder */0, courseId, level, examId, mark));
             level += 1;
         }
-        questionDAO.addLevelsOfExam(levelModels);
+        levelDAO.addLevelsOfExam(levelModels);
 
         // add student-join-in-exam relationship in database
         // assume that students here are all in t_student
@@ -157,7 +162,7 @@ public class ExamServiceImpl implements IExamService {
             levelModels.add(new LevelModel(0, courseId, level, examId, mark));
             level += 1;
         }
-        questionDAO.updateMarkOfLevel(levelModels);
+        levelDAO.updateMarkOfLevel(levelModels);
 
         return new ResultInfo(true, "成功修改考试信息", null);
     }
@@ -193,7 +198,7 @@ public class ExamServiceImpl implements IExamService {
             List<Double> marks = new ArrayList<>(array.length);
             List<Integer> num = new ArrayList<>(array.length);
             for (int i = 1; i <= array.length; ++i) {
-                marks.add(questionDAO.getMarkOfQuestion(
+                marks.add(levelDAO.getMarkOfQuestion(
                         exam.getExamId(), courseId, i
                 ));
                 num.add(Integer.parseInt(array[i - 1]));
