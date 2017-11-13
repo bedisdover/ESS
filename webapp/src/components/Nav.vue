@@ -10,9 +10,11 @@
         <span class="name">{{user.name}}</span>
         <span class="logout">
           <el-tooltip content="登 出">
-            <svg class="icon" aria-hidden="true" @click="logout">
-              <use xlink:href="#icon-logout"></use>
-            </svg>
+            <span>
+              <svg class="icon" aria-hidden="true" @click="logout">
+                <use xlink:href="#icon-logout"></use>
+              </svg>
+            </span>
           </el-tooltip>
         </span>
       </div>
