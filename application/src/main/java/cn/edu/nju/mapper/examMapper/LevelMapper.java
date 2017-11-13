@@ -28,6 +28,11 @@ public interface LevelMapper {
                         @Param("courseId") int courseId,
                         @Param("level") int level);
 
+    List<Double> getMarksOfQuestions(
+                        @Param("examId") int examId,
+                        @Param("courseId") int courseId,
+                        @Param("levels") List<Integer> levels);
+
     List<LevelModel> getLevelModelList(
                         @Param("courseId") int courseId);
 

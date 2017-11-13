@@ -17,6 +17,8 @@ public interface ILevelDAO {
 
     double getMarkOfQuestion(int examId, int courseId, int level);
 
+    List<Double> getMarksOfQuestions(int examId, int courseId, List<Integer> levels);
+
     List<LevelModel> getLevelModelList(int courseId);
 
     void addLevelsOfExam(List<LevelModel> levelModelList) throws Exception;

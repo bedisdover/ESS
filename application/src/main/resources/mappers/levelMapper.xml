@@ -33,6 +33,14 @@
         WHERE examId = #{examId} AND courseId = #{courseId} AND level = #{level}
     </select>
 
+    <select id="getMarksOfQuestions" resultType="double">
+        SELECT mark FROM t_level
+        WHERE examId = #{examId} AND courseId = #{courseId} AND level IN
+        <foreach collection="levels" item="level" open="(" close=")" separator=",">
+            #{level}
+        </foreach>
+    </select>
+
     <resultMap id="levelMap" type="cn.edu.nju.model.examModel.LevelModel">
         <id column="id" property="levelId"/>
         <result column="courseId" property="courseId"/>
