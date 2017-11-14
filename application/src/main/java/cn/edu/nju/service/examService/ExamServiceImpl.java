@@ -311,7 +311,7 @@ public class ExamServiceImpl implements IExamService {
         } catch (ParseException e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "开始考试时间格式错误", null);
+            return new ResultInfo(false, "考试开始时间格式错误", null);
         }
 
         if (endTime == null) {
@@ -324,15 +324,15 @@ public class ExamServiceImpl implements IExamService {
         } catch (ParseException e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "结束考试时间格式错误", null);
+            return new ResultInfo(false, "考试结束时间格式错误", null);
         }
 
         if (DateTimeUtil.compareDateTime(start, new Date()) <= 0) {
-            return new ResultInfo(false, "考试考试时间应该大于当前时间", null);
+            return new ResultInfo(false, "考试开始时间应该大于当前时间", null);
         }
 
         if (DateTimeUtil.compareDateTime(start, end) >= 0) {
-            return new ResultInfo(false, "开始考试时间应该小于结束考试时间", null);
+            return new ResultInfo(false, "考试开始时间应该小于考试结束时间", null);
         }
 
         return new ResultInfo(true, null, null);
