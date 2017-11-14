@@ -16,8 +16,7 @@ public interface LevelMapper {
 
     void setMarkOfLevel(@Param("courseId") int courseId,
                         @Param("examId") int examId,
-                        @Param("mark") double mark,
-                        @Param("level") int level);
+                        @Param("marks") double[] marks);
 
     void updateMarkOfLevel(
                         @Param("levelModelList")
