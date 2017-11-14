@@ -12,13 +12,15 @@ public class ExamsOfCourse {
         private String endTime;
         private List<Integer> num;
         private List<Double> marks;
+        private List<StudentInfo> studentInfoList;
 
         public ExamInfo() {
         }
 
         public ExamInfo(int examId, String name, String password,
                         String startTime, String endTime,
-                        List<Integer> num, List<Double> marks) {
+                        List<Integer> num, List<Double> marks,
+                        List<StudentInfo> studentInfoList) {
             this.examId = examId;
             this.name = name;
             this.password = password;
@@ -26,6 +28,7 @@ public class ExamsOfCourse {
             this.endTime = endTime;
             this.num = num;
             this.marks = marks;
+            this.studentInfoList = studentInfoList;
         }
 
         public int getExamId() {
@@ -82,6 +85,14 @@ public class ExamsOfCourse {
 
         public void setMarks(List<Double> marks) {
             this.marks = marks;
+        }
+
+        public List<StudentInfo> getStudentInfoList() {
+            return studentInfoList;
+        }
+
+        public void setStudentInfoList(List<StudentInfo> studentInfoList) {
+            this.studentInfoList = studentInfoList;
         }
     }
 

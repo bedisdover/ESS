@@ -1,6 +1,5 @@
 package cn.edu.nju.dao.examDAO;
 
-import cn.edu.nju.mapper.examMapper.StudentExamMapper;
 import cn.edu.nju.mapper.examMapper.StudentMapper;
 import cn.edu.nju.model.examModel.StudentModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,13 @@ public class StudentDAOImpl implements IStudentDAO {
     }
 
     @Override
-    public List<StudentModel> getExamStudents(int courseId) {
-        return studentMapper.getExamStudents(courseId);
+    public List<StudentModel> getCourseStudents(int courseId) {
+        return studentMapper.getCourseStudents(courseId);
+    }
+
+    @Override
+    public List<StudentModel> getExamStudents(int examId) {
+        return studentMapper.getExamStudents(examId);
     }
 
     @Override
