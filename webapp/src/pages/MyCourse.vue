@@ -5,9 +5,11 @@
         <el-card class="box-card clearfix">
           <div slot="header">
             <span>我的课程</span>
-            <el-button v-if="user.role === 1" style="float: right; padding: 3px 0" type="text">
-              <router-link to="createCourse">创建课程</router-link>
+            <router-link to="createCourse">
+            <el-button v-if="user.role === 1" style="float: right" type="primary" size="small">
+              创建课程
             </el-button>
+            </router-link>
           </div>
           <el-table
             :data="myListData"
