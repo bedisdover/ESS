@@ -36,13 +36,14 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/update',
+                'url': '/exam/list',
                 'method': 'post',
-                'contentType': 'application/json',
-                'data': JSON.stringify({
-                    'examId': 14, 'name': '编译原理', 'courseId': 9, 'startTime': '2018-01-01 00:00:00',
-                    'endTime': '2018-01-02 00:00:00', 'num': [1,1,0], 'marks': [10,20,10,10]
-                }),
+//                'data': JSON.stringify({
+//                    'examId': 14, 'studentEmail': '1483809252@qq.com',
+//                    'answeredQuestions': [{'question': {'questionId': 32}, 'answer': [2]},
+//                        {'question': {'questionId': 33}, 'answer': [1,2]}]
+//                }),
+                'data': {'courseId': 9},
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },

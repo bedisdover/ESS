@@ -30,8 +30,10 @@ public class PaperController {
         return paperService.generatePaper(examId, email, password);
     }
 
+    @RequestMapping(value = "/paper/submit", method = RequestMethod.POST)
+    @ResponseBody
     public ResultInfo submitPaper(@RequestBody AnsweredPaperInfo paper) {
-        return null;
+        return paperService.submitPaper(paper);
     }
 
     // TODO finish it until iteration 3

@@ -43,6 +43,11 @@ public class LevelDAOImpl implements ILevelDAO {
     }
 
     @Override
+    public List<Double> getMarksOfQuestions(int examId, int courseId, List<Integer> levels) {
+        return levelMapper.getMarksOfQuestions(examId, courseId, levels);
+    }
+
+    @Override
     public List<LevelModel> getLevelModelList(int courseId) {
         return levelMapper.getLevelModelList(courseId);
     }
