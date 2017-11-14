@@ -1,6 +1,7 @@
 package cn.edu.nju.mapper.accountMapper;
 
 import cn.edu.nju.model.userModel.UserModel;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Service;
 @Service("accountMapper")
 public interface AccountMapper {
 
-    int getAccountNumByEmail(String email);
+    int getAccountNumByEmail(@Param("email") String email);
 
-    int getVerifiedAccountNumByEmailAndPassword(String email, String password);
+    int getVerifiedAccountNumByEmailAndPassword(
+                            @Param("email") String email,
+                            @Param("password") String password);
 
-    void addUser(UserModel model);
+    void addUser(@Param("user") UserModel user);
 }

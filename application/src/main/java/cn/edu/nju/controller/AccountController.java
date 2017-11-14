@@ -39,7 +39,7 @@ public class AccountController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo login(HttpSession session,
-                            @ModelAttribute LoginInfo info) {
+                            @RequestBody LoginInfo info) {
         info.setPassword(EncryptionUtil.sha256(info.getPassword()));
         if (session.getAttribute(AccountConfig.LOGIN_KEY) == null) {
             if (accountService.isAccountValid(info)) {
@@ -96,14 +96,14 @@ public class AccountController {
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo signUp(@ModelAttribute SigUpInfo info) {
+    public ResultInfo signUp(@RequestBody SigUpInfo info) {
         info.setPassword(EncryptionUtil.sha256(info.getPassword()));
         return accountService.signUp(info);
     }
 
     @RequestMapping(value = "/mail/verify")
     @ResponseBody
-    public ResultInfo verifyEmail(String key) {
+    public ResultInfo verifyEmail(@RequestParam String key) {
         return accountService.verifyEmail(key);
     }
 

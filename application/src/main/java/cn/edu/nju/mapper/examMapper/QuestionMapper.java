@@ -1,9 +1,7 @@
 package cn.edu.nju.mapper.examMapper;
 
-import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,28 +13,27 @@ public interface QuestionMapper {
 
     void addQuestionList(@Param("questions") List<QuestionModel> questions);
 
-    List<QuestionModel> getAllQuestions(@Param("num") int num);
+    List<QuestionModel> getAllQuestions(
+                        @Param("num") int num);
 
-    void deleteQuestions(@Param("courseId") int courseId,
-                         @Param("questionIdList") List<Integer> questionIdList);
+    void deleteQuestions(
+                        @Param("courseId") int courseId,
+                        @Param("questionIdList")
+                        List<Integer> questionIdList);
 
-    int getCourseIdByQuestionId(@Param("questionId") int questionId);
+    int getCourseIdByQuestionId(
+                        @Param("questionId") int questionId);
 
-    void setMarkOfLevel(@Param("courseId") int courseId,
-                        @Param("examId") int examId,
-                        @Param("mark") double mark,
+    int getLevelNumByCourseId(
+                        @Param("courseId") int courseId);
+
+    int getNumOfQuestions(
+                        @Param("courseId") int courseId,
                         @Param("level") int level);
 
-    List<LevelModel> getLevelModelList(@Param("courseId") int courseId);
+    List<QuestionModel> getAllQuestionsByCourseId(
+                        @Param("courseId") int courseId);
 
-    void updateMarkOfLevelById(@Param("levelModelList")
-                                       List<LevelModel> levelModelList);
-
-    void updateMarkOfLevelByUniqueKey(@Param("levelModelList")
-                                              List<LevelModel> levelModelList);
-
-    int getNumOfQuestions(@Param("courseId") int courseId,
-                          @Param("level") int level);
-
-    List<QuestionModel> getAllQuestionsByCourseId(@Param("courseId") int courseId);
+    QuestionModel getQuestionById(
+                        @Param("questionId") int questionId);
 }

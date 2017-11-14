@@ -3,6 +3,7 @@ package cn.edu.nju.info.examInfo;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.JsonUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,8 @@ public class QuestionInfo {
         this.options = options;
     }
 
-    public static List<QuestionModel> toModelList(List<QuestionInfo> list, String md5) {
+    public static List<QuestionModel> toModelList(List<QuestionInfo> list,
+                                                  String md5) throws IOException {
         List<QuestionModel> result = new ArrayList<>(list.size());
         for (QuestionInfo info : list) {
             result.add(new QuestionModel(

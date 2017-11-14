@@ -3,6 +3,9 @@ import cn.edu.nju.utils.EncryptionUtil;
 public class EncrpytionTest {
 
     public static void main(String[] args) {
-        System.out.println(EncryptionUtil.sha256("test"));
+        String base = "abc";
+        String encode = EncryptionUtil.base64Encode(base);
+        System.out.println("base64 encode: " + encode);
+        System.out.println("base64 decode: " + EncryptionUtil.base64Decode(encode));
     }
 }

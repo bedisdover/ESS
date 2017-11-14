@@ -10,6 +10,7 @@ import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.utils.ExcelUtil;
+import cn.edu.nju.utils.IOUtil;
 import jxl.read.biff.BiffException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class QuestionServiceImpl implements IQuestionService {
         }
 
         try {
-            ByteArrayOutputStream bufferStream = toByteArrayOutputStream(excelStream);
+            ByteArrayOutputStream bufferStream = IOUtil.toByteArrayOutputStream(excelStream);
             byte[] data = bufferStream.toByteArray();
 
             InputStream stream1 = new ByteArrayInputStream(data);
@@ -57,7 +58,10 @@ public class QuestionServiceImpl implements IQuestionService {
             }
 
             InputStream stream2 = new ByteArrayInputStream(data);
-            List<QuestionInfo> list = ExcelUtil.extractQuestions(courseId, stream2);
+            List<QuestionInfo> list = ExcelUtil.extractQuestions(
+                    new ByteArrayInputStream(data)
+            );
+            list.forEach(info -> info.setCourseId(courseId));
             stream2.close();
 
             excelStream.close();
@@ -122,84 +126,4 @@ public class QuestionServiceImpl implements IQuestionService {
         }
     }
 
-    @Override
-    public ResultInfo setMarkOfLevel(Integer userId, int courseId,
-                                     int examId, double[] marks) {
-        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
-            return new ResultInfo(
-                    false, "只有该门课的老师才能设置等级分数", null
-            );
-        }
-
-        if (!areMarksValid(marks)) {
-            return new ResultInfo(
-                    false, "分数应该在" + ExamConfig.MIN_MARK
-                    + "和" + ExamConfig.MAX_MARK + "之间", null
-            );
-        }
-
-        try {
-            questionDAO.setMarkOfLevel(courseId, examId, marks);
-            return new ResultInfo(true, "成功设置等级分数", null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(QuestionServiceImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", null);
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public ResultInfo getLevelInfoList(int courseId) {
-        List<LevelModel> list = questionDAO.getLevelModelList(courseId);
-        return new ResultInfo(
-                true, "成功获取等级信息",
-                LevelModel.toInfoList(list)
-        );
-    }
-
-    @Override
-    public ResultInfo updateMarkOfLevel(Integer userId, List<LevelInfo> levelInfoList) {
-        if (levelInfoList.isEmpty()) {
-            return new ResultInfo(true, "等级分数修改成功", null);
-        }
-
-        int courseId = levelInfoList.get(0).getCourseId();
-        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
-            return new ResultInfo(
-                    false, "只有该门课的老师才能修改等级分数", null
-            );
-        }
-
-        try {
-            questionDAO.updateMarkOfLevelById(
-                    LevelInfo.toModelList(levelInfoList)
-            );
-            return new ResultInfo(true, "成功修改等级对应的分数", null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.getLogger(QuestionServiceImpl.class).error(e);
-            return new ResultInfo(false, "系统异常", false);
-        }
-    }
-
-    private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[2048];
-        int len;
-        while ((len = inputStream.read(buffer)) != -1) {
-            result.write(buffer, 0, len);
-        }
-        result.flush();
-        return result;
-    }
-
-    private boolean areMarksValid(double[] marks) {
-        for (double m : marks) {
-            if (m <= ExamConfig.MIN_MARK || m >= ExamConfig.MAX_MARK) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

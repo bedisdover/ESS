@@ -1,5 +1,6 @@
 package cn.edu.nju.utils;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -38,6 +39,14 @@ public class EncryptionUtil {
             Logger.getLogger(EncryptionUtil.class).error(e);
             return "";
         }
+    }
+
+    public static String base64Encode(String str) {
+        return new String(Base64.encodeBase64(str.getBytes()));
+    }
+
+    public static String base64Decode(String str) {
+        return new String(Base64.decodeBase64(str));
     }
 
     private static String bytes2Hex(byte[] bytes) {

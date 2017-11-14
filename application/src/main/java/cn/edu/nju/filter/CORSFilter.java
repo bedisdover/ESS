@@ -16,6 +16,7 @@ public class CORSFilter implements Filter {
         // 开发环境允许前端访问
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
         response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Connection, User-Agent, Cookie");
 
         chain.doFilter(req, resp);
     }

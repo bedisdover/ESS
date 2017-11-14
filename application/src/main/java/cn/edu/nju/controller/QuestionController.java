@@ -4,6 +4,7 @@ import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.LevelInfo;
 import cn.edu.nju.service.examService.IQuestionService;
+import cn.edu.nju.utils.HttpUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,28 +33,7 @@ public class QuestionController {
     @RequestMapping("/question/download")
     public void downloadQuestionTemplate(HttpServletRequest request,
                                          HttpServletResponse response) {
-        final String fileName = "/download/questionTemplate.xlsx";
-        final String filePath = request.getSession().getServletContext().getRealPath("/");
-        File file = new File(filePath+fileName);
-        if(!file.exists()){
-            Logger.getLogger(QuestionController.class)
-                    .error("No such file: " + file.getName());
-            return;
-        }
-
-        try (FileInputStream fileInputStream = new FileInputStream(file);
-             OutputStream outputStream = response.getOutputStream()) {
-
-            response.setHeader("Content-Disposition", "attachment;Filename=" + fileName);
-            byte[] bytes = new byte[2048];
-            int len;
-            while ((len = fileInputStream.read(bytes))>0){
-                outputStream.write(bytes,0,len);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Logger.getLogger(QuestionController.class).error(e);
-        }
+        HttpUtil.fileDownload("/download/questionTemplate.xls", request, response);
     }
 
     @RequestMapping(value = "/question/upload", method = RequestMethod.POST)
@@ -87,30 +67,4 @@ public class QuestionController {
         return questionService.deleteQuestions(userId, questionIdList);
     }
 
-    /**
-     * mark should between ExamConfig.MIN_MARK and ExamConfig.MAX_MARK exclusively
-     */
-    @RequestMapping(value = "/level/config", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo setMarkOfLevel(HttpSession session,
-                                     @RequestParam int examId,
-                                     @RequestParam int courseId,
-                                     @RequestParam double[] marks) {
-        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-        return questionService.setMarkOfLevel(userId, courseId, examId, marks);
-    }
-
-    @RequestMapping(value = "/level/list", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo getLevelInfoList(@RequestParam int courseId) {
-        return questionService.getLevelInfoList(courseId);
-    }
-
-    @RequestMapping(value = "/level/update", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultInfo updateMarkOfLevel(HttpSession session,
-                                        @RequestBody List<LevelInfo> levelInfoList) {
-        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-        return questionService.updateMarkOfLevel(userId, levelInfoList);
-    }
 }

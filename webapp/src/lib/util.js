@@ -104,7 +104,7 @@ util.getParamByName = function (name) {
 /**
  * 格式化时间
  */
-util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm:ss') {
+util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm') {
   const time = {
     'M+': date.getMonth() + 1, // 月份
     'd+': date.getDate(), // 日
@@ -116,7 +116,7 @@ util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm:ss') {
   }
 
   if (/(y+)/.test(format)) {
-    format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length))
+    format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
 
   for (let key in time) {

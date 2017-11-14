@@ -1,6 +1,7 @@
 package cn.edu.nju.dao.courseDAO;
 
 import cn.edu.nju.mapper.courseMapper.CourseMapper;
+import cn.edu.nju.mapper.courseMapper.UserCourseMapper;
 import cn.edu.nju.model.courseModel.CourseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,21 +15,25 @@ public class CourseDAOImpl implements ICourseDAO {
 
     private final CourseMapper courseMapper;
 
+    private final UserCourseMapper userCourseMapper;
+
     @Autowired
-    public CourseDAOImpl(CourseMapper courseMapper) {
+    public CourseDAOImpl(CourseMapper courseMapper,
+                         UserCourseMapper userCourseMapper) {
         this.courseMapper = courseMapper;
+        this.userCourseMapper = userCourseMapper;
     }
 
     @Override
     public void addCourse(int userId, CourseModel model) throws Exception {
         boolean isRecordExist = courseMapper.getRemovedCourseNum(model.getId()) > 0;
         if (isRecordExist) {
-            courseMapper.recoverRemovedRecord(model.getId());
+            userCourseMapper.recoverRemovedRecord(userId, model.getId());
         }
         else {
             courseMapper.addCourse(model);
             int courseId = model.getId();
-            courseMapper.addUserCourseRecord(userId, courseId);
+            userCourseMapper.addUserCourseRecord(userId, courseId);
         }
     }
 
@@ -39,23 +44,18 @@ public class CourseDAOImpl implements ICourseDAO {
 
     @Override
     public void enrollCourse(int userId, int courseId) throws Exception {
-        boolean isRecordExist = courseMapper.getRemovedRecordNum(userId, courseId) > 0;
+        boolean isRecordExist = userCourseMapper.getRemovedRecordNum(userId, courseId) > 0;
         if (isRecordExist) {
-            courseMapper.recoverRemovedRecord(userId, courseId);
+            userCourseMapper.recoverRemovedRecord(userId, courseId);
         }
         else {
-            courseMapper.addUserCourseRecord(userId, courseId);
+            userCourseMapper.addUserCourseRecord(userId, courseId);
         }
     }
 
     @Override
     public void quitCourse(int userId, int courseId) throws Exception {
-        courseMapper.removeUserCourseRecord(userId, courseId);
-    }
-
-    @Override
-    public int getCourseUserRecordNum(int courseId, int userId) {
-        return courseMapper.getCourseUserRecordNum(userId, courseId);
+        userCourseMapper.removeUserCourseRecord(userId, courseId);
     }
 
     @Override

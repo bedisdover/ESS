@@ -9,13 +9,14 @@
     </select>
 
     <select id="getVerifiedAccountNumByEmailAndPassword" resultType="int">
-        SELECT COUNT(*) FROM t_user WHERE email = #{0} AND password = #{1}
+        SELECT COUNT(*) FROM t_user WHERE email = #{email} AND password = #{password}
         AND verified = 1 AND enable = 1
     </select>
 
     <insert id="addUser" useGeneratedKeys="true" keyProperty="id"
             parameterType="cn.edu.nju.model.userModel.UserModel">
         INSERT INTO t_user(name, email, password, role, verified, enable)
-                VALUES (#{name}, #{email}, #{password}, #{role}, #{verified}, #{enabled})
+                VALUES (#{user.name}, #{user.email}, #{user.password},
+                      #{user.role}, #{user.verified}, #{user.enabled})
     </insert>
 </mapper>

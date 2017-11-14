@@ -4,9 +4,19 @@
       <div class="nav-left">
         <router-link to="/list">课程列表</router-link>
         <router-link to="/my">我的课程</router-link>
+        <router-link to="/myExam">我的考试</router-link>
       </div>
       <div class="nav-right">
-        <a @click="logout">登出</a>
+        <span class="name">{{user.name}}</span>
+        <span class="logout">
+          <el-tooltip content="登 出">
+            <span>
+              <svg class="icon" aria-hidden="true" @click="logout">
+                <use xlink:href="#icon-logout"></use>
+              </svg>
+            </span>
+          </el-tooltip>
+        </span>
       </div>
     </div>
   </div>
@@ -39,10 +49,6 @@
     display: inline-flex;
   }
 
-  .content > div {
-    display: inline-block;
-  }
-
   .nav-left {
     flex: 1;
     text-align: left;
@@ -62,7 +68,7 @@
     color: gold;
   }
 
-  a:after, .router-link-active:after {
+  a:not(.router-link-active):after {
     content: '';
     position: absolute;
     top: 40px;
@@ -81,14 +87,30 @@
 
   .router-link-active:after {
     opacity: 1;
-    top: 50px;
+    top: 40px;
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: #fff;
   }
 
-  a:not(.router-link-active):hover:after {
+  a:hover:after {
     height: 5px;
     opacity: 1;
     -webkit-transform: translateY(0px);
     -moz-transform: translateY(0px);
     transform: translateY(0px);
+  }
+
+  .nav-right > span {
+    line-height: 72px;
+    color: white;
+  }
+
+  .logout {
+    cursor: pointer;
+    margin-left: 20px;
   }
 </style>
