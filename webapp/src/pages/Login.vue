@@ -60,7 +60,7 @@
           if (valid) {
             this.loginForm.loading = true
 
-            request('/login', 'post', params, (success, message, data) => {
+            request('/login', 'post', JSON.stringify(params), (success, message, data) => {
               this.loginForm.loading = false
 
               if (success) {
