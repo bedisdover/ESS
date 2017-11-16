@@ -24,12 +24,7 @@ public class LevelDAOImpl implements ILevelDAO {
 
     @Override
     public void setMarkOfLevel(int courseId, int examId, double[] marks) throws Exception {
-        // FIXME: maybe can be optimized with a single sql
-        int level = 1;
-        for (double mark : marks) {
-            levelMapper.setMarkOfLevel(courseId, examId, mark, level);
-            level += 1;
-        }
+        levelMapper.setMarkOfLevel(courseId, examId, marks);
     }
 
     @Override

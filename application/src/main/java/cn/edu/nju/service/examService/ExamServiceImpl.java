@@ -2,10 +2,7 @@ package cn.edu.nju.service.examService;
 
 import cn.edu.nju.config.Role;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
-import cn.edu.nju.dao.examDAO.IExamDAO;
-import cn.edu.nju.dao.examDAO.ILevelDAO;
-import cn.edu.nju.dao.examDAO.IQuestionDAO;
-import cn.edu.nju.dao.examDAO.IStudentExamDAO;
+import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
@@ -13,6 +10,7 @@ import cn.edu.nju.info.examInfo.ExamsOfCourse;
 import cn.edu.nju.info.examInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.LevelModel;
+import cn.edu.nju.model.examModel.StudentModel;
 import cn.edu.nju.model.userModel.UserModel;
 import cn.edu.nju.utils.DateTimeUtil;
 import cn.edu.nju.utils.EmailUtil;
@@ -43,6 +41,7 @@ public class ExamServiceImpl implements IExamService {
 
     private final IStudentExamDAO studentExamDAO;
 
+    private final IStudentDAO studentDAO;
 
     @Autowired
     public ExamServiceImpl(IUserCourseDAO userCourseDAO,
@@ -50,13 +49,15 @@ public class ExamServiceImpl implements IExamService {
                            ILevelDAO levelDAO,
                            IExamDAO examDAO,
                            IUserDAO userDAO,
-                           IStudentExamDAO studentExamDAO) {
+                           IStudentExamDAO studentExamDAO,
+                           IStudentDAO studentDAO) {
         this.userCourseDAO = userCourseDAO;
         this.questionDAO = questionDAO;
         this.levelDAO = levelDAO;
         this.examDAO = examDAO;
         this.userDAO = userDAO;
         this.studentExamDAO = studentExamDAO;
+        this.studentDAO = studentDAO;
     }
 
     @Override
@@ -179,13 +180,19 @@ public class ExamServiceImpl implements IExamService {
                 num.add(Integer.parseInt(array[i - 1]));
                 levels.add(i);
             }
+
             List<Double> marks = levelDAO.getMarksOfQuestions(
                     exam.getExamId(), courseId, levels
             );
+
+            List<StudentModel> studentModelList =
+                    studentDAO.getExamStudents(exam.getExamId());
+
             infoList.add(new ExamsOfCourse.ExamInfo(
                     exam.getExamId(), exam.getName(),
                     exam.getPassword(), exam.getStartTime(),
-                    exam.getEndTime(), num, marks
+                    exam.getEndTime(), num, marks,
+                    StudentModel.toInfoList(studentModelList)
             ));
         }
 
@@ -304,7 +311,7 @@ public class ExamServiceImpl implements IExamService {
         } catch (ParseException e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "开始考试时间格式错误", null);
+            return new ResultInfo(false, "考试开始时间格式错误", null);
         }
 
         if (endTime == null) {
@@ -317,15 +324,15 @@ public class ExamServiceImpl implements IExamService {
         } catch (ParseException e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
-            return new ResultInfo(false, "结束考试时间格式错误", null);
+            return new ResultInfo(false, "考试结束时间格式错误", null);
         }
 
         if (DateTimeUtil.compareDateTime(start, new Date()) <= 0) {
-            return new ResultInfo(false, "考试考试时间应该大于当前时间", null);
+            return new ResultInfo(false, "考试开始时间应该大于当前时间", null);
         }
 
         if (DateTimeUtil.compareDateTime(start, end) >= 0) {
-            return new ResultInfo(false, "开始考试时间应该小于结束考试时间", null);
+            return new ResultInfo(false, "考试开始时间应该小于考试结束时间", null);
         }
 
         return new ResultInfo(true, null, null);

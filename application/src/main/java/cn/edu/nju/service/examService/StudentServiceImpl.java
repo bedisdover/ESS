@@ -40,7 +40,7 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public ResultInfo getExamStudents(int courseId) {
-        List<StudentModel> list = studentDAO.getExamStudents(courseId);
+        List<StudentModel> list = studentDAO.getCourseStudents(courseId);
         return new ResultInfo(true, "成功获取学生列表信息",
                 StudentModel.toInfoList(list));
     }

@@ -14,7 +14,9 @@ import java.util.List;
 @Service(value = "studentMapper")
 public interface StudentMapper {
 
-    List<StudentModel> getExamStudents(@Param("courseId") int courseId);
+    List<StudentModel> getCourseStudents(@Param("courseId") int courseId);
+
+    List<StudentModel> getExamStudents(@Param("examId") int examId);
 
     void updateStudent(@Param("student") StudentModel student);
 

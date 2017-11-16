@@ -11,7 +11,9 @@ import java.util.List;
  */
 public interface IStudentDAO {
 
-    List<StudentModel> getExamStudents(int courseId);
+    List<StudentModel> getCourseStudents(int courseId);
+
+    List<StudentModel> getExamStudents(int examId);
 
     boolean isStudentFileMD5Exist(String md5Value);
 
