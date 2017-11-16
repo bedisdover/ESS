@@ -6,9 +6,9 @@
           <div slot="header">
             <span>我的课程</span>
             <router-link to="createCourse">
-            <el-button v-if="user.role === 1" style="float: right" type="primary" size="small">
-              创建课程
-            </el-button>
+              <el-button v-if="user.role === 1" style="float: right" type="primary" size="small">
+                创建课程
+              </el-button>
             </router-link>
           </div>
           <el-table
@@ -48,16 +48,34 @@
               label="操作"
             >
               <template slot-scope="scope">
-                <el-button-group v-if="user.role === 1">
-                  <el-button type="primary" size="mini" @click="editCourseHandle(scope.row)">编辑课程
-                  </el-button>
-                  <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id }}">
-                    <el-button type="primary" size="mini">试题列表</el-button>
+                <div v-if="user.role === 1">
+                  <el-tooltip content="编辑课程" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true" @click="editCourseHandle(scope.row)">
+                            <use xlink:href="#icon-edit"></use>
+                          </svg>
+                        </span>
+                  </el-tooltip>
+
+                  <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}" class="nocsslink">
+                    <el-tooltip content="试题库" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-questionList"></use>
+                          </svg>
+                        </span>
+                    </el-tooltip>
                   </router-link>
-                  <router-link :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}">
-                    <el-button type="primary" size="mini">考试列表</el-button>
+                  <router-link  :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}" class="nocsslink">
+                    <el-tooltip content="考试列表" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-examList"></use>
+                          </svg>
+                        </span>
+                    </el-tooltip>
                   </router-link>
-                </el-button-group>
+                </div>
 
                 <el-button type="danger" size="mini" @click="dialogHandle(scope.row.name, scope.row.id)"
                            v-if="user.role === 2">退出课程
@@ -172,7 +190,7 @@
           password: courseForm.password,
           id: this.courseId
         }
-        request('/course/modify', 'post', params, (success, message) => {
+        request('/course/modify', 'post', JSON.stringify(params), (success, message) => {
           if (success) {
             this.myListData = this.myListData.map((obj) => {
               if (obj.id === this.courseId) {
@@ -206,5 +224,15 @@
 
   .clearfix:after {
     clear: both;
+  }
+
+  .operation {
+    font-size: 1.5em;
+  }
+
+  .nocsslink {
+    text-decoration: none;
+    out-line: none;
+    color: #333333;
   }
 </style>
