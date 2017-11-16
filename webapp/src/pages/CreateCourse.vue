@@ -54,7 +54,7 @@
           term: courseForm.term,
           password: courseForm.password
         }
-        request('/course/create', 'post', params, (success, message) => {
+        request('/course/create', 'post', JSON.stringify(params), (success, message) => {
           if (success) {
             this.$router.push('my')
           } else {

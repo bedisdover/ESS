@@ -30,7 +30,7 @@ const withoutLogin = [
  */
 const privileges = [
   [
-    'CreateCourse'
+    'CreateCourse', 'QuestionList'
   ],
   []
 ]
