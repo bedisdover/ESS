@@ -50,10 +50,10 @@
                   <el-button type="primary" size="mini" @click="editCourseHandle(scope.row)">编辑课程
                   </el-button>
                   <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id }}">
-                    <el-button  type="primary" size="mini" >试题列表</el-button>
+                    <el-button type="primary" size="mini">试题列表</el-button>
                   </router-link>
-                  <router-link :to="{ name: 'ExamList', params: { id: scope.row.id }}">
-                    <el-button  type="primary" size="mini" >考试列表</el-button>
+                  <router-link :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}">
+                    <el-button type="primary" size="mini">考试列表</el-button>
                   </router-link>
                 </el-button-group>
 
