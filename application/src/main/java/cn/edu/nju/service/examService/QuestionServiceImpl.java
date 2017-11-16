@@ -1,12 +1,9 @@
 package cn.edu.nju.service.examService;
 
-import cn.edu.nju.config.ExamConfig;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.LevelInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
-import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.utils.ExcelUtil;
@@ -80,17 +77,10 @@ public class QuestionServiceImpl implements IQuestionService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public ResultInfo getAllQuestions(Integer page, Integer size) {
-        if (page == null || page <= 0) {
-            page = 1;
-        }
-        if (size == null || size <= 0) {
-            size = 10;
-        }
-        int num = (long)page * size > Integer.MAX_VALUE ?
-                Integer.MAX_VALUE : page * size;
-
-        List<QuestionModel> list = questionDAO.getAllQuestions(num);
+    public ResultInfo getCourseQuestions(int courseId, int page, int size) {
+        List<QuestionModel> list = questionDAO.getCourseQuestions(
+                courseId, (page - 1) * size, size
+        );
         List<QuestionInfo> questions;
         try {
             questions = QuestionModel.toInfoList(list);

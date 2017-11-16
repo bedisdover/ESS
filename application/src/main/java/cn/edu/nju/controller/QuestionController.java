@@ -2,7 +2,6 @@ package cn.edu.nju.controller;
 
 import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.LevelInfo;
 import cn.edu.nju.service.examService.IQuestionService;
 import cn.edu.nju.utils.HttpUtil;
 import org.apache.log4j.Logger;
@@ -14,10 +13,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 @Controller
@@ -55,8 +51,10 @@ public class QuestionController {
 
     @RequestMapping(value = "/question/list")
     @ResponseBody
-    public ResultInfo getAllQuestions(Integer page, Integer size) {
-        return questionService.getAllQuestions(page, size);
+    public ResultInfo getCourseQuestions(@RequestParam int courseId,
+                                      @RequestParam int page,
+                                      @RequestParam int size) {
+        return questionService.getCourseQuestions(courseId, page, size);
     }
 
     @RequestMapping(value = "/question/delete", method = RequestMethod.POST)

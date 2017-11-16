@@ -1,7 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.mapper.examMapper.QuestionMapper;
-import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +30,8 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
-    public List<QuestionModel> getAllQuestions(int num) {
-        return questionMapper.getAllQuestions(num);
+    public List<QuestionModel> getCourseQuestions(int courseId, int offset, int size) {
+        return questionMapper.getCourseQuestions(courseId, offset, size);
     }
 
     @Override

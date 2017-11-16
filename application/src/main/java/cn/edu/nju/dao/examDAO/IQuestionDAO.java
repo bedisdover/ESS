@@ -12,7 +12,7 @@ public interface IQuestionDAO {
 
     void saveQuestions(List<QuestionModel> questions) throws Exception;
 
-    List<QuestionModel> getAllQuestions(int num);
+    List<QuestionModel> getCourseQuestions(int courseId, int offset, int size);
 
     void deleteQuestions(int courseId, List<Integer> questionIdList) throws Exception;
 
