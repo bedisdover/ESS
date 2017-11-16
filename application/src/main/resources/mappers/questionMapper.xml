@@ -59,6 +59,11 @@
         WHERE courseId = #{courseId} AND level = #{level} AND enable = 1
     </select>
 
+    <select id="getNumOfCourseQuestions" resultType="int">
+        SELECT COUNT(*) FROM t_question
+        WHERE courseId = #{courseId} AND enable = 1
+    </select>
+
     <select id="getAllQuestionsByCourseId" resultMap="questionMap">
         SELECT * FROM t_question WHERE courseId = #{courseId} AND enable = 1
     </select>

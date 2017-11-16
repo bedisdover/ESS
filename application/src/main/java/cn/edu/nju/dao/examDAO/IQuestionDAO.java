@@ -22,6 +22,8 @@ public interface IQuestionDAO {
 
     int getNumOfQuestions(int courseId, int level);
 
+    int getNumOfCourseQuestions(int courseId);
+
     List<QuestionModel> getAllQuestionsByCourseId(int courseId);
 
     QuestionModel getQuestionById(int questionId);

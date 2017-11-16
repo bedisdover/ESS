@@ -33,6 +33,9 @@ public interface QuestionMapper {
                         @Param("courseId") int courseId,
                         @Param("level") int level);
 
+    int getNumOfCourseQuestions(
+                        @Param("courseId") int courseId);
+
     List<QuestionModel> getAllQuestionsByCourseId(
                         @Param("courseId") int courseId);
 
