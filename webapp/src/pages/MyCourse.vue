@@ -41,6 +41,33 @@
             >
             </el-table-column>
             <el-table-column
+              label="设置"
+              v-if="user.role === 1"
+            >
+              <template slot-scope="scope" >
+                <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}"
+                             class="nocsslink">
+                  <el-tooltip content="试题库" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-questionList"></use>
+                          </svg>
+                        </span>
+                  </el-tooltip>
+                </router-link>
+                <router-link :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}"
+                             class="nocsslink">
+                  <el-tooltip content="考试列表" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-examList"></use>
+                          </svg>
+                        </span>
+                  </el-tooltip>
+                </router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="操作"
             >
               <template slot-scope="scope">
@@ -52,27 +79,6 @@
                           </svg>
                         </span>
                   </el-tooltip>
-
-                  <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}"
-                               class="nocsslink">
-                    <el-tooltip content="试题库" effect="light">
-                        <span class="operation">
-                          <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-questionList"></use>
-                          </svg>
-                        </span>
-                    </el-tooltip>
-                  </router-link>
-                  <router-link :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}"
-                               class="nocsslink">
-                    <el-tooltip content="考试列表" effect="light">
-                        <span class="operation">
-                          <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-examList"></use>
-                          </svg>
-                        </span>
-                    </el-tooltip>
-                  </router-link>
                 </div>
 
                 <el-button type="danger" size="mini" @click="dialogHandle(scope.row.name, scope.row.id)"
