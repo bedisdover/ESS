@@ -15,6 +15,7 @@
           </div>
           <el-table
             @selection-change="handleSelectionChange"
+            v-loading="loading"
             :data="questionListData"
             style="width: 100%;text-align: left">
             <el-table-column
@@ -100,16 +101,19 @@
         questionListData: [],
         deleteQuestionList: [],
         uploadDialogVisible: false,
-        fileList: []
+        fileList: [],
+        loading: true
       }
     },
     methods: {
       reloadQuestionList () {
+        this.loading = true
         let url = '/question/list?courseId=' + this.id + '&page=' + this.page + '&size=' + this.size
         request(url, 'get', '', (success, message, data) => {
           if (success) {
             this.total = data.num
             this.questionListData = data.questionInfoList
+            this.loading = false
           } else {
             util.notifyError(message)
           }
