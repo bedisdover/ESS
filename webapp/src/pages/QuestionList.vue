@@ -14,6 +14,7 @@
             </el-button>
           </div>
           <el-table
+            @selection-change="handleSelectionChange"
             :data="questionListData"
             style="width: 100%;text-align: left">
             <el-table-column
@@ -49,7 +50,9 @@
           <div style="margin-top: 20px">
             <el-button style="float: left"
                        type="danger"
-                       size="small">删除题目
+                       size="small"
+                       @click="deleteQuestion"
+            >删除题目
             </el-button>
             <el-pagination
               @size-change="handleSizeChange"
@@ -93,8 +96,9 @@
       return {
         page: 1,
         size: 10,
-        total: 50,
+        total: 0,
         questionListData: [],
+        deleteQuestionList: [],
         uploadDialogVisible: false,
         fileList: []
       }
@@ -118,6 +122,29 @@
       handleCurrentChange (val) {
         this.page = val
         this.reloadQuestionList()
+      },
+      handleSelectionChange (val) {
+        this.deleteQuestionList = val.map((obj) => {
+          return obj.questionId
+        })
+      },
+      deleteQuestion () {
+        if (this.deleteQuestionList.length === 0) {
+          return false
+        }
+        request('/question/delete', 'post', JSON.stringify(this.deleteQuestionList), (success, message) => {
+          if (success) {
+//            this.questionListData = this.questionListData.map((obj) => {
+//              if (this.deleteQuestionList.indexOf(obj.questionId) < 0) {
+//                return obj
+//              }
+//            })
+//            this.deleteQuestionList = []
+            window.location.reload()
+          } else {
+            util.notifyError(message)
+          }
+        })
       }
     },
     beforeMount: function () {
