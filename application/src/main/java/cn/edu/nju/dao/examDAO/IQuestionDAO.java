@@ -12,7 +12,7 @@ public interface IQuestionDAO {
 
     void saveQuestions(List<QuestionModel> questions) throws Exception;
 
-    List<QuestionModel> getAllQuestions(int num);
+    List<QuestionModel> getCourseQuestions(int courseId, int offset, int size);
 
     void deleteQuestions(int courseId, List<Integer> questionIdList) throws Exception;
 
@@ -21,6 +21,8 @@ public interface IQuestionDAO {
     int getLevelNumByCourseId(int courseId);
 
     int getNumOfQuestions(int courseId, int level);
+
+    int getNumOfCourseQuestions(int courseId);
 
     List<QuestionModel> getAllQuestionsByCourseId(int courseId);
 

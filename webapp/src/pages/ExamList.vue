@@ -9,7 +9,7 @@
             <span>{{title}}</span>
             <el-button type="text" class="btn-create" @click="createExam" v-show="!examFormVisible">新建考试</el-button>
           </div>
-          <el-table :data="examListShow" class="table" v-show="!examFormVisible">
+          <el-table :data="examList" class="table" v-show="!examFormVisible">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <ExamInfo :examList="props"></ExamInfo>
@@ -18,7 +18,7 @@
             <el-table-column label="考试名称" prop="name"></el-table-column>
             <el-table-column label="开始时间" prop="startTime"></el-table-column>
             <el-table-column label="结束时间" prop="endTime"></el-table-column>
-            <el-table-column label="考试人数" prop="students"></el-table-column>
+            <el-table-column label="考试人数" prop="studentNum"></el-table-column>
             <el-table-column label="试题数量" prop="questionNum"></el-table-column>
             <el-table-column label="总分" prop="score"></el-table-column>
             <el-table-column label="操作">
@@ -42,7 +42,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <ExamForm :courseId="id" :maxNum="maxNum" :exam="exam" :students="students" v-on:onConfirm="onConfirm"
+          <ExamForm :courseId="id" :maxNum="maxNum" :exam="exam" :clsList="cls" :students="students" v-on:onConfirm="onConfirm"
                     :onCancel="hideExamForm" v-if="examFormVisible"></ExamForm>
         </el-card>
       </el-col>
@@ -57,7 +57,7 @@
 
   export default {
     name: 'ExamList',
-    props: ['id'],
+    props: ['id', 'cls'],
     components: {ExamInfo, ExamForm},
     data () {
       return {
@@ -73,26 +73,6 @@
     computed: {
       title: function () {
         return this.examFormVisible ? (this.exam ? '新建考试' : '编辑考试') : '考试列表'
-      },
-      /**
-       * 展示数据
-       */
-      examListShow: function () {
-        return this.examList.reduce(function (temp, item) {
-          let num = 0
-          let mark = 0
-          for (let i = 0; i < item.num.length; i++) {
-            num += item.num[i]
-            mark += item.num[i] * item.marks[i]
-          }
-
-          item.questionNum = num
-          item.score = mark
-
-          temp.push(item)
-
-          return temp
-        }, [])
       }
     },
     mounted: function () {
@@ -112,8 +92,22 @@
     },
     methods: {
       initData: function (data) {
-        this.examList = data.examInfoList
         this.maxNum = data.maxNum
+        data.examInfoList.forEach(exam => {
+          let temp = Object.assign({}, exam)
+          let num = 0
+          let mark = 0
+          for (let i = 0; i < exam.num.length; i++) {
+            num += exam.num[i]
+            mark += exam.num[i] * exam.marks[i]
+          }
+
+          temp.score = mark
+          temp.questionNum = num
+          temp.studentNum = exam.studentInfoList.length
+
+          this.examList.push(temp)
+        })
       },
       hideExamForm: function () {
         this.examFormVisible = false
@@ -136,7 +130,7 @@
         if (exam.examId) { // 编辑考试
           this.examList.map((item, index) => {
             if (item.examId === exam.examId) {
-              this.examList[index] = exam
+              this.examList.splice(index, 1, exam)
             }
           })
         } else { // 新建考试

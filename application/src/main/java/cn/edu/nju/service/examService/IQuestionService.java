@@ -10,7 +10,7 @@ public interface IQuestionService {
 
     ResultInfo saveQuestion(int userId, int courseId, InputStream excelStream);
 
-    ResultInfo getAllQuestions(Integer page, Integer size);
+    ResultInfo getCourseQuestions(int courseId, int page, int size);
 
     ResultInfo deleteQuestions(int userId, List<Integer> questionIdList);
 

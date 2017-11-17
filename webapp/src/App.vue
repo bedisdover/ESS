@@ -67,6 +67,10 @@
     margin: 0;
   }
 
+  input {
+    text-align: left !important;
+  }
+
   .icon {
     width: 1em;
     height: 1em;

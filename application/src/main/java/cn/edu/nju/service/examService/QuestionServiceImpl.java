@@ -1,12 +1,10 @@
 package cn.edu.nju.service.examService;
 
-import cn.edu.nju.config.ExamConfig;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.LevelInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
-import cn.edu.nju.model.examModel.LevelModel;
+import cn.edu.nju.info.examInfo.QuestionOfCourse;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EncryptionUtil;
 import cn.edu.nju.utils.ExcelUtil;
@@ -79,22 +77,17 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ResultInfo getAllQuestions(Integer page, Integer size) {
-        if (page == null || page <= 0) {
-            page = 1;
-        }
-        if (size == null || size <= 0) {
-            size = 10;
-        }
-        int num = (long)page * size > Integer.MAX_VALUE ?
-                Integer.MAX_VALUE : page * size;
+    public ResultInfo getCourseQuestions(int courseId, int page, int size) {
+        List<QuestionModel> list = questionDAO.getCourseQuestions(
+                courseId, (page - 1) * size, size
+        );
+        int num = questionDAO.getNumOfCourseQuestions(courseId);
 
-        List<QuestionModel> list = questionDAO.getAllQuestions(num);
         List<QuestionInfo> questions;
         try {
             questions = QuestionModel.toInfoList(list);
-            return new ResultInfo(true, "成功获取问题列表", questions);
+            return new ResultInfo(true, "成功获取问题列表",
+                    new QuestionOfCourse(num, questions));
         } catch (IOException e) {
             e.printStackTrace();
             Logger.getLogger(QuestionServiceImpl.class).error(e);

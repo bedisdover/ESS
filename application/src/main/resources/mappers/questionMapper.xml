@@ -32,8 +32,9 @@
         <result property="optionJson" column="optionJson"/>
     </resultMap>
 
-    <select id="getAllQuestions" resultMap="questionMap">
-        SELECT * FROM t_question WHERE enable = 1 LIMIT #{num}
+    <select id="getCourseQuestions" resultMap="questionMap">
+        SELECT * FROM t_question
+        WHERE courseId = #{courseId} AND enable = 1 LIMIT #{offset}, #{size}
     </select>
     
     <update id="deleteQuestions">
@@ -56,6 +57,11 @@
     <select id="getNumOfQuestions" resultType="int">
         SELECT COUNT(*) FROM t_question
         WHERE courseId = #{courseId} AND level = #{level} AND enable = 1
+    </select>
+
+    <select id="getNumOfCourseQuestions" resultType="int">
+        SELECT COUNT(*) FROM t_question
+        WHERE courseId = #{courseId} AND enable = 1
     </select>
 
     <select id="getAllQuestionsByCourseId" resultMap="questionMap">

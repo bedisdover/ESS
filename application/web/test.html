@@ -36,16 +36,15 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/level/config',
+                'url': '/question/list',
                 'method': 'post',
-                'traditional': true,
 //                'data': JSON.stringify({
 //                    'examId': 14, 'studentEmail': '1483809252@qq.com',
 //                    'answeredQuestions': [{'question': {'questionId': 32}, 'answer': [2]},
 //                        {'question': {'questionId': 33}, 'answer': [1,2]}]
 //                }),
                 'data': {
-                    'examId': 14, 'courseId': 9, 'marks': [10,20,30,40]
+                    'courseId': 9, 'page': 1, 'size': 10
                 },
                 'success': function(data) {
                     alert(JSON.stringify(data));

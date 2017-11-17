@@ -44,7 +44,7 @@
           score += this.questionNum[i] * this.questionMark[i]
         }
 
-        this.$emit('onUpdateScore', this.questionNum, this.questionMark)
+        this.$emit('onUpdateScore', this.questionNum, this.questionMark, score)
 
         return score
       }
@@ -71,7 +71,6 @@
     width: 130px;
     padding: 10px;
     margin-right: 20px;
-    margin-bottom: 20px;
     border: 1px solid #409EFF;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;

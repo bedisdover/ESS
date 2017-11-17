@@ -13,8 +13,10 @@ public interface QuestionMapper {
 
     void addQuestionList(@Param("questions") List<QuestionModel> questions);
 
-    List<QuestionModel> getAllQuestions(
-                        @Param("num") int num);
+    List<QuestionModel> getCourseQuestions(
+                        @Param("courseId") int courseId,
+                        @Param("offset") int offset,
+                        @Param("size") int size);
 
     void deleteQuestions(
                         @Param("courseId") int courseId,
@@ -30,6 +32,9 @@ public interface QuestionMapper {
     int getNumOfQuestions(
                         @Param("courseId") int courseId,
                         @Param("level") int level);
+
+    int getNumOfCourseQuestions(
+                        @Param("courseId") int courseId);
 
     List<QuestionModel> getAllQuestionsByCourseId(
                         @Param("courseId") int courseId);

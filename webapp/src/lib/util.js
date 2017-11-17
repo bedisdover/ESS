@@ -104,7 +104,7 @@ util.getParamByName = function (name) {
 /**
  * 格式化时间
  */
-util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm') {
+util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm:ss') {
   const time = {
     'M+': date.getMonth() + 1, // 月份
     'd+': date.getDate(), // 日
