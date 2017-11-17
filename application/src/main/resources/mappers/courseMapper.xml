@@ -5,7 +5,7 @@
 <mapper namespace="cn.edu.nju.mapper.courseMapper.CourseMapper">
 
     <insert id="addCourse" parameterType="cn.edu.nju.model.courseModel.CourseModel"
-        useGeneratedKeys="true" keyProperty="id">
+        useGeneratedKeys="true">
         INSERT INTO t_course(name, grade, class, year, term, password, enable)
         VALUES(#{course.name}, #{course.grade}, #{course.cls},
               #{course.year}, #{course.term}, #{course.password}, #{course.enable})
