@@ -31,21 +31,23 @@
         'method': 'post',
         'contentType': 'application/json',
         'data': JSON.stringify({
-            'email': '1483809252@qq.com', 'password': 'test', 'role': 1
+            'email': '1282976747@qq.com', 'password': 'test', 'role': 1
         }),
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/question/list',
+                'url': '/course/create',
                 'method': 'post',
+                'contentType': 'application/json',
 //                'data': JSON.stringify({
 //                    'examId': 14, 'studentEmail': '1483809252@qq.com',
 //                    'answeredQuestions': [{'question': {'questionId': 32}, 'answer': [2]},
 //                        {'question': {'questionId': 33}, 'answer': [1,2]}]
 //                }),
-                'data': {
-                    'courseId': 9, 'page': 1, 'size': 10
-                },
+                'data': JSON.stringify({
+                    'name': '_test_', 'grade': 4, 'cls': '1,2,3,4',
+                    'year': 2017, 'term': 1, 'password': 'grade14'
+                }),
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },
