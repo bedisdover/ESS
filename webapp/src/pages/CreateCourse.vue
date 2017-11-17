@@ -49,7 +49,7 @@
         let params = {
           name: courseForm.name,
           grade: courseForm.grade,
-          cls: courseForm.cls,
+          cls: courseForm.cls.join(','),
           year: courseForm.year,
           term: courseForm.term,
           password: courseForm.password

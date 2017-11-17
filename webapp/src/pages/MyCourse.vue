@@ -23,25 +23,21 @@
             <el-table-column
               label="课程名称"
               prop="name"
-              width="200"
             >
             </el-table-column>
             <el-table-column
               label="年份"
               prop="year"
-              width="200"
             >
             </el-table-column>
             <el-table-column
               label="学期"
               prop="term"
-              width="200"
             >
             </el-table-column>
             <el-table-column
               label="年级"
               prop="grade"
-              width="200"
             >
             </el-table-column>
             <el-table-column
@@ -57,7 +53,8 @@
                         </span>
                   </el-tooltip>
 
-                  <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}" class="nocsslink">
+                  <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}"
+                               class="nocsslink">
                     <el-tooltip content="试题库" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
@@ -66,7 +63,8 @@
                         </span>
                     </el-tooltip>
                   </router-link>
-                  <router-link  :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}" class="nocsslink">
+                  <router-link :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}"
+                               class="nocsslink">
                     <el-tooltip content="考试列表" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
@@ -184,7 +182,7 @@
         let params = {
           name: courseForm.name,
           grade: courseForm.grade,
-          cls: courseForm.cls,
+          cls: courseForm.cls.join(','),
           year: courseForm.year,
           term: courseForm.term,
           password: courseForm.password,
@@ -195,7 +193,7 @@
             this.myListData = this.myListData.map((obj) => {
               if (obj.id === this.courseId) {
                 obj = params
-                obj.cls = params.cls.join(',')
+                obj.cls = params.cls
               }
               return obj
             })

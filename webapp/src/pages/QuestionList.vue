@@ -79,7 +79,7 @@
     name: 'QuestionList',
     props: ['id', 'courseName'],
     created: function () {
-      request('/question/list', '', '', (success, message) => {
+      request('/question/list', 'get', '', (success, message) => {
         if (success) {
 
         } else {
