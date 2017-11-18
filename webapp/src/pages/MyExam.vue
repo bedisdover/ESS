@@ -48,13 +48,12 @@
 
 <script>
   import request from '../lib/request'
-  import ExamInfo from '../components/ExamInfo'
   import ExamForm from '../components/ExamForm'
 
   export default {
     name: 'ExamList',
     props: ['id'],
-    components: {ExamInfo, ExamForm},
+    components: {ExamForm},
     data () {
       return {
         examFormVisible: false,

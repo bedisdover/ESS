@@ -14,23 +14,23 @@
   export default {
     name: 'StudentList',
 
-    props: ['courseId', 'students', 'onUpdateStudents'],
+    props: ['courseId', 'students', 'readonly', 'onUpdateStudents'],
 
     data () {
+      let checked = this.students ? this.students.reduce((array, student) => {
+        array.push(student.studentId)
+
+        return array
+      }, []) : []
+
       return {
         all: [], // 所有学生列表
+        checked: checked,
         popoverVisible: false
       }
     },
 
     computed: {
-      checked: function () {
-        return this.students.reduce((array, student) => {
-          array.push(student.studentId)
-
-          return array
-        }, [])
-      },
       /**
        * 用于input显示选择的学生列表
        */
@@ -68,7 +68,11 @@
 
       request('/student/exam', 'post', params, (success, message, data) => {
         if (success) {
-          this.all = data
+          if (this.readonly) {
+            this.all = data.map(student => Object.assign(student, {disabled: true}))
+          } else {
+            this.all = data
+          }
         }
       })
 

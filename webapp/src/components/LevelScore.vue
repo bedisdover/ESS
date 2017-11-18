@@ -7,8 +7,8 @@
       <div class="level-box" v-for="(n, index) in maxNum">
         <div>难度 {{index + 1}}</div>
         <el-input-number v-model="questionNum[index]" :min="0" :max="n" :controls-position="'right'"
-                         size="small"></el-input-number>
-        <el-input v-model="questionMark[index]" placeholder="分数" size="small"></el-input>
+                         size="small" :disabled="readonly"></el-input-number>
+        <el-input v-model="questionMark[index]" placeholder="分数" size="small" :readonly="readonly"></el-input>
       </div>
     </div>
   </div>
@@ -17,8 +17,11 @@
 <script>
   export default {
     name: 'LevelScore',
+
     description: '试题难度等级分数查看/编辑器',
-    props: ['maxNum', 'num', 'marks'],
+
+    props: ['maxNum', 'num', 'marks', 'readonly'],
+
     data () {
       return {
         levelNum: this.maxNum.length,
@@ -26,6 +29,7 @@
         questionMark: []
       }
     },
+
     computed: {
       score: function () {
         let score = 0
@@ -49,6 +53,7 @@
         return score
       }
     },
+
     mounted: function () {
       this.questionNum = this.num ? this.num : new Array(this.levelNum).fill(0)
       this.questionMark = this.marks ? this.marks : new Array(this.levelNum).fill('')
