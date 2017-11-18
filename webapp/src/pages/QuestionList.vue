@@ -108,8 +108,12 @@
     methods: {
       reloadQuestionList () {
         this.loading = true
-        let url = '/question/list?courseId=' + this.id + '&page=' + this.page + '&size=' + this.size
-        request(url, 'get', '', (success, message, data) => {
+        let params = {
+          courseId: this.id,
+          page: this.page,
+          size: this.size
+        }
+        request('/question/list', 'post', params, (success, message, data) => {
           if (success) {
             this.total = data.num
             this.questionListData = data.questionInfoList
