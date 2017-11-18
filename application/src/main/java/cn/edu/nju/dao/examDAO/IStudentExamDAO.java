@@ -1,7 +1,5 @@
 package cn.edu.nju.dao.examDAO;
 
-import cn.edu.nju.model.examModel.StudentModel;
-
 import java.util.List;
 
 /**
@@ -12,6 +10,10 @@ import java.util.List;
 public interface IStudentExamDAO {
 
     void joinInExam(int examId, List<String> emails) throws Exception;
+
+    void quitExam(int examId, List<String> emails) throws Exception;
+
+    List<String> getExamStudentEmails(int examId);
 
     boolean doesStudentJoinExam(String email, int examId);
 }

@@ -12,6 +12,18 @@
         </foreach>
     </insert>
 
+    <update id="deleteJoinExamRecords">
+        UPDATE r_exam_student SET enable = 0
+        WHERE examId = #{examId} AND email IN
+        <foreach collection="emails" item="email" separator="," open="(" close=")">
+            #{email}
+        </foreach>
+    </update>
+
+    <select id="getExamStudentEmails" resultType="String">
+        SELECT email FROM r_exam_student WHERE examId = #{examId} AND enable = 1
+    </select>
+
     <insert id="createJoinExamRecordIfNotExist" useGeneratedKeys="true">
         <selectKey keyProperty="count" order="BEFORE" resultType="int">
             SELECT COUNT(*) from r_exam_student

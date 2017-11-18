@@ -49,7 +49,7 @@ public class QuestionController {
         }
     }
 
-    @RequestMapping(value = "/question/list")
+    @RequestMapping(value = "/question/list", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo getCourseQuestions(@RequestParam int courseId,
                                       @RequestParam int page,

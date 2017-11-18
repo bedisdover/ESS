@@ -144,7 +144,15 @@ public class ExamServiceImpl implements IExamService {
         levelDAO.updateMarkOfLevel(levelModels);
 
         List<StudentInfo> students = examInfo.getStudents();
-        studentDAO.updateStudents(StudentInfo.toModelList(students, ""));
+        List<String> oldEmails = studentExamDAO.getExamStudentEmails(examId);
+        if (!oldEmails.isEmpty()) {
+            studentExamDAO.quitExam(examId, oldEmails);
+        }
+
+        List<String> newEmails = extractEmails(students);
+        if (!newEmails.isEmpty()) {
+            studentExamDAO.joinInExam(examId, newEmails);
+        }
 
         return new ResultInfo(true, "成功修改考试信息", null);
     }
