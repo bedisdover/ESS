@@ -33,7 +33,7 @@
                     </el-tooltip>
                     <el-tooltip content="删除考试" effect="light">
                         <span>
-                          <svg class="icon" aria-hidden="true" @click="deleteExam(scope.$index)">
+                          <svg class="icon" aria-hidden="true" @click="deleteExam(scope.$index, scope.row.examId)">
                             <use xlink:href="#icon-delete"></use>
                           </svg>
                         </span>
@@ -52,6 +52,7 @@
 
 <script>
   import request from '../lib/request'
+  import Util from '../lib/util'
   import ExamInfo from '../components/ExamInfo'
   import ExamForm from '../components/ExamForm'
 
@@ -123,8 +124,18 @@
 
         this.examFormVisible = true
       },
-      deleteExam: function (index) {
-        console.log(index)
+      deleteExam: function (index, examId) {
+        let params = {
+          examId: examId
+        }
+
+        request('/exam/delete', 'post', params, (success, message) => {
+          if (success) {
+            this.examList.splice(index, 1)
+          } else {
+            Util.notifyError(message)
+          }
+        })
       },
       onConfirm: function (exam) {
         if (exam.examId) { // 编辑考试
