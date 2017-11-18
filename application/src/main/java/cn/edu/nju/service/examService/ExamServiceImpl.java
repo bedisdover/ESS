@@ -143,6 +143,9 @@ public class ExamServiceImpl implements IExamService {
         }
         levelDAO.updateMarkOfLevel(levelModels);
 
+        List<StudentInfo> students = examInfo.getStudents();
+        studentDAO.updateStudents(StudentInfo.toModelList(students, ""));
+
         return new ResultInfo(true, "成功修改考试信息", null);
     }
 
