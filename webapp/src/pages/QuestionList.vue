@@ -138,13 +138,8 @@
         }
         request('/question/delete', 'post', JSON.stringify(this.deleteQuestionList), (success, message) => {
           if (success) {
-//            this.questionListData = this.questionListData.map((obj) => {
-//              if (this.deleteQuestionList.indexOf(obj.questionId) < 0) {
-//                return obj
-//              }
-//            })
-//            this.deleteQuestionList = []
-            window.location.reload()
+            this.deleteQuestionList = []
+            this.reloadQuestionList()
           } else {
             util.notifyError(message)
           }

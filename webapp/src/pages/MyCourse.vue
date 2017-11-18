@@ -196,12 +196,12 @@
         }
         request('/course/modify', 'post', JSON.stringify(params), (success, message) => {
           if (success) {
-            this.myListData = this.myListData.map((obj) => {
-              if (obj.id === this.courseId) {
-                obj = params
-                obj.cls = params.cls
+            request('/course/my', 'get', '', (success, message, data) => {
+              if (success) {
+                this.myListData = data
+              } else {
+                util.notifyError(message)
               }
-              return obj
             })
           } else {
             util.notifyError(message)
