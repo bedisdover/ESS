@@ -16,9 +16,14 @@ public interface StudentExamMapper {
     void createJoinExamRecords(@Param("examId") int examId,
                                @Param("emails") List<String> emails);
 
-    void createJoinExamRecordIfNotExist(
-                                @Param("examId") int examId,
-                                @Param("email") String email);
+    void deleteJoinExamRecords(@Param("examId") int examId,
+                               @Param("emails") List<String> emails);
+
+//    void createJoinExamRecordIfNotExist(
+//                                @Param("examId") int examId,
+//                                @Param("email") String email);
+
+    List<String> getExamStudentEmails(@Param("examId") int examId);
 
     int getStudentExamRecordNum(@Param("examId") int examId,
                                 @Param("email") String email);

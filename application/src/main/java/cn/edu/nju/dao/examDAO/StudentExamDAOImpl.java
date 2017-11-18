@@ -27,6 +27,16 @@ public class StudentExamDAOImpl implements IStudentExamDAO {
     }
 
     @Override
+    public void quitExam(int examId, List<String> emails) throws Exception {
+        studentExamMapper.deleteJoinExamRecords(examId, emails);
+    }
+
+    @Override
+    public List<String> getExamStudentEmails(int examId) {
+        return studentExamMapper.getExamStudentEmails(examId);
+    }
+
+    @Override
     public boolean doesStudentJoinExam(String email, int examId) {
         return studentExamMapper.getStudentExamRecordNum(examId, email) > 0;
     }
