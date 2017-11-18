@@ -42,7 +42,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <ExamForm :courseId="id" :maxNum="maxNum" :exam="exam" :clsList="cls" :students="students" v-on:onConfirm="onConfirm"
+          <ExamForm :courseId="id" :maxNum="maxNum" :exam="exam" v-on:onConfirm="onConfirm"
                     :onCancel="hideExamForm" v-if="examFormVisible"></ExamForm>
         </el-card>
       </el-col>
@@ -66,8 +66,6 @@
         examList: [],
         // 各难度级别试题数目
         maxNum: [],
-        // 课程学生列表
-        students: [],
         exam: {}
       }
     },
@@ -83,11 +81,6 @@
       request('/exam/list', 'post', params, (success, message, data) => {
         if (success) {
           this.initData(data)
-        }
-      })
-      request('/student/exam', 'post', params, (success, message, data) => {
-        if (success) {
-          this.students = data
         }
       })
     },

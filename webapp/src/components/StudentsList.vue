@@ -1,39 +1,35 @@
 <template>
   <div class="main">
-    <el-checkbox-group v-model="checkedCls" @change="handleCheckedClsChange">
-      <el-checkbox v-for="cls in clsList.split(',')" :label="cls" :key="cls">{{cls}} 班</el-checkbox>
-    </el-checkbox-group>
-    <el-input class="input" v-model="checkedShow"></el-input>
+    <el-input v-model="checkedShow" :readonly="true" @click.native="showPopover"></el-input>
+    <el-popover id="popover" v-model="popoverVisible">
+      <el-transfer v-model="checked" :data="all" :titles="['未选', '已选']"
+                   :props="{key: 'studentId', label: 'name'}"></el-transfer>
+    </el-popover>
   </div>
 </template>
 
 <script>
+  import request from '../lib/request'
+
   export default {
     name: 'StudentList',
-    props: ['checkedStudents', 'students', 'clsList', 'onUpdateStudents'],
+
+    props: ['courseId', 'students', 'onUpdateStudents'],
+
     data () {
       return {
-        checked: [],
-        checkedCls: []
+        all: [], // 所有学生列表
+        popoverVisible: false
       }
     },
+
     computed: {
-      studentOfCls: function () {
-        let temp = {}
+      checked: function () {
+        return this.students.reduce((array, student) => {
+          array.push(student.studentId)
 
-        if (this.clsList === '') {
-          return temp
-        }
-
-        this.clsList.split(',').forEach(cls => {
-          temp[cls] = []
-        })
-
-        this.students.forEach(student => {
-          temp[student.cls].push(student)
-        })
-
-        return temp
+          return array
+        }, [])
       },
       /**
        * 用于input显示选择的学生列表
@@ -43,33 +39,73 @@
           return ''
         }
 
-        let temp = []
-        this.checkedCls.forEach(cls => {
-          temp.push(this.studentOfCls[cls][0].name)
+        let temp = this.checked.slice(0, 5)
+        let name = this.all.reduce((array, student) => {
+          if (temp.indexOf(student.studentId) !== -1) {
+            array.push(student.name)
+          }
+
+          return array
+        }, [])
+
+        return name.join('、') + (name.length === 5 ? ' 等' + this.checked.length + '人' : '')
+      }
+    },
+    watch: {
+      checked: function () {
+        let students = this.all.filter(student => {
+          return this.checked.indexOf(student.studentId) !== -1
         })
 
-        return temp.join('、') + ' 等' + this.checked.length + '人'
+        this.$emit('onUpdateStudents', students)
       }
-//      clsList: function () {
-//        let temp = new Set()
-//
-//        this.students.forEach(student => {
-//          temp.add(student.cls)
-//        })
-//
-//        return temp
-//      }
     },
-    methods: {
-      handleCheckedClsChange: function (value) {
-        this.checked = this.checked.concat(this.studentOfCls[value])
+
+    mounted () {
+      let params = {
+        courseId: this.courseId
       }
+
+      request('/student/exam', 'post', params, (success, message, data) => {
+        if (success) {
+          this.all = data
+        }
+      })
+
+      document.addEventListener('click', this.hidePopover)
+    },
+
+    methods: {
+      showPopover: function (e) {
+        this.popoverVisible = true
+
+        e.stopPropagation()
+      },
+      hidePopover: function (e) {
+        let popover = document.getElementById('popover')
+
+        if (popover.contains(e.target)) {
+          return
+        }
+
+        this.popoverVisible = false
+      }
+    },
+
+    destroyed () {
+      document.removeEventListener('click', this.hidePopover)
     }
   }
 </script>
 
+<style>
+  .el-popover {
+    padding: 0;
+  }
+</style>
+
 <style scoped>
-  .input {
+  .main {
     width: 500px;
   }
 </style>

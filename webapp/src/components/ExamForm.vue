@@ -18,7 +18,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="参加人员" prop="students" required>
-        <StudentsList :checkedStudents="exam.studentInfoList" :students="students" :clsList="clsList"
+        <StudentsList :courseId="courseId" :students="exam.studentInfoList"
                       v-on:onUpdateStudents="onUpdateStudents"></StudentsList>
       </el-form-item>
       <el-form-item label="试卷分数" prop="score" required>
@@ -41,14 +41,24 @@
 
   export default {
     name: 'ExamForm',
-    props: ['courseId', 'maxNum', 'exam', 'clsList', 'students', 'onConfirm', 'onCancel'],
+
+    props: ['courseId', 'maxNum', 'exam', 'onConfirm', 'onCancel'],
+
     components: {StudentsList, LevelScore},
+
     data () {
       const validateTime = (rule, value, callback) => {
         if (this.examInfo.startTime < new Date()) {
           callback(new Error('开始时间不得早于当前时间'))
         } else if (this.examInfo.endTime <= this.examInfo.startTime) {
           callback(new Error('结束时间不得早于开始时间'))
+        } else {
+          callback()
+        }
+      }
+      const validateStudents = (rule, value, callback) => {
+        if (this.examInfo.students.length === 0) {
+          callback(new Error('参加人员不能为空'))
         } else {
           callback()
         }
@@ -79,7 +89,7 @@
             {required: true, validator: validateTime}
           ],
           students: [
-            {required: true, message: '参加人员不能为空'}
+            {required: true, validator: validateStudents, trigger: 'change'}
           ],
           score: [
             {required: true, validator: validateScore}
@@ -87,6 +97,7 @@
         }
       }
     },
+
     methods: {
       onUpdateStudents: function (students) {
         this.examInfo.students = students
@@ -105,7 +116,7 @@
           endTime: Util.formatTime(this.examInfo.endTime),
           num: this.examInfo.num,
           marks: this.examInfo.marks,
-          students: this.students
+          students: this.examInfo.students
         }
 
         let url = '/exam' + (params.examId ? '/update' : '/add')
