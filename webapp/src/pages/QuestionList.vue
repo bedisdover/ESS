@@ -4,13 +4,13 @@
       <el-col :span="20" :offset="2">
         <el-card class="box-card clearfix">
           <div slot="header">
-            <span style="margin-right: -205px">{{courseName}}试题列表</span>
+            <span style="margin-right: -205px">【{{courseName}}】试题列表</span>
             <el-button style="float: right;width: 100px" type="primary" size="small">
               下载试题模版
             </el-button>
             <el-button style="float: right;margin-right: 5px;width: 100px" type="primary" size="small"
                        @click="uploadDialogVisible = true">
-              上传试题
+              上传试题库
             </el-button>
           </div>
           <el-table

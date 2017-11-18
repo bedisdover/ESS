@@ -12,6 +12,7 @@ import MyExam from '@/pages/MyExam'
 import Exam from '@/pages/Exam'
 import ExamList from '@/pages/ExamList'
 import QuestionList from '@/pages/QuestionList'
+import ExamStudents from '@/pages/ExamStudents'
 
 // 单独页面
 const singlePage = [
@@ -30,7 +31,7 @@ const withoutLogin = [
  */
 const privileges = [
   [
-    'CreateCourse', 'QuestionList'
+    'CreateCourse', 'QuestionList', 'ExamStudents'
   ],
   []
 ]
@@ -143,6 +144,15 @@ const navRouter = [
     props: true,
     mata: {
       title: '试题列表'
+    }
+  },
+  {
+    path: '/examStudents/:id',
+    name: 'ExamStudents',
+    component: ExamStudents,
+    props: true,
+    mata: {
+      title: '考试学生列表'
     }
   }
 ]
