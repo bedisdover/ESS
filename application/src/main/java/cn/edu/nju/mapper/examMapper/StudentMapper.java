@@ -18,6 +18,9 @@ public interface StudentMapper {
 
     List<StudentModel> getExamStudents(@Param("examId") int examId);
 
+    void deleteCourseStudents(@Param("courseId") int courseId,
+                              @Param("emails") List<String> emails);
+
     void updateStudent(@Param("student") StudentModel student);
 
     int getStudentMD5Count(@Param("md5Value") String md5Value);

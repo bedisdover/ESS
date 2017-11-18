@@ -13,6 +13,8 @@ public interface IStudentDAO {
 
     List<StudentModel> getCourseStudents(int courseId);
 
+    void deleteCourseStudents(int courseId, List<String> emails) throws Exception;
+
     List<StudentModel> getExamStudents(int examId);
 
     boolean isStudentFileMD5Exist(String md5Value);

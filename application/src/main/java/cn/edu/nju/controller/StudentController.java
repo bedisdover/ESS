@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Jiayiwu on 17/11/13.
@@ -33,10 +34,19 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @RequestMapping(value = "/student/exam", method = RequestMethod.POST)
+    @RequestMapping(value = "/student/course/get", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo getExamStudents(@RequestParam int courseId) {
-        return studentService.getExamStudents(courseId);
+    public ResultInfo getCourseStudents(@RequestParam int courseId) {
+        return studentService.getCourseStudents(courseId);
+    }
+
+    @RequestMapping(value = "/student/course/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo deleteCourseStudents(HttpSession session,
+                                           @RequestParam int courseId,
+                                           @RequestParam List<String> emails) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return studentService.deleteCourseStudents(userId, courseId, emails);
     }
 
     @RequestMapping(value = "/student/upload", method = RequestMethod.POST)

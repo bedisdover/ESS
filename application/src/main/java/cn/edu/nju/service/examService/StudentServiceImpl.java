@@ -39,10 +39,31 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public ResultInfo getExamStudents(int courseId) {
+    public ResultInfo getCourseStudents(int courseId) {
         List<StudentModel> list = studentDAO.getCourseStudents(courseId);
         return new ResultInfo(true, "成功获取学生列表信息",
                 StudentModel.toInfoList(list));
+    }
+
+    @Override
+    public ResultInfo deleteCourseStudents(int userId, int courseId,
+                                           List<String> emails) {
+        if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
+            return new ResultInfo(false, "只有该门课的老师才能删除学生信息", null);
+        }
+
+        if (emails.isEmpty()) {
+            return new ResultInfo(false, "成功删除学生信息", null);
+        }
+
+        try {
+            studentDAO.deleteCourseStudents(courseId, emails);
+            return new ResultInfo(false, "成功删除学生信息", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(StudentServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 
     @Override

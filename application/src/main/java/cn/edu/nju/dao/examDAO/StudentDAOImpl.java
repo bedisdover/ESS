@@ -28,6 +28,11 @@ public class StudentDAOImpl implements IStudentDAO {
     }
 
     @Override
+    public void deleteCourseStudents(int courseId, List<String> emails) throws Exception {
+        studentMapper.deleteCourseStudents(courseId, emails);
+    }
+
+    @Override
     public List<StudentModel> getExamStudents(int examId) {
         return studentMapper.getExamStudents(examId);
     }
@@ -39,8 +44,6 @@ public class StudentDAOImpl implements IStudentDAO {
 
     @Override
     public void updateStudents(List<StudentModel> students) throws Exception {
-        students.forEach((student) -> {
-            studentMapper.updateStudent(student);
-        });
+        students.forEach(studentMapper::updateStudent);
     }
 }

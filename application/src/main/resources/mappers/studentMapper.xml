@@ -45,4 +45,12 @@
         (SELECT email FROM r_exam_student WHERE examId = #{examId} AND enable = 1)
     </select>
 
+    <update id="deleteCourseStudents">
+        UPDATE t_student SET enable = 0
+        WHERE courseId = #{courseId} AND email IN
+        <foreach collection="emails" item="email" separator="," open="(" close=")">
+            #{email}
+        </foreach>
+    </update>
+
 </mapper>
