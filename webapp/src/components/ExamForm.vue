@@ -1,32 +1,34 @@
 <template>
   <div class="main">
-    <el-form ref="examForm" :model="examInfo" :rules="rules" labelWidth="80px">
-      <el-form-item label="考试名称" prop="name" required>
-        <el-input v-model="examInfo.name" class="input"></el-input>
+    <el-form ref="examForm" :model="examInfo" labelWidth="80px">
+      <el-form-item label="考试名称" required>
+        <el-input v-model="examInfo.name" class="input" :readonly="exam.readonly"></el-input>
       </el-form-item>
-      <el-form-item label="考试时间" prop="time" required>
+      <el-form-item label="考试时间" required>
         <el-date-picker
           v-model="examInfo.startTime"
+          :readonly="exam.readonly"
           type="datetime"
           placeholder="开始时间">
         </el-date-picker>
         <span class="to">至</span>
         <el-date-picker
           v-model="examInfo.endTime"
+          :readonly="exam.readonly"
           type="datetime"
           placeholder="结束时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="参加人员" prop="students" required>
-        <StudentsList :courseId="courseId" :students="exam.studentInfoList"
+      <el-form-item label="参加人员" required>
+        <StudentsList :courseId="courseId" :students="exam.studentInfoList" :readonly="exam.readonly"
                       v-on:onUpdateStudents="onUpdateStudents"></StudentsList>
       </el-form-item>
-      <el-form-item label="试卷分数" prop="score" required>
-        <LevelScore :maxNum="maxNum" :num="examInfo.num" :marks="examInfo.marks"
+      <el-form-item label="试卷分数" required>
+        <LevelScore :maxNum="maxNum" :num="examInfo.num" :marks="examInfo.marks" :readonly="exam.readonly"
                     v-on:onUpdateScore="onUpdateScore"></LevelScore>
       </el-form-item>
-      <el-form-item class="footer">
-        <el-button type="primary" @click="submit">{{exam ? '确认修改' : '立即创建'}}</el-button>
+      <el-form-item class="footer" v-if="!exam.readonly">
+        <el-button type="primary" @click="submit">{{exam.examId ? '确认修改' : '立即创建'}}</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
@@ -47,53 +49,15 @@
     components: {StudentsList, LevelScore},
 
     data () {
-      const validateTime = (rule, value, callback) => {
-        if (this.examInfo.startTime < new Date()) {
-          callback(new Error('开始时间不得早于当前时间'))
-        } else if (this.examInfo.endTime <= this.examInfo.startTime) {
-          callback(new Error('结束时间不得早于开始时间'))
-        } else {
-          callback()
-        }
-      }
-      const validateStudents = (rule, value, callback) => {
-        if (this.examInfo.students.length === 0) {
-          callback(new Error('参加人员不能为空'))
-        } else {
-          callback()
-        }
-      }
-      const validateScore = (rule, value, callback) => {
-        if (this.examInfo.score === 0) {
-          callback(new Error('试题分数不能为零'))
-        } else {
-          callback()
-        }
-      }
-
       return {
         examInfo: {
           name: this.exam.name ? this.exam.name : '',
           startTime: this.exam.startTime ? new Date(this.exam.startTime) : '',
           endTime: this.exam.endTime ? new Date(this.exam.endTime) : '',
-          students: [],
+          students: this.exam.studentInfoList ? this.exam.studentInfoList : [],
           num: this.exam.num ? [...this.exam.num] : [],
           marks: this.exam.marks ? [...this.exam.marks] : [],
           score: 0
-        },
-        rules: {
-          name: [
-            {required: true, message: '考试名称不能为空'}
-          ],
-          time: [
-            {required: true, validator: validateTime}
-          ],
-          students: [
-            {required: true, validator: validateStudents, trigger: 'change'}
-          ],
-          score: [
-            {required: true, validator: validateScore}
-          ]
         }
       }
     },
@@ -107,7 +71,37 @@
         this.examInfo.marks = marks
         this.examInfo.score = score
       },
+      validate: function () {
+        if (this.examInfo.name === '') {
+          Util.notifyError('考试名称不能为空')
+          return false
+        }
+
+        if (this.examInfo.startTime < new Date()) {
+          Util.notifyError('开始时间不得早于当前时间')
+          return false
+        } else if (this.examInfo.endTime <= this.examInfo.startTime) {
+          Util.notifyError('结束时间不得早于开始时间')
+          return false
+        }
+
+        if (this.examInfo.students.length === 0) {
+          Util.notifyError('参加人员不能为空')
+          return false
+        }
+
+        if (this.examInfo.score === 0) {
+          Util.notifyError('试题分数不能为零')
+          return false
+        }
+
+        return true
+      },
       submit: function () {
+        if (!this.validate()) {
+          return
+        }
+
         let params = {
           courseId: this.courseId,
           examId: this.exam.examId,

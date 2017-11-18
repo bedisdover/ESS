@@ -13,7 +13,9 @@
           </div>
           <el-table
             :data="myListData"
-            style="width: 100%;text-align: left">
+            v-loading="loading"
+            style="width: 100%;text-align: left"
+          >
             <el-table-column type="expand">
               <template slot-scope="props">
                 <CourseInfo :props="props">
@@ -44,13 +46,23 @@
               label="设置"
               v-if="user.role === 1"
             >
-              <template slot-scope="scope" >
+              <template slot-scope="scope">
                 <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}"
                              class="nocsslink">
                   <el-tooltip content="试题库" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-questionList"></use>
+                          </svg>
+                        </span>
+                  </el-tooltip>
+                </router-link>
+                <router-link :to="{ name: 'ExamStudents', params: { id: scope.row.id, courseName: scope.row.name }}"
+                             class="nocsslink">
+                  <el-tooltip content="考试学生名单" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-xuesheng"></use>
                           </svg>
                         </span>
                   </el-tooltip>
@@ -130,6 +142,7 @@
     props: ['user'],
     data () {
       return {
+        loading: true,
         myListData: [],
         courseId: '',
         courseName: '',
@@ -148,6 +161,7 @@
     created: function () {
       request('/course/my', 'get', '', (success, message, data) => {
         if (success) {
+          this.loading = false
           this.myListData = data
         } else {
           util.notifyError(message)
@@ -196,9 +210,11 @@
         }
         request('/course/modify', 'post', JSON.stringify(params), (success, message) => {
           if (success) {
+            this.loading = true
             request('/course/my', 'get', '', (success, message, data) => {
               if (success) {
                 this.myListData = data
+                this.loading = false
               } else {
                 util.notifyError(message)
               }
