@@ -14,8 +14,14 @@
             </el-button>
           </div>
           <el-table
+            @selection-change="handleSelectionChange"
+            v-loading="loading"
             :data="questionListData"
             style="width: 100%;text-align: left">
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -42,16 +48,23 @@
             >
             </el-table-column>
           </el-table>
-          <el-pagination
-            style="margin-top: 20px"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page=page
-            :page-sizes="[10, 15, 20, 50]"
-            :page-size=size
-            layout="total, sizes, prev, pager, next, jumper"
-            :total=total>
-          </el-pagination>
+          <div style="margin-top: 20px">
+            <el-button style="float: left"
+                       type="danger"
+                       size="small"
+                       @click="deleteQuestion"
+            >删除题目
+            </el-button>
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page=page
+              :page-sizes="[10, 15, 20, 50]"
+              :page-size=size
+              layout="total, sizes, prev, pager, next, jumper"
+              :total=total>
+            </el-pagination>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -74,114 +87,72 @@
 <script>
   import request from '../lib/request'
   import util from '../lib/util'
+  import ElButton from '../../node_modules/element-ui/packages/button/src/button.vue'
 
   export default {
+    components: {ElButton},
     name: 'QuestionList',
     props: ['id', 'courseName'],
-    created: function () {
-      request('/question/list', '', '', (success, message) => {
-        if (success) {
-
-        } else {
-          util.notifyError(message)
-        }
-      })
-    },
     data () {
       return {
         page: 1,
         size: 10,
-        total: 50,
-        questionListData: [
-          {
-            questionId: 32,
-            courseId: 9,
-            content: '数据结构',
-            level: 1,
-            answer: '1',
-            options: [
-              {
-                optionId: 1,
-                content: 'a'
-              },
-              {
-                optionId: 2,
-                content: 'b'
-              },
-              {
-                optionId: 3,
-                content: 'c'
-              }
-            ]
-          },
-          {
-            questionId: 33,
-            courseId: 9,
-            content: '操作系统',
-            level: 2,
-            answer: '1,2',
-            options: [
-              {
-                optionId: 1,
-                content: 'a'
-              },
-              {
-                optionId: 2,
-                content: 'b'
-              },
-              {
-                optionId: 3,
-                content: 'c'
-              },
-              {
-                optionId: 4,
-                content: 'd'
-              },
-              {
-                optionId: 5,
-                content: 'e'
-              }
-            ]
-          },
-          {
-            questionId: 34,
-            courseId: 9,
-            content: '数据库',
-            level: 3,
-            answer: '2',
-            options: [
-              {
-                optionId: 1,
-                content: 'a'
-              },
-              {
-                optionId: 2,
-                content: 'd'
-              },
-              {
-                optionId: 3,
-                content: 'c'
-              },
-              {
-                optionId: 4,
-                content: 'e'
-              }
-            ]
-          }
-        ],
+        total: 0,
+        questionListData: [],
+        deleteQuestionList: [],
         uploadDialogVisible: false,
-        fileList: []
+        fileList: [],
+        loading: true
       }
     },
     methods: {
+      reloadQuestionList () {
+        this.loading = true
+        let url = '/question/list?courseId=' + this.id + '&page=' + this.page + '&size=' + this.size
+        request(url, 'get', '', (success, message, data) => {
+          if (success) {
+            this.total = data.num
+            this.questionListData = data.questionInfoList
+            this.loading = false
+          } else {
+            util.notifyError(message)
+          }
+        })
+      },
       handleSizeChange (val) {
         this.size = val
-        alert(this.size)
+        this.reloadQuestionList()
       },
       handleCurrentChange (val) {
         this.page = val
-        alert(this.page)
+        this.reloadQuestionList()
+      },
+      handleSelectionChange (val) {
+        this.deleteQuestionList = val.map((obj) => {
+          return obj.questionId
+        })
+      },
+      deleteQuestion () {
+        if (this.deleteQuestionList.length === 0) {
+          return false
+        }
+        request('/question/delete', 'post', JSON.stringify(this.deleteQuestionList), (success, message) => {
+          if (success) {
+//            this.questionListData = this.questionListData.map((obj) => {
+//              if (this.deleteQuestionList.indexOf(obj.questionId) < 0) {
+//                return obj
+//              }
+//            })
+//            this.deleteQuestionList = []
+            window.location.reload()
+          } else {
+            util.notifyError(message)
+          }
+        })
       }
+    },
+    beforeMount: function () {
+      this.reloadQuestionList()
     }
   }
 </script>
