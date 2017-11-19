@@ -53,12 +53,12 @@ public class StudentServiceImpl implements IStudentService {
         }
 
         if (emails.isEmpty()) {
-            return new ResultInfo(false, "成功删除学生信息", null);
+            return new ResultInfo(true, "成功删除学生信息", null);
         }
 
         try {
             studentDAO.deleteCourseStudents(courseId, emails);
-            return new ResultInfo(false, "成功删除学生信息", null);
+            return new ResultInfo(true, "成功删除学生信息", null);
         } catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(StudentServiceImpl.class).error(e);
