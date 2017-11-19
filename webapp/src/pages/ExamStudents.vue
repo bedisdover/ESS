@@ -85,7 +85,7 @@
         let params = {
           courseId: parseInt(this.id)
         }
-        request('/student/exam', 'post', params, (success, message, data) => {
+        request('/student/course/get', 'post', params, (success, message, data) => {
           if (success) {
             this.ExamStudentsData = data
             this.loading = false
@@ -96,22 +96,25 @@
       },
       handleSelectionChange (val) {
         this.deleteStudentList = val.map((obj) => {
-          return obj.studentId
+          return obj.email
         })
       },
       deleteStudents () {
         if (this.deleteStudentList.length === 0) {
           return false
         }
-        alert(JSON.stringify(this.deleteStudentList))
-//        request('/question/delete', 'post', JSON.stringify(this.deleteQuestionList), (success, message) => {
-//          if (success) {
-//            this.deleteQuestionList = []
-//            this.reloadQuestionList()
-//          } else {
-//            util.notifyError(message)
-//          }
-//        })
+        let params = {
+          courseId: this.id,
+          emails: this.deleteQuestionList
+        }
+        request('/student/course/delete', 'post', params, (success, message) => {
+          if (success) {
+            this.deleteQuestionList = []
+            this.loadExamStudents()
+          } else {
+            util.notifyError(message)
+          }
+        })
       }
     },
     beforeMount: function () {
