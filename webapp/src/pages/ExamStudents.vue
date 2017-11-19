@@ -4,7 +4,7 @@
       <el-col :span="20" :offset="2">
         <el-card class="box-card clearfix">
           <div slot="header">
-            <span style="margin-right: -205px">【{{courseName}}】考试学生名单</span>
+            <span style="margin-right: -205px">【{{courseName}}】学生名单</span>
             <el-button style="float: right;width: 100px" type="primary" size="small">
               下载学生模版
             </el-button>
@@ -105,11 +105,11 @@
         }
         let params = {
           courseId: this.id,
-          emails: this.deleteQuestionList
+          emails: this.deleteStudentList
         }
         request('/student/course/delete', 'post', params, (success, message) => {
           if (success) {
-            this.deleteQuestionList = []
+            this.deleteStudentList = []
             this.loadExamStudents()
           } else {
             util.notifyError(message)

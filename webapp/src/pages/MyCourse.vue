@@ -59,7 +59,7 @@
                 </router-link>
                 <router-link :to="{ name: 'ExamStudents', params: { id: scope.row.id, courseName: scope.row.name }}"
                              class="nocsslink">
-                  <el-tooltip content="考试学生名单" effect="light">
+                  <el-tooltip content="学生名单" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-xuesheng"></use>
