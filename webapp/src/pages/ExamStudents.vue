@@ -4,7 +4,7 @@
       <el-col :span="20" :offset="2">
         <el-card class="box-card clearfix">
           <div slot="header">
-            <span style="margin-right: -205px">【{{courseName}}】考试学生名单</span>
+            <span style="margin-right: -205px">【{{courseName}}】学生名单</span>
             <el-button style="float: right;width: 100px" type="primary" size="small">
               下载学生模版
             </el-button>
@@ -85,7 +85,7 @@
         let params = {
           courseId: parseInt(this.id)
         }
-        request('/student/exam', 'post', params, (success, message, data) => {
+        request('/student/course/get', 'post', params, (success, message, data) => {
           if (success) {
             this.ExamStudentsData = data
             this.loading = false
@@ -96,22 +96,25 @@
       },
       handleSelectionChange (val) {
         this.deleteStudentList = val.map((obj) => {
-          return obj.studentId
+          return obj.email
         })
       },
       deleteStudents () {
         if (this.deleteStudentList.length === 0) {
           return false
         }
-        alert(JSON.stringify(this.deleteStudentList))
-//        request('/question/delete', 'post', JSON.stringify(this.deleteQuestionList), (success, message) => {
-//          if (success) {
-//            this.deleteQuestionList = []
-//            this.reloadQuestionList()
-//          } else {
-//            util.notifyError(message)
-//          }
-//        })
+        let params = {
+          courseId: this.id,
+          emails: this.deleteStudentList
+        }
+        request('/student/course/delete', 'post', params, (success, message) => {
+          if (success) {
+            this.deleteStudentList = []
+            this.loadExamStudents()
+          } else {
+            util.notifyError(message)
+          }
+        })
       }
     },
     beforeMount: function () {
@@ -120,20 +123,6 @@
   }
 </script>
 <style scoped>
-  .demo-table-expand {
-    font-size: 0;
-  }
-
-  .demo-table-expand label {
-    color: #99a9bf;
-  }
-
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
-
   .deleteButton {
     margin-top: 20px;
     margin-bottom: 20px;
