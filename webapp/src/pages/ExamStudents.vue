@@ -4,16 +4,30 @@
       <el-col :span="20" :offset="2">
         <el-card class="box-card clearfix">
           <div slot="header">
-            <span style="margin-right: -205px">【{{courseName}}】学生名单</span>
-            <el-button style="float: right;width: 100px" type="primary" size="small">
-              <a href="/student/download" target="_blank">
-                下载学生模版
-              </a>
-            </el-button>
-            <el-button style="float: right;margin-right: 5px;width: 100px" type="primary" size="small"
-                       @click="uploadDialogVisible = true">
-              上传学生名单
-            </el-button>
+            <el-tooltip content="删除选中学生名单" effect="light">
+                        <span class="operation deleteIcon" @click="deleteStudents">
+                          <svg class="icon " aria-hidden="true">
+                            <use xlink:href="#icon-delete"></use>
+                          </svg>
+                        </span>
+            </el-tooltip>
+            <span style="margin-right: -72px">【{{courseName}}】学生名单</span>
+            <a href="/student/download" target="_blank">
+              <el-tooltip content="下载学生模版" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-clouddownload"></use>
+                          </svg>
+                        </span>
+              </el-tooltip>
+            </a>
+            <el-tooltip content="上传学生名单" effect="light">
+                        <span class="operation" @click="uploadDialogVisible = true">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-cloudupload"></use>
+                          </svg>
+                        </span>
+            </el-tooltip>
           </div>
           <el-table
             @selection-change="handleSelectionChange"
@@ -40,12 +54,6 @@
             >
             </el-table-column>
           </el-table>
-          <el-button class="deleteButton"
-                     type="danger"
-                     size="small"
-                     @click="deleteStudents"
-          >删除学生名单
-          </el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -142,5 +150,13 @@
     margin-top: 20px;
     margin-bottom: 20px;
     float: left
+  }
+  .operation {
+    font-size: 1.5em;
+    float: right;
+    margin-left: 24px;
+  }
+  .deleteIcon {
+    float: left;
   }
 </style>

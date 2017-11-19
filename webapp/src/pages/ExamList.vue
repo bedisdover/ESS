@@ -9,7 +9,7 @@
             <span>{{title}}</span>
             <el-button type="text" class="btn-create" @click="createExam" v-show="!examFormVisible">新建考试</el-button>
           </div>
-          <el-table :data="examList" class="table" v-show="!examFormVisible">
+          <el-table :data="examList" class="table" v-show="!examFormVisible" v-loading="loading">
             <el-table-column label="考试名称" prop="name"></el-table-column>
             <el-table-column label="开始时间" prop="startTime"></el-table-column>
             <el-table-column label="结束时间" prop="endTime"></el-table-column>
@@ -70,7 +70,8 @@
         examList: [],
         // 各难度级别试题数目
         maxNum: [],
-        exam: {}
+        exam: {},
+        loading: true
       }
     },
 
@@ -87,6 +88,7 @@
       request('/exam/list', 'post', params, (success, message, data) => {
         if (success) {
           this.initData(data)
+          this.loading = false
         }
       })
     },
