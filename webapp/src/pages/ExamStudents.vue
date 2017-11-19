@@ -55,8 +55,13 @@
       width="60%"
     >
       <el-upload
-        action="/question/upload"
-        :file-list="fileList">
+        action="http://localhost:8080//student/upload"
+        :with-credentials="true"
+        :data="{courseId: parseInt(id)}"
+        :on-success="uploadSuccess"
+        :show-file-list="false"
+        name="studentFile"
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
       </el-upload>
@@ -75,11 +80,19 @@
         ExamStudentsData: [],
         deleteStudentList: [],
         uploadDialogVisible: false,
-        fileList: [],
         loading: true
       }
     },
     methods: {
+      uploadSuccess (response) {
+        if (response.success) {
+          util.notifySuccess(response.message)
+          this.uploadDialogVisible = false
+          this.loadExamStudents()
+        } else {
+          util.notifyError(response.message)
+        }
+      },
       loadExamStudents () {
         this.loading = true
         let params = {
