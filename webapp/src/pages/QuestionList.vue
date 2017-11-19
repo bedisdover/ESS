@@ -6,7 +6,9 @@
           <div slot="header">
             <span style="margin-right: -205px">【{{courseName}}】试题列表</span>
             <el-button style="float: right;width: 100px" type="primary" size="small">
-              下载试题模版
+              <a href="/question/download" target="_blank">
+                下载试题模版
+              </a>
             </el-button>
             <el-button style="float: right;margin-right: 5px;width: 100px" type="primary" size="small"
                        @click="uploadDialogVisible = true">

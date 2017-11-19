@@ -60,6 +60,7 @@
 
   a {
     text-decoration: none;
+    color: #333333;
   }
 
   pre {

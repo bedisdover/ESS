@@ -6,7 +6,9 @@
           <div slot="header">
             <span style="margin-right: -205px">【{{courseName}}】学生名单</span>
             <el-button style="float: right;width: 100px" type="primary" size="small">
-              下载学生模版
+              <a href="/student/download" target="_blank">
+                下载学生模版
+              </a>
             </el-button>
             <el-button style="float: right;margin-right: 5px;width: 100px" type="primary" size="small"
                        @click="uploadDialogVisible = true">
