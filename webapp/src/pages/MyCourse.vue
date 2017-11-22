@@ -47,8 +47,7 @@
               v-if="user.role === 1"
             >
               <template slot-scope="scope">
-                <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}"
-                             class="nocsslink">
+                <router-link :to="{ name: 'QuestionList', params: { id: scope.row.id, courseName: scope.row.name }}">
                   <el-tooltip content="试题库" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
@@ -57,8 +56,7 @@
                         </span>
                   </el-tooltip>
                 </router-link>
-                <router-link :to="{ name: 'ExamStudents', params: { id: scope.row.id, courseName: scope.row.name }}"
-                             class="nocsslink">
+                <router-link :to="{ name: 'ExamStudents', params: { id: scope.row.id, courseName: scope.row.name }}">
                   <el-tooltip content="学生名单" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
@@ -67,8 +65,7 @@
                         </span>
                   </el-tooltip>
                 </router-link>
-                <router-link :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}"
-                             class="nocsslink">
+                <router-link :to="{ name: 'ExamList', params: { id: scope.row.id, cls: scope.row.cls }}">
                   <el-tooltip content="考试列表" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
@@ -248,11 +245,5 @@
 
   .operation {
     font-size: 1.5em;
-  }
-
-  .nocsslink {
-    text-decoration: none;
-    out-line: none;
-    color: #333333;
   }
 </style>

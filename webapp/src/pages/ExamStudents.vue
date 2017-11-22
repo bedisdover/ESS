@@ -4,14 +4,30 @@
       <el-col :span="20" :offset="2">
         <el-card class="box-card clearfix">
           <div slot="header">
-            <span style="margin-right: -205px">【{{courseName}}】学生名单</span>
-            <el-button style="float: right;width: 100px" type="primary" size="small">
-              下载学生模版
-            </el-button>
-            <el-button style="float: right;margin-right: 5px;width: 100px" type="primary" size="small"
-                       @click="uploadDialogVisible = true">
-              上传学生名单
-            </el-button>
+            <el-tooltip content="删除选中学生名单" effect="light">
+                        <span class="operation deleteIcon" @click="deleteStudents">
+                          <svg class="icon " aria-hidden="true">
+                            <use xlink:href="#icon-delete"></use>
+                          </svg>
+                        </span>
+            </el-tooltip>
+            <span style="margin-right: -72px">【{{courseName}}】学生名单</span>
+            <a href="/student/download" target="_blank">
+              <el-tooltip content="下载学生模版" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-clouddownload"></use>
+                          </svg>
+                        </span>
+              </el-tooltip>
+            </a>
+            <el-tooltip content="上传学生名单" effect="light">
+                        <span class="operation" @click="uploadDialogVisible = true">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-cloudupload"></use>
+                          </svg>
+                        </span>
+            </el-tooltip>
           </div>
           <el-table
             @selection-change="handleSelectionChange"
@@ -38,12 +54,6 @@
             >
             </el-table-column>
           </el-table>
-          <el-button class="deleteButton"
-                     type="danger"
-                     size="small"
-                     @click="deleteStudents"
-          >删除学生名单
-          </el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -55,8 +65,13 @@
       width="60%"
     >
       <el-upload
-        action="/question/upload"
-        :file-list="fileList">
+        action="http://localhost:8080//student/upload"
+        :with-credentials="true"
+        :data="{courseId: parseInt(id)}"
+        :on-success="uploadSuccess"
+        :show-file-list="false"
+        name="studentFile"
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
       </el-upload>
@@ -75,11 +90,19 @@
         ExamStudentsData: [],
         deleteStudentList: [],
         uploadDialogVisible: false,
-        fileList: [],
         loading: true
       }
     },
     methods: {
+      uploadSuccess (response) {
+        if (response.success) {
+          util.notifySuccess(response.message)
+          this.uploadDialogVisible = false
+          this.loadExamStudents()
+        } else {
+          util.notifyError(response.message)
+        }
+      },
       loadExamStudents () {
         this.loading = true
         let params = {
@@ -127,5 +150,13 @@
     margin-top: 20px;
     margin-bottom: 20px;
     float: left
+  }
+  .operation {
+    font-size: 1.5em;
+    float: right;
+    margin-left: 24px;
+  }
+  .deleteIcon {
+    float: left;
   }
 </style>

@@ -4,14 +4,30 @@
       <el-col :span="20" :offset="2">
         <el-card class="box-card clearfix">
           <div slot="header">
-            <span style="margin-right: -205px">【{{courseName}}】试题列表</span>
-            <el-button style="float: right;width: 100px" type="primary" size="small">
-              下载试题模版
-            </el-button>
-            <el-button style="float: right;margin-right: 5px;width: 100px" type="primary" size="small"
-                       @click="uploadDialogVisible = true">
-              上传试题库
-            </el-button>
+            <el-tooltip content="删除选中题目" effect="light">
+                        <span class="operation deleteIcon" @click="deleteQuestion">
+                          <svg class="icon " aria-hidden="true">
+                            <use xlink:href="#icon-delete"></use>
+                          </svg>
+                        </span>
+            </el-tooltip>
+            <span style="margin-right: -72px">【{{courseName}}】试题列表</span>
+              <a href="/question/download" target="_blank">
+                <el-tooltip content="下载试题模版" effect="light">
+                        <span class="operation">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-clouddownload"></use>
+                          </svg>
+                        </span>
+                </el-tooltip>
+              </a>
+              <el-tooltip content="上传试题库" effect="light">
+                        <span class="operation" @click="uploadDialogVisible = true">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-cloudupload"></use>
+                          </svg>
+                        </span>
+              </el-tooltip>
           </div>
           <el-table
             @selection-change="handleSelectionChange"
@@ -49,12 +65,6 @@
             </el-table-column>
           </el-table>
           <div style="margin-top: 20px">
-            <el-button style="float: left"
-                       type="danger"
-                       size="small"
-                       @click="deleteQuestion"
-            >删除题目
-            </el-button>
             <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
@@ -76,8 +86,13 @@
       width="60%"
     >
       <el-upload
-        action="/question/upload"
-        :file-list="fileList">
+        action="http://localhost:8080/question/upload"
+        :with-credentials="true"
+        :data="{courseId: parseInt(id)}"
+        :on-success="uploadSuccess"
+        :show-file-list="false"
+        name="questions"
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
       </el-upload>
@@ -101,11 +116,19 @@
         questionListData: [],
         deleteQuestionList: [],
         uploadDialogVisible: false,
-        fileList: [],
         loading: true
       }
     },
     methods: {
+      uploadSuccess (response) {
+        if (response.success) {
+          util.notifySuccess(response.message)
+          this.uploadDialogVisible = false
+          this.reloadQuestionList()
+        } else {
+          util.notifyError(response.message)
+        }
+      },
       reloadQuestionList () {
         this.loading = true
         let params = {
@@ -168,5 +191,13 @@
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+  }
+  .operation {
+    font-size: 1.5em;
+    float: right;
+    margin-left: 24px;
+  }
+  .deleteIcon {
+    float: left;
   }
 </style>
