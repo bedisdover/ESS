@@ -36,9 +36,9 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/student/course/delete',
+                'url': '/exam/all',
                 'method': 'post',
-                'traditional': true,
+//                'traditional': true,
 //                'data': JSON.stringify({
 //                    'examId': 14, 'courseId': 9, 'name': '并行计算', 'marks': [1,2,3],
 //                    'num': [1,1,1], 'startTime': '2018-01-01 00:00:00', 'endTime': '2018-01-01 00:10:00',
@@ -46,9 +46,9 @@
 //                        {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
 //                    'students':[]
 //                }),
-                'data': {
-                    'courseId': 9, 'emails':['1282976747@qq.com', '1483809252@qq.com']
-                },
+//                'data': {
+//                    'courseId': 9, 'emails':['1282976747@qq.com', '1483809252@qq.com']
+//                },
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },

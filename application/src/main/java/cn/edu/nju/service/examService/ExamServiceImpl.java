@@ -176,25 +176,17 @@ public class ExamServiceImpl implements IExamService {
     public ResultInfo getExamList(int courseId) {
         List<ExamModel> list = examDAO.getExamList(courseId);
 
-        int levelNum = questionDAO.getLevelNumByCourseId(courseId);
-        List<Integer> maxNum = new ArrayList<>(levelNum);
-        for (int i = 1; i <= levelNum; ++i) {
-            maxNum.add(questionDAO.getNumOfQuestions(courseId, i));
-        }
+        List<Integer> maxNum = getQuestionMaxNum(courseId);
 
         List<ExamsOfCourse.ExamInfo> infoList = new ArrayList<>();
         for (ExamModel exam : list) {
             String[] array = exam.getNum().split(",");
             List<Integer> num = new ArrayList<>(array.length);
-            List<Integer> levels = new ArrayList<>(array.length);
             for (int i = 1; i <= array.length; ++i) {
                 num.add(Integer.parseInt(array[i - 1]));
-                levels.add(i);
             }
 
-            List<Double> marks = levelDAO.getMarksOfQuestions(
-                    exam.getExamId(), courseId, levels
-            );
+            List<Double> marks = getQuestionMarks(exam);
 
             List<StudentModel> studentModelList =
                     studentDAO.getExamStudents(exam.getExamId());
@@ -220,15 +212,53 @@ public class ExamServiceImpl implements IExamService {
             UserModel userInfo = userDAO.getUserInfoById(userId);
             String email = userInfo.getEmail();
             List<ExamModel> examModelList = examDAO.getJoinExam(email);
-            return new ResultInfo(true, "成功获取考试信息列表", examModelList);
+            List<ExamInfo> examInfoList = toExamInfoList(examModelList);
+
+            return new ResultInfo(true, "成功获取考试信息列表", examInfoList);
         } else if (role == Role.teacher) {
             List<Integer> courseIds = userCourseDAO.getCourseIdsByUserId(userId);
             List<ExamModel> examModelList = examDAO.getCreateExam(courseIds);
-            return new ResultInfo(true, "成功获取考试信息列表", examModelList);
+            List<ExamInfo> examInfoList = toExamInfoList(examModelList);
+
+            return new ResultInfo(true, "成功获取考试信息列表", examInfoList);
         } else {
             Logger.getLogger(ExamServiceImpl.class).error("Unexpected role of user");
             return new ResultInfo(false, "系统异常", null);
         }
+    }
+
+    private List<ExamInfo> toExamInfoList(List<ExamModel> examModelList) {
+        List<ExamInfo> examInfoList = new ArrayList<>(examModelList.size());
+        examModelList.forEach(model -> {
+            int courseId = model.getCourseId();
+            List<Integer> maxNum = getQuestionMaxNum(courseId);
+            List<Double> marks = getQuestionMarks(model);
+            List<StudentInfo> students = StudentModel.toInfoList(
+                    studentDAO.getExamStudents(model.getExamId())
+            );
+            examInfoList.add(model.toInfo(maxNum, marks, students));
+        });
+        return examInfoList;
+    }
+
+    private List<Integer> getQuestionMaxNum(int courseId) {
+        int levelNum = questionDAO.getLevelNumByCourseId(courseId);
+        List<Integer> maxNum = new ArrayList<>(levelNum);
+        for (int i = 1; i <= levelNum; ++i) {
+            maxNum.add(questionDAO.getNumOfQuestions(courseId, i));
+        }
+        return maxNum;
+    }
+
+    private List<Double> getQuestionMarks(ExamModel exam) {
+        String[] array = exam.getNum().split(",");
+        List<Integer> levels = new ArrayList<>(array.length);
+        for (int i = 1; i <= array.length; ++i) {
+            levels.add(i);
+        }
+        return levelDAO.getMarksOfQuestions(
+                exam.getExamId(), exam.getCourseId(), levels
+        );
     }
 
     private ResultInfo checkExamInfo(int userId, ExamInfo examInfo,

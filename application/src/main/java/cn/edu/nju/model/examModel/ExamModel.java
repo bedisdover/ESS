@@ -33,24 +33,17 @@ public class ExamModel {
         this.endTime = endTime;
     }
 
-    public static List<ExamInfo> toInfoList(List<ExamModel> list,
-                                            List<Integer> maxNum,
-                                            List<Double> marks,
-                                            List<StudentInfo> students) {
-        List<ExamInfo> result = new ArrayList<>(list.size());
-        for (ExamModel model : list) {
-            String[] array = model.getNum().split(",");
-            List<Integer> num = new ArrayList<>();
-            for (String str : array) {
-                num.add(Integer.parseInt(str));
-            }
-            result.add(new ExamInfo(
-                    model.getExamId(), model.getCourseId(),
-                    model.getName(), model.getPassword(), num,
-                    maxNum, marks, students
-            ));
+    public ExamInfo toInfo(List<Integer> maxNum,
+                           List<Double> marks,
+                           List<StudentInfo> students) {
+        String[] array = num.split(",");
+        List<Integer> num = new ArrayList<>();
+        for (String str : array) {
+            num.add(Integer.parseInt(str));
         }
-        return result;
+        return new ExamInfo(
+                examId, courseId, name, password,
+                num, maxNum, marks, students);
     }
 
     public int getExamId() {
