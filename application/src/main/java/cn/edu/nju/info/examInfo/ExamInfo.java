@@ -23,12 +23,15 @@ public class ExamInfo {
     }
 
     public ExamInfo(int examId, int courseId, String name, String password,
+                    String startTime, String endTime,
                     List<Integer> num, List<Integer> maxNum,
                     List<Double> marks, List<StudentInfo> students) {
         this.examId = examId;
         this.courseId = courseId;
         this.name = name;
         this.password = password;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.num = num;
         this.maxNum = maxNum;
         this.marks = marks;

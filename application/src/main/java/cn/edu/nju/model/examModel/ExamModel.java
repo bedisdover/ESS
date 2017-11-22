@@ -42,8 +42,8 @@ public class ExamModel {
             num.add(Integer.parseInt(str));
         }
         return new ExamInfo(
-                examId, courseId, name, password,
-                num, maxNum, marks, students);
+                examId, courseId, name, password, startTime,
+                endTime, num, maxNum, marks, students);
     }
 
     public int getExamId() {
