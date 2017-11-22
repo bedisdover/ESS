@@ -7,7 +7,8 @@
             <el-button type="text" class="btn-back" @click="hideExamForm" v-show="examFormVisible">&lt;&lt; 返回
             </el-button>
             <span>{{title}}</span>
-            <el-button type="text" class="btn-create" @click="createExam" v-show="!examFormVisible">新建考试</el-button>
+            <el-button type="text" class="btn-create" @click="createExam" v-show="id && !examFormVisible">新建考试
+            </el-button>
           </div>
           <el-table :data="examList" class="table" v-show="!examFormVisible" v-loading="loading">
             <el-table-column label="考试名称" prop="name"></el-table-column>
@@ -44,8 +45,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <ExamForm :courseId="id" :maxNum="maxNum" :exam="exam" v-on:onConfirm="onConfirm"
-                    :onCancel="hideExamForm" v-if="examFormVisible"></ExamForm>
+          <ExamForm :exam="exam" v-on:onConfirm="onConfirm" :onCancel="hideExamForm" v-if="examFormVisible"></ExamForm>
         </el-card>
       </el-col>
     </el-row>
@@ -68,8 +68,7 @@
       return {
         examFormVisible: false,
         examList: [],
-        // 各难度级别试题数目
-        maxNum: [],
+        maxNum: [], // 各难度级别试题总数目
         exam: {},
         loading: true
       }
@@ -82,10 +81,12 @@
     },
 
     mounted: function () {
+      let url = this.id ? '/exam/list' : '/exam/all'
       let params = {
         courseId: this.id
       }
-      request('/exam/list', 'post', params, (success, message, data) => {
+
+      request(url, 'post', params, (success, message, data) => {
         if (success) {
           this.initData(data)
           this.loading = false
@@ -98,13 +99,22 @@
         return Util.formatTime(new Date()) < endTime
       },
       initData: function (data) {
-        this.maxNum = data.maxNum
-        data.examInfoList.forEach(exam => {
-          this.examList.push(this.prepareExam(exam))
-        })
+        if (data.examInfoList) { // 单独课程考试列表
+          this.maxNum = data.maxNum
+
+          data.examInfoList.forEach(exam => {
+            exam = Object.assign(exam, {courseId: this.id, maxNum: data.maxNum})
+
+            this.examList.push(this.prepareExam(exam))
+          })
+        } else { // 所有课程列表
+          data.forEach(exam => {
+            this.examList.push(this.prepareExam(exam))
+          })
+        }
       },
       prepareExam: function (exam) {
-        let temp = Object.assign({}, exam)
+        let temp = Object.assign({}, {courseId: this.id, maxNum: this.maxNum}, exam)
         let num = 0
         let mark = 0
         for (let i = 0; i < exam.num.length; i++) {
@@ -123,7 +133,10 @@
       },
       createExam: function () {
         // 新建考试时重置数据
-        this.exam = {}
+        this.exam = {
+          courseId: this.id,
+          maxNum: this.maxNum
+        }
 
         this.examFormVisible = true
       },

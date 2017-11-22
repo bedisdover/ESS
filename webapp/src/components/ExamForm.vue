@@ -20,11 +20,11 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="参加人员" required>
-        <StudentsList :courseId="courseId" :students="exam.studentInfoList" :readonly="exam.readonly"
+        <StudentsList :courseId="exam.courseId" :students="exam.studentInfoList" :readonly="exam.readonly"
                       v-on:onUpdateStudents="onUpdateStudents"></StudentsList>
       </el-form-item>
       <el-form-item label="试卷分数" required>
-        <LevelScore :maxNum="maxNum" :num="examInfo.num" :marks="examInfo.marks" :readonly="exam.readonly"
+        <LevelScore :maxNum="exam.maxNum" :num="examInfo.num" :marks="examInfo.marks" :readonly="exam.readonly"
                     v-on:onUpdateScore="onUpdateScore"></LevelScore>
       </el-form-item>
       <el-form-item class="footer" v-if="!exam.readonly">
@@ -44,7 +44,7 @@
   export default {
     name: 'ExamForm',
 
-    props: ['courseId', 'maxNum', 'exam', 'onConfirm', 'onCancel'],
+    props: ['exam', 'onConfirm', 'onCancel'],
 
     components: {StudentsList, LevelScore},
 
@@ -103,7 +103,7 @@
         }
 
         let params = {
-          courseId: this.courseId,
+          courseId: this.exam.courseId,
           examId: this.exam.examId,
           name: this.examInfo.name,
           startTime: Util.formatTime(this.examInfo.startTime),

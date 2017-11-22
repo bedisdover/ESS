@@ -1,10 +1,15 @@
 <template>
   <div class="main">
-    <el-input v-model="checkedShow" :readonly="true" @click.native="showPopover"></el-input>
-    <el-popover id="popover" v-model="popoverVisible">
-      <el-transfer v-model="checked" :data="all" :titles="['未选', '已选']"
-                   :props="{key: 'studentId', label: 'name'}"></el-transfer>
-    </el-popover>
+    <div v-if="all && all.length > 0">
+      <el-input v-model="checkedShow" :readonly="true" @click.native="showPopover"></el-input>
+      <el-popover id="popover" v-model="popoverVisible">
+        <el-transfer v-model="checked" :data="all" :titles="['未选', '已选']"
+                     :props="{key: 'studentId', label: 'name'}"></el-transfer>
+      </el-popover>
+    </div>
+    <div v-else>
+      还没有学生, <router-link :to="'/examStudents/' + $route.params.id">去上传</router-link>
+    </div>
   </div>
 </template>
 
@@ -66,7 +71,7 @@
         courseId: this.courseId
       }
 
-      request('/student/exam', 'post', params, (success, message, data) => {
+      request('/student/course/get', 'post', params, (success, message, data) => {
         if (success) {
           if (this.readonly) {
             this.all = data.map(student => Object.assign(student, {disabled: true}))
@@ -88,7 +93,7 @@
       hidePopover: function (e) {
         let popover = document.getElementById('popover')
 
-        if (popover.contains(e.target)) {
+        if (popover && popover.contains(e.target)) {
           return
         }
 
@@ -111,5 +116,9 @@
 <style scoped>
   .main {
     width: 500px;
+  }
+
+  .main a {
+    color: #409EFF;
   }
 </style>
