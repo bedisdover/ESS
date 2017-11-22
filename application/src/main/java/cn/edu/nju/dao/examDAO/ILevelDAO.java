@@ -11,9 +11,7 @@ import java.util.List;
  */
 public interface ILevelDAO {
 
-    void setMarkOfLevel(int courseId, int examId, double[] marks) throws Exception;
-
-    void updateMarkOfLevel(List<LevelModel> levelModelList) throws Exception;
+    void setMarkOfLevel(int courseId, int examId, List<Double> marks) throws Exception;
 
     double getMarkOfQuestion(int examId, int courseId, int level);
 

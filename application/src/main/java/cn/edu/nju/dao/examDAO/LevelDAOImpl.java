@@ -23,14 +23,10 @@ public class LevelDAOImpl implements ILevelDAO {
     }
 
     @Override
-    public void setMarkOfLevel(int courseId, int examId, double[] marks) throws Exception {
+    public void setMarkOfLevel(int courseId, int examId, List<Double> marks) throws Exception {
         levelMapper.setMarkOfLevel(courseId, examId, marks);
     }
 
-    @Override
-    public void updateMarkOfLevel(List<LevelModel> levelModelList) throws Exception {
-        levelMapper.updateMarkOfLevel(levelModelList);
-    }
 
     @Override
     public double getMarkOfQuestion(int examId, int courseId, int level) {

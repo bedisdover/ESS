@@ -10,7 +10,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jiayiwu on 17/11/13.
@@ -48,7 +51,8 @@ public class LevelServiceImpl implements ILevelService {
         }
 
         try {
-            levelDAO.setMarkOfLevel(courseId, examId, marks);
+            List<Double> markList = Arrays.stream(marks).boxed().collect(Collectors.toList());
+            levelDAO.setMarkOfLevel(courseId, examId, markList);
             return new ResultInfo(true, "成功设置等级分数", null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +77,8 @@ public class LevelServiceImpl implements ILevelService {
             return new ResultInfo(true, "等级分数修改成功", null);
         }
 
-        int courseId = levelInfoList.get(0).getCourseId();
+        LevelInfo levelInfo = levelInfoList.get(0);
+        int courseId = levelInfo.getCourseId();
         if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
             return new ResultInfo(
                     false, "只有该门课的老师才能修改等级分数", null
@@ -81,9 +86,11 @@ public class LevelServiceImpl implements ILevelService {
         }
 
         try {
-            levelDAO.updateMarkOfLevel(
-                    LevelInfo.toModelList(levelInfoList)
-            );
+            int examId= levelInfo.getExamId();
+            int size = levelInfoList.size();
+            List<Double> marks = new ArrayList<>(size);
+            levelInfoList.forEach(level -> marks.add(level.getMark()));
+            levelDAO.setMarkOfLevel(courseId, examId, marks);
             return new ResultInfo(true, "成功修改等级对应的分数", null);
         } catch (Exception e) {
             e.printStackTrace();

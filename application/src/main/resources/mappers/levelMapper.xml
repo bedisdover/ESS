@@ -12,15 +12,6 @@
         ON DUPLICATE KEY UPDATE mark = VALUES(mark)
     </insert>
 
-    <update id="updateMarkOfLevel" parameterType="java.util.List">
-        <foreach collection="levelModelList" item="model" separator=";">
-            UPDATE t_level
-            <set> mark = #{model.mark} </set>
-            WHERE courseId = #{model.courseId} AND level = #{model.level}
-                  AND examId = #{model.examId}
-        </foreach>
-    </update>
-
     <select id="getMarkOfQuestion" resultType="double">
         SELECT mark FROM t_level
         WHERE examId = #{examId} AND courseId = #{courseId} AND level = #{level}

@@ -133,15 +133,8 @@ public class ExamServiceImpl implements IExamService {
         examDAO.updateNumOfQuestions(examId,
                 StringUtil.stringify(num, ","));
 
-        int level = 1;
         int courseId = examInfo.getCourseId();
-        List<Double> marks = examInfo.getMarks();
-        List<LevelModel> levelModels = new ArrayList<>(marks.size());
-        for (double mark : marks) {
-            levelModels.add(new LevelModel(0, courseId, level, examId, mark));
-            level += 1;
-        }
-        levelDAO.updateMarkOfLevel(levelModels);
+        levelDAO.setMarkOfLevel(courseId, examId, examInfo.getMarks());
 
         List<StudentInfo> students = examInfo.getStudents();
         List<String> oldEmails = studentExamDAO.getExamStudentEmails(examId);
