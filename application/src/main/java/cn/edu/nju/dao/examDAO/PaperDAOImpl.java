@@ -5,6 +5,8 @@ import cn.edu.nju.model.examModel.PaperModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Jiayiwu on 17/11/13.
  * Mail:wujiayi@lgdreamer.com
@@ -34,5 +36,10 @@ public class PaperDAOImpl implements IPaperDAO {
     @Override
     public void updateMarkOfPaper(int paperId, double mark) throws Exception {
         paperMapper.updateMarkOfPaper(paperId, mark);
+    }
+
+    @Override
+    public List<Double> getStudentMarks(int examId) {
+        return paperMapper.getStudentMarks(examId);
     }
 }

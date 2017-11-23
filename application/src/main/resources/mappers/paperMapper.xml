@@ -19,4 +19,8 @@
         UPDATE t_paper SET mark = #{mark}
         WHERE id = #{paperId} AND enable = 1
     </update>
+
+    <select id="getStudentMarks" resultType="double">
+        SELECT mark FROM t_paper WHERE examId = #{examId} AND enable = 1
+    </select>
 </mapper>

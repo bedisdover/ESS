@@ -2,6 +2,8 @@ package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.model.examModel.PaperModel;
 
+import java.util.List;
+
 /**
  * Created by Jiayiwu on 17/11/13.
  * Mail:wujiayi@lgdreamer.com
@@ -15,4 +17,7 @@ public interface IPaperDAO {
     int addPaper(PaperModel paper) throws Exception;
 
     void updateMarkOfPaper(int paperId, double mark) throws Exception;
+
+    List<Double> getStudentMarks(int examId);
+
 }

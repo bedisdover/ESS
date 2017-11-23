@@ -5,6 +5,7 @@ import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.ResultInfo;
+import cn.edu.nju.info.examInfo.ExamAnalysis;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.info.examInfo.ExamsOfCourse;
 import cn.edu.nju.info.examInfo.StudentInfo;
@@ -43,6 +44,8 @@ public class ExamServiceImpl implements IExamService {
 
     private final IStudentDAO studentDAO;
 
+    private final IPaperDAO paperDAO;
+
     @Autowired
     public ExamServiceImpl(IUserCourseDAO userCourseDAO,
                            IQuestionDAO questionDAO,
@@ -50,7 +53,8 @@ public class ExamServiceImpl implements IExamService {
                            IExamDAO examDAO,
                            IUserDAO userDAO,
                            IStudentExamDAO studentExamDAO,
-                           IStudentDAO studentDAO) {
+                           IStudentDAO studentDAO,
+                           IPaperDAO paperDAO) {
         this.userCourseDAO = userCourseDAO;
         this.questionDAO = questionDAO;
         this.levelDAO = levelDAO;
@@ -58,6 +62,7 @@ public class ExamServiceImpl implements IExamService {
         this.userDAO = userDAO;
         this.studentExamDAO = studentExamDAO;
         this.studentDAO = studentDAO;
+        this.paperDAO = paperDAO;
     }
 
     @Override
@@ -218,6 +223,25 @@ public class ExamServiceImpl implements IExamService {
             Logger.getLogger(ExamServiceImpl.class).error("Unexpected role of user");
             return new ResultInfo(false, "系统异常", null);
         }
+    }
+
+    @Override
+    public ResultInfo getExamStatistics(int userId, int examId) {
+        ResultInfo permissionResult = checkPermission(
+                userId, examDAO.getCourseIdByExamId(examId),
+                "只有该门课的老师才能查看该门课的考试结果");
+        if (!permissionResult.isSuccess()) {
+            return permissionResult;
+        }
+
+        List<Double> marks = paperDAO.getStudentMarks(examId);
+        return new ResultInfo(true, "成功获得考试结果",
+                new ExamAnalysis(examId, marks));
+    }
+
+    @Override
+    public String generateExamResultFile(int userId, int examId) {
+        return null;
     }
 
     private List<ExamInfo> toExamInfoList(List<ExamModel> examModelList) {

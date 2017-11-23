@@ -4,11 +4,14 @@ import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.service.examService.IExamService;
+import cn.edu.nju.utils.HttpUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -74,6 +77,28 @@ public class ExamController {
     public ResultInfo getAllExams(HttpSession session) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         return examService.getAllExams(userId);
+    }
+
+    @RequestMapping(value = "/exam/analyze")
+    @ResponseBody
+    public ResultInfo getExamStatistics(HttpSession session,
+                                        @RequestParam int examId) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return examService.getExamStatistics(userId, examId);
+    }
+
+    @RequestMapping(value = "/exam/score/download")
+    public void getExamResult(HttpServletRequest request,
+                              HttpServletResponse response,
+                              @RequestParam int examId) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        String fileName = examService.generateExamResultFile(userId, examId);
+        if (fileName != null) {
+            HttpUtil.fileDownload(fileName, request, response);
+        } else {
+            Logger.getLogger(ExamController.class).error("Fail to generate result of exam");
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package cn.edu.nju.mapper.examMapper;
 
 import cn.edu.nju.model.examModel.ExamModel;
-import cn.edu.nju.model.examModel.StudentModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
