@@ -5,14 +5,8 @@ import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.dao.userDAO.IUserDAO;
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.ExamAnalysis;
-import cn.edu.nju.info.examInfo.ExamInfo;
-import cn.edu.nju.info.examInfo.ExamsOfCourse;
-import cn.edu.nju.info.examInfo.StudentInfo;
-import cn.edu.nju.model.examModel.ExamModel;
-import cn.edu.nju.model.examModel.ExamScoreModel;
-import cn.edu.nju.model.examModel.LevelModel;
-import cn.edu.nju.model.examModel.StudentModel;
+import cn.edu.nju.info.examInfo.*;
+import cn.edu.nju.model.examModel.*;
 import cn.edu.nju.model.userModel.UserModel;
 import cn.edu.nju.utils.*;
 import org.apache.log4j.Logger;
@@ -240,6 +234,24 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
+    public ResultInfo getAnsweredPaper(int userId, int examId) {
+        UserModel user = userDAO.getUserInfoById(userId);
+        return getAnsweredPaper(examId, user.getEmail());
+    }
+
+    @Override
+    public ResultInfo getAnsweredPaper(int userId, int examId, String email) {
+        ResultInfo permissionResult = checkPermission(
+                userId, examDAO.getCourseIdByExamId(examId),
+                "只有该门课的老师才能查看该门考试学生的试卷");
+        if (!permissionResult.isSuccess()) {
+            return permissionResult;
+        }
+
+        return getAnsweredPaper(examId, email);
+    }
+
+    @Override
     public String generateExamResultFile(int userId, int examId, String context) {
         ResultInfo permissionResult = checkPermission(
                 userId, examDAO.getCourseIdByExamId(examId),
@@ -264,6 +276,36 @@ public class ExamServiceImpl implements IExamService {
         List<ExamScoreModel> scores = paperDAO.getStudentScores(examId);
         boolean success = ExcelUtil.generateScoreFile(file, scores);
         return success ? targetName : null;
+    }
+
+    private ResultInfo getAnsweredPaper(int examId, String email) {
+        PaperModel paper = paperDAO.getPaperModel(examId, email);
+        try {
+            List<AnsweredItem> items = JsonUtil.toCollection(
+                    paper.getContent(), ArrayList.class, AnsweredItem.class
+            );
+            List<AnsweredQuestion> questions = new ArrayList<>(items.size());
+            for (AnsweredItem item : items) {
+                int questionId = item.getQuestionId();
+                QuestionModel question = questionDAO.getQuestionById(questionId);
+                QuestionInfo info;
+                try {
+                    info = question.toInfo();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Logger.getLogger(ExamServiceImpl.class).error(e);
+                    return new ResultInfo(false, "系统异常", null);
+                }
+                questions.add(new AnsweredQuestion(info, item.getAnswerList()));
+            }
+
+            return new ResultInfo(true, "成功返回试卷信息",
+                    paper.toInfo(questions));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logger.getLogger(ExamServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
     }
 
     private List<ExamInfo> toExamInfoList(List<ExamModel> examModelList) {

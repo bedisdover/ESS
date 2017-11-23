@@ -29,4 +29,18 @@
         WHERE p.examId = #{examId} AND p.enable = 1
               AND s.email = p.studentEmail AND s.enable = 1
     </select>
+
+    <resultMap id="paperMap" type="cn.edu.nju.model.examModel.PaperModel">
+        <id column="id" property="paperId"/>
+        <result column="examId" property="examId"/>
+        <result column="studentEmail" property="studentEmail"/>
+        <result column="mark" property="mark"/>
+        <result column="enable" property="enable"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <select id="getPaperModel" resultMap="paperMap">
+        SELECT * FROM t_paper
+        WHERE examId = #{examId} AND studentEmail = #{email} AND enable = 1
+    </select>
 </mapper>

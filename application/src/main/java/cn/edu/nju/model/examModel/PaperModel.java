@@ -1,5 +1,10 @@
 package cn.edu.nju.model.examModel;
 
+import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
+import cn.edu.nju.info.examInfo.AnsweredQuestion;
+
+import java.util.List;
+
 /**
  * Created by Jiayiwu on 17/11/13.
  * Mail:wujiayi@lgdreamer.com
@@ -26,6 +31,12 @@ public class PaperModel {
         this.mark = mark;
         this.enable = enable;
         this.content = content;
+    }
+
+    public AnsweredPaperInfo toInfo(List<AnsweredQuestion> questions) {
+        return new AnsweredPaperInfo(
+                paperId, examId, mark, studentEmail, questions
+        );
     }
 
     public int getPaperId() {

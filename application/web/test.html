@@ -35,9 +35,9 @@
         }),
         'success': function(data) {
             alert(JSON.stringify(data));
-//            $.ajax({
-//                'url': '/exam/score/download',
-//                'method': 'post',
+            $.ajax({
+                'url': '/exam/teacher/review',
+                'method': 'post',
 //                'traditional': true,
 //                'contentType': 'application/json',
 //                'data': JSON.stringify({
@@ -46,16 +46,16 @@
 //                    'students': [{'email': '1483809252@qq.com', 'name': 'test1', 'courseId': 9},
 //                        {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
 //                }),
-//                'data': {
-//                    'examId': 14
-//                },
-//                'success': function(data) {
-//                    alert(JSON.stringify(data));
-//                },
-//                'error': function(data) {
-//                    alert(JSON.stringify(data));
-//                }
-//            });
+                'data': {
+                    'examId': 14, 'email': '1483809252@qq.com'
+                },
+                'success': function(data) {
+                    alert(JSON.stringify(data));
+                },
+                'error': function(data) {
+                    alert(JSON.stringify(data));
+                }
+            });
         },
         'error': function (data) {
             alert(JSON.stringify(data));

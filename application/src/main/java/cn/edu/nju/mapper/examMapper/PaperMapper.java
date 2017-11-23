@@ -22,6 +22,9 @@ public interface PaperMapper {
     void updateMarkOfPaper(@Param("paperId") int paperId,
                            @Param("mark") double mark);
 
+    PaperModel getPaperModel(@Param("examId") int examId,
+                             @Param("email") String email);
+
     List<Double> getStudentMarks(@Param("examId") int examId);
 
     List<ExamScoreModel> getStudentScores(@Param("examId") int examId);

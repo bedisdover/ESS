@@ -34,6 +34,16 @@ public class QuestionModel {
         this.enable = enable;
     }
 
+    public QuestionInfo toInfo() throws IOException {
+        List<OptionInfo> options = JsonUtil.toCollection(
+                optionJson, ArrayList.class, OptionInfo.class
+        );
+        return new QuestionInfo(
+                questionId, courseId, content,
+                level, answer, options
+        );
+    }
+
     public static List<QuestionInfo> toInfoList(List<QuestionModel> list) throws IOException {
         List<QuestionInfo> result = new ArrayList<>(list.size());
         for (QuestionModel model : list) {

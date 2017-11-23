@@ -19,6 +19,8 @@ public interface IPaperDAO {
 
     void updateMarkOfPaper(int paperId, double mark) throws Exception;
 
+    PaperModel getPaperModel(int examId, String email);
+
     List<Double> getStudentMarks(int examId);
 
     List<ExamScoreModel> getStudentScores(int examId);

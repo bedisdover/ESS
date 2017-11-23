@@ -1,5 +1,8 @@
 package cn.edu.nju.info.examInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jiayiwu on 17/11/13.
  * Mail:wujiayi@lgdreamer.com
@@ -32,5 +35,14 @@ public class AnsweredItem {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public List<Integer> getAnswerList() {
+        String[] answerArray = answer.split(",");
+        List<Integer> list = new ArrayList<>(answerArray.length);
+        for (String answer : answerArray) {
+            list.add(Integer.parseInt(answer));
+        }
+        return list;
     }
 }

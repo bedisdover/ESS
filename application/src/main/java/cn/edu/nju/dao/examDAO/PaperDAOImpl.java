@@ -40,6 +40,11 @@ public class PaperDAOImpl implements IPaperDAO {
     }
 
     @Override
+    public PaperModel getPaperModel(int examId, String email) {
+        return paperMapper.getPaperModel(examId, email);
+    }
+
+    @Override
     public List<Double> getStudentMarks(int examId) {
         return paperMapper.getStudentMarks(examId);
     }

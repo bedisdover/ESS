@@ -79,7 +79,7 @@ public class ExamController {
         return examService.getAllExams(userId);
     }
 
-    @RequestMapping(value = "/exam/analyze")
+    @RequestMapping(value = "/exam/analyze", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo getExamStatistics(HttpSession session,
                                         @RequestParam int examId) {
@@ -102,4 +102,21 @@ public class ExamController {
         }
     }
 
+
+    @RequestMapping(value = "/exam/student/review", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo getAnsweredPaper(HttpSession session,
+                                       @RequestParam int examId) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return examService.getAnsweredPaper(userId, examId);
+    }
+
+    @RequestMapping(value = "/exam/teacher/review", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo getAnsweredPaper(HttpSession session,
+                                       @RequestParam int examId,
+                                       @RequestParam String email) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return examService.getAnsweredPaper(userId, examId, email);
+    }
 }
