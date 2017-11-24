@@ -7,10 +7,7 @@
     <div class="options" v-for="(option, index) in question.options" :key="option">
       <el-checkbox v-model="checked[index]" :label="option" border></el-checkbox>
     </div>
-    <div class="button-container">
-      <el-button type="error" @click="submit">交卷</el-button>
-      <el-button type="primary" @click="next">下一题</el-button>
-    </div>
+
   </div>
 </template>
 
@@ -38,12 +35,6 @@
         })
 
         return answer.join(',')
-      },
-      submit: function () {
-        this.$emit('onSubmit', this.index, this.getAnswer())
-      },
-      next: function () {
-        this.$emit('onNext', this.index, this.getAnswer())
       }
     }
   }
@@ -73,11 +64,5 @@
     display: block;
     padding: 10px;
     margin: 15px;
-  }
-
-  .button-container {
-    text-align: right;
-    margin-top: 30px;
-    padding-right: 15px;
   }
 </style>
