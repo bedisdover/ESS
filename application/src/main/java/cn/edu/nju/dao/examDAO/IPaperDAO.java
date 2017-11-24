@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.model.examModel.PaperModel;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface IPaperDAO {
     void updateMarkOfPaper(int paperId, double mark) throws Exception;
 
     List<Double> getStudentMarks(int examId);
+
+    List<ExamScoreModel> getStudentScores(int examId);
 
 }

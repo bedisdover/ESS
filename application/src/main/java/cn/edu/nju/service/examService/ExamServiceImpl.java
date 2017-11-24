@@ -10,18 +10,18 @@ import cn.edu.nju.info.examInfo.ExamInfo;
 import cn.edu.nju.info.examInfo.ExamsOfCourse;
 import cn.edu.nju.info.examInfo.StudentInfo;
 import cn.edu.nju.model.examModel.ExamModel;
+import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.model.examModel.LevelModel;
 import cn.edu.nju.model.examModel.StudentModel;
 import cn.edu.nju.model.userModel.UserModel;
-import cn.edu.nju.utils.DateTimeUtil;
-import cn.edu.nju.utils.EmailUtil;
-import cn.edu.nju.utils.RandomUtil;
-import cn.edu.nju.utils.StringUtil;
+import cn.edu.nju.utils.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -229,19 +229,41 @@ public class ExamServiceImpl implements IExamService {
     public ResultInfo getExamStatistics(int userId, int examId) {
         ResultInfo permissionResult = checkPermission(
                 userId, examDAO.getCourseIdByExamId(examId),
-                "只有该门课的老师才能查看该门课的考试结果");
+                "只有该门课的老师才能查看该门课的统计信息");
         if (!permissionResult.isSuccess()) {
             return permissionResult;
         }
 
         List<Double> marks = paperDAO.getStudentMarks(examId);
-        return new ResultInfo(true, "成功获得考试结果",
+        return new ResultInfo(true, "成功获得统计信息",
                 new ExamAnalysis(examId, marks));
     }
 
     @Override
-    public String generateExamResultFile(int userId, int examId) {
-        return null;
+    public String generateExamResultFile(int userId, int examId, String context) {
+        ResultInfo permissionResult = checkPermission(
+                userId, examDAO.getCourseIdByExamId(examId),
+                "只有该门课的老师才能查看该门课的考试结果");
+        if (!permissionResult.isSuccess()) {
+            Logger.getLogger(ExamServiceImpl.class).info(permissionResult.getMessage());
+            return null;
+        }
+
+        String targetName = "score/" + examId + "_" + "scores.xls";
+        String fileName = context + targetName;
+        File file = new File(fileName);
+        if (!file.exists()) {
+            try {
+                assert file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Logger.getLogger(ExamServiceImpl.class).error(e);
+            }
+        }
+
+        List<ExamScoreModel> scores = paperDAO.getStudentScores(examId);
+        boolean success = ExcelUtil.generateScoreFile(file, scores);
+        return success ? targetName : null;
     }
 
     private List<ExamInfo> toExamInfoList(List<ExamModel> examModelList) {

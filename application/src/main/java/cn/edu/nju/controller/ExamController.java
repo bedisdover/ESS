@@ -93,9 +93,10 @@ public class ExamController {
                               @RequestParam int examId) {
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
-        String fileName = examService.generateExamResultFile(userId, examId);
-        if (fileName != null) {
-            HttpUtil.fileDownload(fileName, request, response);
+        String context = request.getSession().getServletContext().getRealPath("/");
+        String targetName = examService.generateExamResultFile(userId, examId, context);
+        if (targetName != null) {
+            HttpUtil.fileDownload(context + targetName, "score.xls", response);
         } else {
             Logger.getLogger(ExamController.class).error("Fail to generate result of exam");
         }

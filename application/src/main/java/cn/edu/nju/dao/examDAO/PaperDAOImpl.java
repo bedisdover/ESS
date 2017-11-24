@@ -1,6 +1,7 @@
 package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.mapper.examMapper.PaperMapper;
+import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.model.examModel.PaperModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,10 @@ public class PaperDAOImpl implements IPaperDAO {
     @Override
     public List<Double> getStudentMarks(int examId) {
         return paperMapper.getStudentMarks(examId);
+    }
+
+    @Override
+    public List<ExamScoreModel> getStudentScores(int examId) {
+        return paperMapper.getStudentScores(examId);
     }
 }

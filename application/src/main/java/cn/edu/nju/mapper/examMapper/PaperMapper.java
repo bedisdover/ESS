@@ -1,5 +1,6 @@
 package cn.edu.nju.mapper.examMapper;
 
+import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.model.examModel.PaperModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
@@ -22,4 +23,6 @@ public interface PaperMapper {
                            @Param("mark") double mark);
 
     List<Double> getStudentMarks(@Param("examId") int examId);
+
+    List<ExamScoreModel> getStudentScores(@Param("examId") int examId);
 }

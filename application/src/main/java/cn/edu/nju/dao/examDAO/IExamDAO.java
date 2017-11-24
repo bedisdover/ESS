@@ -1,6 +1,7 @@
 package cn.edu.nju.dao.examDAO;
 
 import cn.edu.nju.model.examModel.ExamModel;
+import cn.edu.nju.model.examModel.ExamScoreModel;
 
 import java.util.List;
 

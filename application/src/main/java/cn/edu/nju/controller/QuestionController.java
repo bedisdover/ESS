@@ -29,7 +29,9 @@ public class QuestionController {
     @RequestMapping("/question/download")
     public void downloadQuestionTemplate(HttpServletRequest request,
                                          HttpServletResponse response) {
-        HttpUtil.fileDownload("/download/questionTemplate.xls", request, response);
+        String context = request.getSession().getServletContext().getRealPath("/");
+        String targetName = "download/questionTemplate.xls";
+        HttpUtil.fileDownload(context + targetName, "question.xls", response);
     }
 
     @RequestMapping(value = "/question/upload", method = RequestMethod.POST)

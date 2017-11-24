@@ -1,6 +1,7 @@
 package cn.edu.nju.utils;
 
 import cn.edu.nju.info.examInfo.StudentInfo;
+import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.service.examService.ErrorTemplateFormatException;
 import cn.edu.nju.info.examInfo.OptionInfo;
 import cn.edu.nju.info.examInfo.QuestionInfo;
@@ -8,8 +9,15 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import jxl.write.Label;
+import jxl.write.Number;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -166,6 +174,42 @@ public class ExcelUtil {
         }
 
         return result;
+    }
+
+    public static boolean generateScoreFile(File excel,
+                                            List<ExamScoreModel> scores) {
+        try {
+            WritableWorkbook book = Workbook.createWorkbook(excel);
+            WritableSheet sheet = book.createSheet("score", 0);
+
+            Label nameTitle = new Label(0, 0, "姓名");
+            Label emailTitle = new Label(1, 0, "邮箱");
+            Label scoreTitle = new Label(2, 0, "成绩");
+            sheet.addCell(nameTitle);
+            sheet.addCell(emailTitle);
+            sheet.addCell(scoreTitle);
+
+            int size = scores.size();
+            for (int r = 1; r <= size; ++r) {
+                ExamScoreModel score = scores.get(r - 1);
+                Label name = new Label(0, r, score.getName());
+                Label email = new Label(1, r, score.getEmail());
+                Number s = new Number(2, r, score.getScore());
+                sheet.addCell(name);
+                sheet.addCell(email);
+                sheet.addCell(s);
+            }
+
+            book.write();
+            book.close();
+
+            return true;
+        } catch (IOException | WriteException e) {
+            e.printStackTrace();
+            Logger.getLogger(ExcelUtil.class).error(e);
+            return false;
+        }
+
     }
 
 

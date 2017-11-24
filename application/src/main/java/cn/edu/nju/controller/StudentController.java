@@ -69,6 +69,8 @@ public class StudentController {
     @RequestMapping(value = "/student/download")
     public void downStudentTemplate(HttpServletRequest request,
                                     HttpServletResponse response) {
-        HttpUtil.fileDownload("/download/studentTemplate.xls", request, response);
+        String context = request.getSession().getServletContext().getRealPath("/");
+        String targetName = "download/studentTemplate.xls";
+        HttpUtil.fileDownload(context + targetName, "student.xls", response);
     }
 }

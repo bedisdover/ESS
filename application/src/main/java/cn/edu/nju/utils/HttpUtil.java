@@ -10,7 +10,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,11 +35,9 @@ public class HttpUtil {
         }
     }
 
-    public static void fileDownload(String fileName,
-                                    HttpServletRequest request,
+    public static void fileDownload(String fileName, String targetName,
                                     HttpServletResponse response) {
-        final String filePath = request.getSession().getServletContext().getRealPath("/");
-        File file = new File(filePath+fileName);
+        File file = new File(fileName);
         if(!file.exists()){
             Logger.getLogger(QuestionController.class)
                     .error("No such file: " + file.getName());
@@ -50,7 +47,7 @@ public class HttpUtil {
         try (FileInputStream fileInputStream = new FileInputStream(file);
              OutputStream outputStream = response.getOutputStream()) {
 
-            response.setHeader("Content-Disposition", "attachment;Filename=" + fileName);
+            response.setHeader("Content-Disposition", "attachment;Filename=" + targetName);
             byte[] bytes = new byte[2048];
             int len;
             while ((len = fileInputStream.read(bytes))>0){

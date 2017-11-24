@@ -19,6 +19,6 @@ public interface IExamService {
 
     ResultInfo getExamStatistics(int userId, int examId);
 
-    String generateExamResultFile(int userId, int examId);
+    String generateExamResultFile(int userId, int examId, String context);
 
 }
