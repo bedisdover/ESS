@@ -97,7 +97,7 @@
               role: this.role
             }
 
-            request('/signUp', 'post', data, (success, message) => {
+            request('/signUp', 'post', JSON.stringify(data), (success, message) => {
               this.registerForm.loading = false
 
               if (success) {
