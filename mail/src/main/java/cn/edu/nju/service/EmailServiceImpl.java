@@ -12,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
@@ -57,6 +58,8 @@ public class EmailServiceImpl implements IEmailService {
 
             Session session = Session.getDefaultInstance(props);
             session.setDebug(true);
+            session.setDebugOut(new PrintStream("../logs/mail-debug.log"));
+
             MimeMessage message = new MimeMessage(session);
             ResultInfo result = createMessage(info, message);
             if (!result.isSuccess()) {

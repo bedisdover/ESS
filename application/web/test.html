@@ -36,19 +36,19 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/teacher/review',
+                'url': '/exam/add',
                 'method': 'post',
 //                'traditional': true,
-//                'contentType': 'application/json',
-//                'data': JSON.stringify({
-//                    'examId': 14, 'courseId': 9, 'name': '并行计算', 'marks': [10,20,30],
-//                    'num': [1,1,1], 'startTime': '2018-01-01 00:00:00', 'endTime': '2018-01-01 00:10:00',
-//                    'students': [{'email': '1483809252@qq.com', 'name': 'test1', 'courseId': 9},
-//                        {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
-//                }),
-                'data': {
-                    'examId': 14, 'email': '1483809252@qq.com'
-                },
+                'contentType': 'application/json',
+                'data': JSON.stringify({
+                    'courseId': 9, 'name': '软件工程', 'marks': [15,25,35],
+                    'num': [1,1,1], 'startTime': '2018-01-01 00:00:00', 'endTime': '2018-01-01 00:10:00',
+                    'students': [{'email': '1483809252@qq.com', 'name': 'test1', 'courseId': 9},
+                        {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
+                }),
+//                'data': {
+//                    'examId': 14, 'email': '1483809252@qq.com'
+//                },
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },
