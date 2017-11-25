@@ -16,13 +16,15 @@
 
   export default {
     name: 'app',
+
     components: {NavBar, MyFooter},
+
     methods: {
       getUser: function () {
         return Util.getCookie('user')
       },
       showNav: function () {
-        return this.getUser() !== undefined
+        return this.getUser() !== undefined && this.$route.name !== 'Exam'
       },
       showFooter: function () {
         return this.$router.currentRoute.name !== 'Index'
