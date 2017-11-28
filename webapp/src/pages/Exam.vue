@@ -1,16 +1,17 @@
 <template>
-  <div class="main">
+  <div class="exam-main">
     <el-card>
       <div slot="header">
         考试名称
       </div>
-      <Question :question="question" :index="1"></Question>
+      <Question :question="question" :index="current" :editable="editable"></Question>
       <div class="button-container">
-        <el-button type="error" @click="submit">交卷</el-button>
-        <el-button type="primary" @click="next">下一题</el-button>
+        <el-button type="error" @click="previous" v-show="current !== 0">上一题</el-button>
+        <el-button type="primary" @click="next" v-show="!submitVisible">下一题</el-button>
+        <el-button type="primary" @click="submit" v-show="submitVisible">交卷</el-button>
       </div>
       <hr/>
-      <AnswerSheet :number="10"></AnswerSheet>
+      <AnswerSheet :number="questionList.length" :current="current" @onJump="jumpTo"></AnswerSheet>
     </el-card>
   </div>
 </template>
@@ -27,16 +28,49 @@
 
     data () {
       return {
-        question: {
-          content: '这是题目\ntest',
-          options: [
-            '选项A',
-            '选项B',
-            '选项C',
-            '选项D'
-          ],
-          answers: new Array(4).fill('')
-        }
+        current: 0,
+        editable: false,
+        questionList: [
+          {
+            content: '这是题目1\ntest',
+            options: [
+              '选项A',
+              '选项B',
+              '选项C',
+              '选项D'
+            ],
+            answers: new Array(4).fill('')
+          },
+          {
+            content: '这是题目2\ntest',
+            options: [
+              '选项A',
+              '选项B',
+              '选项C',
+              '选项D'
+            ],
+            answers: new Array(4).fill('')
+          },
+          {
+            content: '这是题目3\ntest',
+            options: [
+              '选项A',
+              '选项B',
+              '选项C',
+              '选项D'
+            ],
+            answers: new Array(4).fill('')
+          }
+        ]
+      }
+    },
+
+    computed: {
+      question: function () {
+        return this.questionList[this.current]
+      },
+      submitVisible: function () {
+        return this.current === this.questionList.length - 1
       }
     },
 
@@ -58,24 +92,30 @@
       getAnswer: function () {
         return this.answers.join(';')
       },
-      submit: function () {
-        this.$emit('onSubmit', this.index, this.getAnswer())
+      jumpTo: function (n) {
+        this.current = n
+      },
+      previous: function () {
+        this.current--
       },
       next: function () {
-        this.$emit('onNext', this.index, this.getAnswer())
+        this.current++
+      },
+      submit: function () {
+        console.log(123)
       }
     }
   }
 </script>
 
 <style scoped>
-  .main {
+  .exam-main {
     max-width: 1200px;
     min-width: 800px;
     margin: 20px auto 0;
   }
 
-  .main hr {
+  .exam-main hr {
     border: dashed 1px #e6ebf5;
     margin: 20px -20px;
   }
