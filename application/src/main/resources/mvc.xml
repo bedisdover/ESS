@@ -51,6 +51,7 @@
             <mvc:exclude-mapping path="/isLogin"/>
             <mvc:exclude-mapping path="/signUp"/>
             <mvc:exclude-mapping path="/mail/verify"/>
+            <mvc:exclude-mapping path="/paper/create"/>
             <bean class="cn.edu.nju.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
