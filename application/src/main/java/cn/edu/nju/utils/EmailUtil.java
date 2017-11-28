@@ -120,8 +120,7 @@ public class EmailUtil {
             String newContent = noticeContent + generateExamInfoContent(
                     examInfo.getExamId(), examInfo.getName(),
                     examInfo.getStartTime(), examInfo.getEndTime(),
-                    EncryptionUtil.base64Encode(info.getEmail()),
-                    EncryptionUtil.base64Encode(examInfo.getPassword())
+                    info.getEmail(), examInfo.getPassword()
             );
 
             List<NameValuePair> data = new ArrayList<>();
@@ -165,9 +164,8 @@ public class EmailUtil {
                                                   String endTime,
                                                   String email,
                                                   String password) {
-        String url = noticeUrl + "?email=" + email
-                + "&amp;password=" + password
-                + "&amp;examId=" + examId;
+        String url = noticeUrl + "?summary=" + EncryptionUtil.base64Encode(
+                        "email=" + email + "&password=" + password + "&examId=" + examId);
         return  "<br/>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;考试名称: " + name + "<br/>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;开始时间: " + startTime + "<br/>" +

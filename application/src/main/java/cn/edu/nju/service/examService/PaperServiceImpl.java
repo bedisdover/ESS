@@ -8,7 +8,6 @@ import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.PaperModel;
 import cn.edu.nju.model.examModel.QuestionModel;
 import cn.edu.nju.utils.EmailUtil;
-import cn.edu.nju.utils.EncryptionUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,14 +55,12 @@ public class PaperServiceImpl implements IPaperService {
 
     @Override
     public ResultInfo generatePaper(int examId, String email, String password) {
-        String originalEmail = EncryptionUtil.base64Decode(email);
-        if (!studentExamDAO.doesStudentJoinExam(originalEmail, examId)) {
+        if (!studentExamDAO.doesStudentJoinExam(email, examId)) {
             return new ResultInfo(false, "该学生没有参加这场考试", null);
         }
 
-        String originalPassword = EncryptionUtil.base64Decode(password);
         String examPassword = examDAO.getPasswordByExamId(examId);
-        if (!originalPassword.equals(examPassword)) {
+        if (!password.equals(examPassword)) {
             return new ResultInfo(false, "考试密码错误", null);
         }
 
