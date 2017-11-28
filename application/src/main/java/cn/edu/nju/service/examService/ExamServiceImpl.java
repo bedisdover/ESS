@@ -93,6 +93,7 @@ public class ExamServiceImpl implements IExamService {
                 numListToString(examInfo.getNum()),
                 startTime, endTime
         ));
+        examInfo.setExamId(examId);
 
         // add level setting to database
         List<Double> marks = examInfo.getMarks();
