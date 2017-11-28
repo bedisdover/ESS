@@ -42,7 +42,7 @@
         },
         rules: {
           email: [
-            {validator: Util.validateEmail, trigger: 'blur'}
+            {validator: Util.validateEmail, trigger: 'change,blur'}
           ],
           password: [
             {required: true, message: '请输入密码'}

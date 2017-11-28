@@ -1,47 +1,38 @@
 <template>
-  <div class="main">
+  <div class="question-main">
     <div class="content">
-      <strong class="index">{{index}}.</strong>
+      <strong class="index">{{index + 1}}.</strong>
       <pre>{{question.content}}</pre>
     </div>
     <div class="options" v-for="(option, index) in question.options" :key="option">
-      <el-checkbox v-model="checked[index]" :label="option" border></el-checkbox>
+      <el-checkbox :label="option" border @change="onChange(index)">{{option}}</el-checkbox>
     </div>
-
   </div>
 </template>
 
 <script>
   export default {
     name: 'Question',
+
     props: ['question', 'index'],
+
     data () {
-      let optionNum = this.question.options.length
-
-      let checked = new Array(optionNum).fill(false)
-
       return {
-        checked: checked
+        checked: this.question.answers
       }
     },
+
     methods: {
-      getAnswer: function () {
-        let answer = []
-
-        this.checked.map((item, index) => {
-          if (item) {
-            answer.push(index + 1)
-          }
-        })
-
-        return answer.join(',')
+      onChange: function (index) {
+        console.log(this.checked)
       }
     }
   }
 </script>
 
 <style scoped>
-  .main {
+  .question-main {
+    margin-top: 10px;
     text-align: left;
   }
 
