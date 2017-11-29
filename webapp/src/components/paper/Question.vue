@@ -4,27 +4,32 @@
       <strong class="index">{{index + 1}}.</strong>
       <pre>{{question.content}}</pre>
     </div>
-    <div class="options" v-for="(option, index) in question.options" :key="option">
-      <el-checkbox :label="option" border @change="onChange(index)">{{option}}</el-checkbox>
-    </div>
+    <el-checkbox-group class="options" v-model="checked">
+      <el-checkbox v-for="option in question.options" :label="option.optionId" :key="option.optionId"
+                   border></el-checkbox>
+    </el-checkbox-group>
   </div>
 </template>
 
 <script>
+  import ElCheckboxGroup from '../../../node_modules/element-ui/packages/checkbox/src/checkbox-group.vue'
+
   export default {
+    components: {ElCheckboxGroup},
     name: 'Question',
 
     props: ['question', 'index'],
 
     data () {
       return {
-        checked: this.question.answers
+        checked: []
       }
     },
 
-    methods: {
-      onChange: function (index) {
+    watch: {
+      checked: function () {
         console.log(this.checked)
+        this.$emit('onUpdateAnswer', this.checked)
       }
     }
   }

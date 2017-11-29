@@ -5,6 +5,7 @@
 <script>
   export default {
     name: 'Verify',
+
     methods: {
       gotoLogin: function () {
         this.$emit('onLogin')
