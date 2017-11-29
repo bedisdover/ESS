@@ -7,12 +7,14 @@ import cn.edu.nju.info.examInfo.AnsweredQuestion;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.PaperModel;
 import cn.edu.nju.model.examModel.QuestionModel;
+import cn.edu.nju.utils.DateTimeUtil;
 import cn.edu.nju.utils.EmailUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -64,6 +66,12 @@ public class PaperServiceImpl implements IPaperService {
             return new ResultInfo(false, "考试密码错误", null);
         }
 
+        ExamModel model = examDAO.getExamModelById(examId);
+        ResultInfo timeCheckResult = doTimeCheck(model.getStartTime(), model.getEndTime());
+        if (!timeCheckResult.isSuccess()) {
+            return timeCheckResult;
+        }
+
         ExamModel examModel = examDAO.getExamModelById(examId);
         int courseId = examModel.getCourseId();
         String[] numArray = examModel.getNum().split(",");
@@ -95,6 +103,13 @@ public class PaperServiceImpl implements IPaperService {
 
     @Override
     public ResultInfo submitPaper(AnsweredPaperInfo paper) {
+        int examId = paper.getExamId();
+        ExamModel model = examDAO.getExamModelById(examId);
+        ResultInfo timeCheckResult = doTimeCheck(model.getStartTime(), model.getEndTime());
+        if (!timeCheckResult.isSuccess()) {
+            return timeCheckResult;
+        }
+
         // add paper to database
         PaperModel paperModel;
         int paperId;
@@ -125,6 +140,28 @@ public class PaperServiceImpl implements IPaperService {
             Logger.getLogger(ExamServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
+    }
+
+    private ResultInfo doTimeCheck(String startTime, String endTime) {
+        Date now = new Date();
+        Date start, end;
+        try {
+            start = DateTimeUtil.toDateTime(startTime);
+            end = DateTimeUtil.toDateTime(endTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Logger.getLogger(PaperServiceImpl.class).error(e);
+            return new ResultInfo(false, "系统异常", null);
+        }
+
+        if (DateTimeUtil.compareDateTime(now, start) < 0) {
+            return new ResultInfo(false, "考试还没开始", null);
+        }
+        if (DateTimeUtil.compareDateTime(now, end) > 0) {
+            return new ResultInfo(false, "考试已经结束", null);
+        }
+
+        return new ResultInfo(true, null, null);
     }
 
     private void saveAndInformMark(int paperId, int examId, String email,
