@@ -44,7 +44,8 @@ public class QuestionModel {
         );
     }
 
-    public static List<QuestionInfo> toInfoList(List<QuestionModel> list) throws IOException {
+    public static List<QuestionInfo> toInfoList(List<QuestionModel> list,
+                                                boolean canGetAnswer) throws IOException {
         List<QuestionInfo> result = new ArrayList<>(list.size());
         for (QuestionModel model : list) {
             List<OptionInfo> options = JsonUtil.toCollection(
@@ -53,7 +54,7 @@ public class QuestionModel {
             result.add(new QuestionInfo(
                     model.getQuestionId(), model.getCourseId(),
                     model.getContent(), model.getLevel(),
-                    model.getAnswer(), options
+                    canGetAnswer ? model.getAnswer() : null , options
             ));
         }
         return result;

@@ -85,7 +85,7 @@ public class QuestionServiceImpl implements IQuestionService {
 
         List<QuestionInfo> questions;
         try {
-            questions = QuestionModel.toInfoList(list);
+            questions = QuestionModel.toInfoList(list, true);
             return new ResultInfo(true, "成功获取问题列表",
                     new QuestionOfCourse(num, questions));
         } catch (IOException e) {

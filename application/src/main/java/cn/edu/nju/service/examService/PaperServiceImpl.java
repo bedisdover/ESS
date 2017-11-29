@@ -84,7 +84,7 @@ public class PaperServiceImpl implements IPaperService {
         List<QuestionModel> questions = generateQuestions(numList);
         try {
             return new ResultInfo(true, "成功生成试卷",
-                    QuestionModel.toInfoList(questions)
+                    QuestionModel.toInfoList(questions, false)
             );
         } catch (IOException e) {
             e.printStackTrace();
