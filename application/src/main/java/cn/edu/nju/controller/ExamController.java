@@ -66,6 +66,12 @@ public class ExamController {
         }
     }
 
+    @RequestMapping(value = "/exam/query/simple", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo getExamSimpleInfo(@RequestParam int examId) {
+        return examService.getExamSimpleInfo(examId);
+    }
+
     @RequestMapping(value = "/exam/list", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo getExamList(@RequestParam int courseId) {

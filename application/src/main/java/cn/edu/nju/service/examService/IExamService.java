@@ -13,6 +13,8 @@ public interface IExamService {
 
     ResultInfo deleteExam(int userId, int examId) throws Exception;
 
+    ResultInfo getExamSimpleInfo(int examId);
+
     ResultInfo getExamList(int courseId);
 
     ResultInfo getAllExams(int userId);
