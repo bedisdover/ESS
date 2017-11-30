@@ -1,0 +1,4 @@
+# db config
+mysqldb.url=jdbc:mysql://localhost:3306/ess
+mysqldb.user=user
+mysqldb.password=password
