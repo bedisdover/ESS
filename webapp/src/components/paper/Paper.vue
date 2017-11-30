@@ -3,7 +3,9 @@
     <div slot="header">
       {{exam.name}}
     </div>
-    <Question :question="question" :index="current" :editable="editable" @onAnswerUpdate="updateAnswer"></Question>
+    <Question :options="question.options" :question="question"
+              :index="current" :editable="editable"
+              @onAnswerUpdate="updateAnswer"></Question>
     <div class="button-container">
       <el-button type="error" @click="previous" v-show="current !== 0">上一题</el-button>
       <el-button type="primary" @click="next" v-show="!submitVisible">下一题</el-button>
@@ -15,6 +17,7 @@
 </template>
 
 <script>
+  import Util from '../../lib/util'
   import Question from './Question'
   import AnswerSheet from './AnswerSheet'
 
@@ -31,7 +34,7 @@
     data () {
       return {
         current: 0,
-        editable: false
+        editable: true
       }
     },
 
@@ -49,7 +52,9 @@
         return this.answers.join(';')
       },
       updateAnswer: function (answer) {
+        this.questionList[this.current].answer = answer
 
+        Util.setCookie('paper', this.questionList)
       },
       jumpTo: function (n) {
         this.current = n
@@ -61,7 +66,7 @@
         this.current++
       },
       submit: function () {
-        console.log(123)
+        console.log(this.questionList)
       }
     }
   }

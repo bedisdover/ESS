@@ -58,6 +58,8 @@
             Util.setCookie('paper', data)
 
             this.showPaper(data)
+          } else {
+            Util.notifyError(message)
           }
         })
       },
