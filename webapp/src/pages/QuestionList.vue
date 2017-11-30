@@ -11,7 +11,8 @@
                           </svg>
                         </span>
             </el-tooltip>
-            <span style="margin-right: -72px">【{{courseName}}】试题列表</span>
+            <span style="margin-right: -72px" v-if="courseName != null">【{{courseName}}】试题列表</span>
+            <span style="margin-right: -72px" v-else>试题列表</span>
               <a href="/question/download" target="_blank">
                 <el-tooltip content="下载试题模版" effect="light">
                         <span class="operation">
@@ -196,6 +197,9 @@
     font-size: 1.5em;
     float: right;
     margin-left: 24px;
+  }
+  .operation svg {
+    cursor: pointer;
   }
   .deleteIcon {
     float: left;
