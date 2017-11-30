@@ -156,6 +156,9 @@
     float: right;
     margin-left: 24px;
   }
+  .operation svg {
+    cursor: pointer;
+  }
   .deleteIcon {
     float: left;
   }

@@ -246,4 +246,7 @@
   .operation {
     font-size: 1.5em;
   }
+  .operation svg {
+    cursor: pointer;
+  }
 </style>
