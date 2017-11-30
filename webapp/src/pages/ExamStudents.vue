@@ -11,7 +11,8 @@
                           </svg>
                         </span>
             </el-tooltip>
-            <span style="margin-right: -72px">【{{courseName}}】学生名单</span>
+            <span style="margin-right: -72px" v-if="courseName != null">【{{courseName}}】学生名单</span>
+            <span style="margin-right: -72px" v-else>学生名单</span>
             <a href="/student/download" target="_blank">
               <el-tooltip content="下载学生模版" effect="light">
                         <span class="operation">
