@@ -19,18 +19,20 @@ public class AnsweredPaperInfo {
     private int examId;
     private double mark;
     private String studentEmail;
+    private String password;
     private List<AnsweredQuestion> answeredQuestions;
 
     public AnsweredPaperInfo() {
     }
 
     public AnsweredPaperInfo(int paperId, int examId,
-                             double mark, String studentEmail,
+                             double mark, String studentEmail, String password,
                              List<AnsweredQuestion> answeredQuestions) {
         this.paperId = paperId;
         this.examId = examId;
         this.mark = mark;
         this.studentEmail = studentEmail;
+        this.password = password;
         this.answeredQuestions = answeredQuestions;
     }
 
@@ -77,6 +79,14 @@ public class AnsweredPaperInfo {
 
     public void setStudentEmail(String studentEmail) {
         this.studentEmail = studentEmail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<AnsweredQuestion> getAnsweredQuestions() {

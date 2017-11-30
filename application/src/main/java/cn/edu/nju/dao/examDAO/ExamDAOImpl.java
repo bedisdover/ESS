@@ -46,11 +46,6 @@ public class ExamDAOImpl implements IExamDAO {
     }
 
     @Override
-    public String getPasswordByExamId(int examId) {
-        return examMapper.getPasswordByExamId(examId);
-    }
-
-    @Override
     public List<ExamModel> getExamList(int courseId) {
         return roundTime(examMapper.getExamList(courseId));
     }

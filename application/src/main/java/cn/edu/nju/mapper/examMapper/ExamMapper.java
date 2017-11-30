@@ -20,8 +20,6 @@ public interface ExamMapper {
 
     int getCourseIdByExamId(@Param("examId") int examId);
 
-    String getPasswordByExamId(@Param("examId") int examId);
-
     List<ExamModel> getExamList(@Param("courseId") int courseId);
 
     List<ExamModel> getJoinExam(@Param("email") String email);

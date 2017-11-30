@@ -12,7 +12,6 @@ public class ExamModel {
     private int courseId;
     private int enable;
     private String name;
-    private String password;
     private String num;             // num of questions with each level, separated by ','
     private String startTime;       // yyyy-MM-dd HH:mm:ss
     private String endTime;         // yyyy-MM-dd HH:mm:ss
@@ -21,13 +20,12 @@ public class ExamModel {
     }
 
     public ExamModel(int examId, int courseId, int enable,
-                     String name, String password, String num,
+                     String name, String num,
                      String startTime, String endTime) {
         this.examId = examId;
         this.courseId = courseId;
         this.enable = enable;
         this.name = name;
-        this.password = password;
         this.num = num;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -42,7 +40,7 @@ public class ExamModel {
             num.add(Integer.parseInt(str));
         }
         return new ExamInfo(
-                examId, courseId, name, password, startTime,
+                examId, courseId, name, startTime,
                 endTime, num, maxNum, marks, students);
     }
 
@@ -76,14 +74,6 @@ public class ExamModel {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getNum() {

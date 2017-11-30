@@ -33,9 +33,10 @@ public class PaperModel {
         this.content = content;
     }
 
-    public AnsweredPaperInfo toInfo(List<AnsweredQuestion> questions) {
+    public AnsweredPaperInfo toInfo(List<AnsweredQuestion> questions,
+                                    String password) {
         return new AnsweredPaperInfo(
-                paperId, examId, mark, studentEmail, questions
+                paperId, examId, mark, studentEmail, password, questions
         );
     }
 

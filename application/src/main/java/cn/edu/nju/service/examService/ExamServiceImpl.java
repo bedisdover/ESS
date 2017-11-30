@@ -85,11 +85,9 @@ public class ExamServiceImpl implements IExamService {
         }
 
         // add an exam record to database
-        String examPassword = RandomUtil.randomString();
-        examInfo.setPassword(examPassword);
         int examId = examDAO.createExam(new ExamModel(
                 0 /* placeholder */, courseId, 1,
-                examInfo.getName(), examPassword,
+                examInfo.getName(),
                 numListToString(examInfo.getNum()),
                 startTime, endTime
         ));
@@ -108,10 +106,15 @@ public class ExamServiceImpl implements IExamService {
         // add student-join-in-exam relationship in database
         // assume that students here are all in t_student
         // this is guaranteed by frontend
-        studentExamDAO.joinInExam(examId, extractEmails(examInfo.getStudents()));
+        List<StudentInfo> students = examInfo.getStudents();
+        List<StudentExamModel> records = new ArrayList<>(students.size());
+        students.forEach(student -> records.add(
+                new StudentExamModel(examId, student.getEmail(), RandomUtil.randomString(), 1)
+        ));
+        studentExamDAO.joinInExam(records);
 
         // send email to student, tell them basic information of the exam
-        sendNotificationEmail(examInfo);
+        sendNotificationEmail(examInfo, records);
 
         return new ResultInfo(true, "成功创建考试", null);
 
@@ -136,15 +139,20 @@ public class ExamServiceImpl implements IExamService {
         int courseId = examInfo.getCourseId();
         levelDAO.setMarkOfLevel(courseId, examId, examInfo.getMarks());
 
-        List<StudentInfo> students = examInfo.getStudents();
+        // delete old records of students joining in the exam
         List<String> oldEmails = studentExamDAO.getExamStudentEmails(examId);
         if (!oldEmails.isEmpty()) {
             studentExamDAO.quitExam(examId, oldEmails);
         }
 
-        List<String> newEmails = extractEmails(students);
-        if (!newEmails.isEmpty()) {
-            studentExamDAO.joinInExam(examId, newEmails);
+        // add new records of students joining in the exam
+        List<StudentInfo> students = examInfo.getStudents();
+        if (!students.isEmpty()) {
+            List<StudentExamModel> records = new ArrayList<>(students.size());
+            students.forEach(student -> records.add(
+                    new StudentExamModel(examId, student.getEmail(), RandomUtil.randomString(), 1)
+            ));
+            studentExamDAO.joinInExam(records);
         }
 
         return new ResultInfo(true, "成功修改考试信息", null);
@@ -193,7 +201,7 @@ public class ExamServiceImpl implements IExamService {
 
             infoList.add(new ExamsOfCourse.ExamInfo(
                     exam.getExamId(), exam.getName(),
-                    exam.getPassword(), exam.getStartTime(),
+                    exam.getStartTime(),
                     exam.getEndTime(), num, marks,
                     StudentModel.toInfoList(studentModelList)
             ));
@@ -307,8 +315,9 @@ public class ExamServiceImpl implements IExamService {
                 questions.add(new AnsweredQuestion(info, item.getAnswerList()));
             }
 
+            String password = studentExamDAO.getExamPassword(examId, email);
             return new ResultInfo(true, "成功返回试卷信息",
-                    paper.toInfo(questions));
+                    paper.toInfo(questions, password));
         } catch (IOException e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
@@ -396,9 +405,9 @@ public class ExamServiceImpl implements IExamService {
         return new ResultInfo(true, null, null);
     }
 
-    private void sendNotificationEmail(final ExamInfo examInfo) {
+    private void sendNotificationEmail(final ExamInfo examInfo, final List<StudentExamModel> records) {
         Runnable task = () -> {
-            ResultInfo emailResult = EmailUtil.sendExamNotificationEmail(examInfo);
+            ResultInfo emailResult = EmailUtil.sendExamNotificationEmail(examInfo, records);
             if (!emailResult.isSuccess()) {
                 Logger.getLogger(ExamServiceImpl.class).error("Fail to send email of exam notification");
             }
@@ -477,14 +486,6 @@ public class ExamServiceImpl implements IExamService {
         }
         builder.append(num.get(size - 1));
         return builder.toString();
-    }
-
-    private List<String> extractEmails(List<StudentInfo> students) {
-        int size = students.size();
-        if (size == 0) return new ArrayList<>();
-        List<String> emails = new ArrayList<>(size);
-        students.forEach((info) -> emails.add(info.getEmail()));
-        return emails;
     }
 
 }

@@ -7,7 +7,6 @@ public class ExamsOfCourse {
     public static class ExamInfo {
         private int examId;
         private String name;
-        private String password;
         private String startTime;
         private String endTime;
         private List<Integer> num;
@@ -17,13 +16,12 @@ public class ExamsOfCourse {
         public ExamInfo() {
         }
 
-        public ExamInfo(int examId, String name, String password,
+        public ExamInfo(int examId, String name,
                         String startTime, String endTime,
                         List<Integer> num, List<Double> marks,
                         List<StudentInfo> studentInfoList) {
             this.examId = examId;
             this.name = name;
-            this.password = password;
             this.startTime = startTime;
             this.endTime = endTime;
             this.num = num;
@@ -45,14 +43,6 @@ public class ExamsOfCourse {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
         }
 
         public String getStartTime() {

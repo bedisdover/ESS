@@ -24,10 +24,8 @@ public class PaperController {
 
     @RequestMapping(value = "/paper/create", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo generatePaper(@RequestParam int examId,
-                                    @RequestParam String email,
-                                    @RequestParam String password) {
-        return paperService.generatePaper(examId, email, password);
+    public ResultInfo generatePaper(@RequestParam String key) {
+        return paperService.generatePaper(key);
     }
 
     @RequestMapping(value = "/paper/submit", method = RequestMethod.POST)

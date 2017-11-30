@@ -10,7 +10,7 @@ import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
  */
 public interface IPaperService {
 
-    ResultInfo generatePaper(int examId, String email, String password);
+    ResultInfo generatePaper(String key);
 
     ResultInfo submitPaper(AnsweredPaperInfo paper);
 

@@ -7,8 +7,10 @@ import cn.edu.nju.info.examInfo.AnsweredQuestion;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.PaperModel;
 import cn.edu.nju.model.examModel.QuestionModel;
+import cn.edu.nju.model.examModel.StudentExamModel;
 import cn.edu.nju.utils.DateTimeUtil;
 import cn.edu.nju.utils.EmailUtil;
+import cn.edu.nju.utils.EncryptionUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,14 +58,18 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     @Override
-    public ResultInfo generatePaper(int examId, String email, String password) {
-        if (!studentExamDAO.doesStudentJoinExam(email, examId)) {
-            return new ResultInfo(false, "该学生没有参加这场考试", null);
+    public ResultInfo generatePaper(String key) {
+        ResultInfo paramCheckResult = extractKey(key);
+        if (!paramCheckResult.isSuccess()) {
+            return paramCheckResult;
         }
 
-        String examPassword = examDAO.getPasswordByExamId(examId);
-        if (!password.equals(examPassword)) {
-            return new ResultInfo(false, "考试密码错误", null);
+        StudentExamModel studentExamModel = (StudentExamModel) paramCheckResult.getData();
+        int examId = studentExamModel.getExamId();
+        String email = studentExamModel.getEmail();
+        String password = studentExamModel.getPassword();
+        if (!studentExamDAO.doesStudentJoinExam(password, email, examId)) {
+            return new ResultInfo(false, "该学生没有参加这场考试", null);
         }
 
         ExamModel model = examDAO.getExamModelById(examId);
@@ -110,6 +116,10 @@ public class PaperServiceImpl implements IPaperService {
             return timeCheckResult;
         }
 
+        if (!studentExamDAO.doesStudentJoinExam(paper.getPassword(), paper.getStudentEmail(), examId)) {
+            return new ResultInfo(false, "该学生没有参加这场考试", null);
+        }
+
         // add paper to database
         PaperModel paperModel;
         int paperId;
@@ -140,6 +150,40 @@ public class PaperServiceImpl implements IPaperService {
             Logger.getLogger(ExamServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
+    }
+
+    private ResultInfo extractKey(String key) {
+        String info = EncryptionUtil.base64Decode(key);
+        String[] params = info.split("&");
+        if (params.length != 3) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+
+        String[] emailKeyValue = params[0].split("=");
+        if (emailKeyValue.length != 2) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+        String email = emailKeyValue[1];
+
+        String[] passwordKeyValue = params[1].split("=");
+        if (passwordKeyValue.length != 2) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+        String password = passwordKeyValue[1];
+
+        String[] examIdKeyValue = params[2].split("=");
+        if (examIdKeyValue.length != 2) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+        int examId;
+        try {
+            examId = Integer.parseInt(examIdKeyValue[1]);
+        } catch (NumberFormatException e) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+
+        return new ResultInfo(true, null,
+                new StudentExamModel(examId, email, password, 1));
     }
 
     private ResultInfo doTimeCheck(String startTime, String endTime) {
