@@ -164,7 +164,7 @@ public class EmailUtil {
                                                   String endTime,
                                                   String email,
                                                   String password) {
-        String url = noticeUrl + "?key=" + EncryptionUtil.base64Encode(
+        String url = noticeUrl + "/" + examId + "/" + EncryptionUtil.base64Encode(
                         "email=" + email + "&password=" + password + "&examId=" + examId);
         return  "<br/>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;考试名称: " + name + "<br/>" +
