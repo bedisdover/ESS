@@ -6,10 +6,10 @@
     </div>
     <div class="options" :clsss="{editable: editable}">
       <div v-if="editable">
-        <el-checkbox-group v-model="checked">
+        <el-checkbox-group v-model="checked" @change="handleChange">
           <el-checkbox
             :key="option.optionId"
-            v-for="option in options"
+            v-for="option in question.options"
             :label="option.optionId">
             {{option.content}}
           </el-checkbox>
@@ -18,7 +18,7 @@
       <div v-else>
         <label
           :key="option.optionId"
-          v-for="option in options">
+          v-for="option in question.options">
           <input type="checkbox">
           <span>{{option.content}}</span>
         </label>
@@ -31,7 +31,7 @@
   export default {
     name: 'Question',
 
-    props: ['options', 'question', 'index', 'editable'],
+    props: ['question', 'index', 'editable'],
 
     data () {
       return {
@@ -40,15 +40,14 @@
     },
 
     watch: {
-      options: function () {
-        console.log(this.question)
-        this.checked = [...this.question.answer]
+      index: function () {
+        this.checked = this.question.answer ? [...this.question.answer] : []
       }
     },
 
     methods: {
-      handleChange: function (e) {
-
+      handleChange: function () {
+        this.$emit('onChange', this.checked)
       }
     }
   }

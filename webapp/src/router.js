@@ -85,9 +85,10 @@ const pageRouter = [
       title: '邮箱验证'
     }
   }, {
-    path: '/exam',
+    path: '/exam/:examId/:examKey',
     name: 'Exam',
     component: Exam,
+    props: true,
     meta: {
       title: '在线考试'
     }

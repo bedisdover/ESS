@@ -1,6 +1,16 @@
 <template>
   <div class="exam-main">
-    <component :is="currentView" :exam="exam" :questionList="questionList" @onStartExam="loadPaper"></component>
+    <Paper
+      v-if="paperVisible"
+      :exam="exam"
+      :questionList="questionList"
+      @onEndExam="submitPaper">
+    </Paper>
+    <Countdown
+      v-else
+      :exam="exam"
+      @onStartExam="loadPaper">
+    </Countdown>
   </div>
 </template>
 
@@ -13,11 +23,13 @@
   export default {
     name: 'Exam',
 
+    props: ['examId', 'examKey'],
+
     components: {Countdown, Paper},
 
     data () {
       return {
-        currentView: 'Countdown',
+        paperVisible: false,
         exam: {},
         questionList: []
       }
@@ -25,7 +37,7 @@
 
     mounted () {
       let params = {
-        examId: this.$route.query.examId
+        examId: this.examId
       }
 
       request('/exam/query/simple', 'post', params, (success, message, data) => {
@@ -48,9 +60,7 @@
     methods: {
       loadPaper: function () {
         let params = {
-          examId: this.$route.query.examId,
-          email: this.$route.query.email,
-          password: this.$route.query.password
+          key: this.examKey
         }
 
         request('/paper/create', 'post', params, (success, message, data) => {
@@ -63,9 +73,31 @@
           }
         })
       },
+      submitPaper: function (questionList) {
+        let params = {
+          paper: {
+            examId: this.exam.examId,
+            answeredQuestions: questionList
+          }
+        }
+
+        request('/paper/submit', 'post', JSON.stringify(params), (success, message) => {
+          if (success) {
+            Util.removeCookie('paper')
+
+            this.hidePaper()
+          } else {
+            Util.notifyError(message)
+          }
+        })
+      },
       showPaper: function (data) {
         this.questionList = data
-        this.currentView = 'Paper'
+        this.paperVisible = true
+      },
+      hidePaper: function () {
+        this.questionList = null
+        this.paperVisible = false
       }
     }
   }

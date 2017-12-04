@@ -3,9 +3,7 @@
     <div slot="header">
       {{exam.name}}
     </div>
-    <Question :options="question.options" :question="question"
-              :index="current" :editable="editable"
-              @onAnswerUpdate="updateAnswer"></Question>
+    <Question :question="question" :index="current" :editable="editable" @onChange="updateAnswer"></Question>
     <div class="button-container">
       <el-button type="error" @click="previous" v-show="current !== 0">上一题</el-button>
       <el-button type="primary" @click="next" v-show="!submitVisible">下一题</el-button>
@@ -48,9 +46,6 @@
     },
 
     methods: {
-      getAnswer: function () {
-        return this.answers.join(';')
-      },
       updateAnswer: function (answer) {
         this.questionList[this.current].answer = answer
 
@@ -66,7 +61,7 @@
         this.current++
       },
       submit: function () {
-        console.log(this.questionList)
+        this.$emit('onEndExam', this.questionList)
       }
     }
   }
