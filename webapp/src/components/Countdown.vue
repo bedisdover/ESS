@@ -79,7 +79,7 @@
       }
     },
 
-    distroy () {
+    destroyed () {
       clearTimeout(this.timeout)
     }
   }

@@ -1,7 +1,9 @@
 <template>
-  <el-card>
-    <div slot="header">
-      {{exam.name}}
+  <el-card class="paper">
+    <div slot="header" class="header" v-if="editable">
+      <el-progress :percentage="percentage" :stroke-width="15" :show-text="false"></el-progress>
+      <span class="percentage-text">{{percentageText}}</span>
+      <span class="countdown">{{countdown}}</span>
     </div>
     <Question :question="question" :index="current" :editable="editable" @onChange="updateAnswer"></Question>
     <div class="button-container">
@@ -32,7 +34,10 @@
     data () {
       return {
         current: 0,
-        editable: true
+        editable: true,
+        endTime: new Date(this.exam.endTime),
+        countdown: '00:00:00',
+        timeout: null
       }
     },
 
@@ -42,10 +47,31 @@
       },
       submitVisible: function () {
         return this.current === this.questionList.length - 1
+      },
+      percentage: function () {
+        return (this.current + 1) / this.questionList.length * 100
+      },
+      percentageText: function () {
+        return (this.current + 1) + '/' + this.questionList.length
       }
     },
 
+    created () {
+      this.timeout = setInterval(() => {
+        this.getCountdown()
+      }, 1000)
+    },
+
     methods: {
+      getCountdown: function () {
+        let temp = this.endTime - new Date()
+
+        if (temp <= 0) {
+          this.submit()
+        }
+
+        this.countdown = Util.formatTime(new Date(temp), 'hh:mm:ss')
+      },
       updateAnswer: function (answer) {
         this.questionList[this.current].answer = answer
 
@@ -62,12 +88,51 @@
       },
       submit: function () {
         this.$emit('onEndExam', this.questionList)
+
+        clearTimeout(this.timeout)
       }
+    },
+
+    destroyed () {
+      clearTimeout(this.timeout)
     }
   }
 </script>
 
 <style scoped>
+  .paper {
+    height: calc(100vh - 122px);
+    position: relative;
+  }
+
+  .header {
+    height: 55px;
+    line-height: 55px;
+    margin: -20px -20px 20px;
+    background: #B4BCCC;
+    font-size: 1.5em;
+    color: white;
+    vertical-align: middle;
+  }
+
+  .header > div:first-child {
+    display: inline-block;
+    float: left;
+    width: 800px;
+    padding: 20px 0 20px 30px;
+  }
+
+  .percentage-text {
+    float: left;
+    margin-left: 20px;
+  }
+
+  .countdown {
+    float: right;
+    padding: 0 30px;
+    background: #878D99;
+  }
+
   hr {
     border: dashed 1px #e6ebf5;
     margin: 20px -20px;

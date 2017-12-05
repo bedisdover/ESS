@@ -17,6 +17,17 @@ util.title = function (title) {
 }
 
 /**
+ *
+ */
+util.loading = function () {
+
+}
+
+util.closeLoading = function () {
+
+}
+
+/**
  * 获取cookie内容
  * @param name cookie名称
  * @returns 对应数据, 若为json类型数据, 返回转换后的对象

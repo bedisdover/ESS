@@ -44,6 +44,7 @@
         if (success) {
           this.exam = data
 
+          Util.title(this.exam.name + '在线考试')
           let time = Util.formatTime(new Date())
           if (time >= this.exam.startTime && time < this.exam.endTime) {
             const paper = Util.getCookie('paper')
