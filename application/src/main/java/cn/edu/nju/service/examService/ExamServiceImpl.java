@@ -391,12 +391,18 @@ public class ExamServiceImpl implements IExamService {
     private ResultInfo getAnsweredPaper(int examId, String email) {
         try {
             PaperModel paper = paperDAO.getPaperModel(examId, email);
+            if (paper == null) {
+                return new ResultInfo(false, "试卷不存在", null);
+            }
+
             List<AnsweredItem> items = JsonUtil.toCollection(
                     paper.getContent(), ArrayList.class, AnsweredItem.class
             );
             List<AnsweredQuestion> questions = new ArrayList<>(items.size());
+            List<Integer> questionIds = new ArrayList<>(items.size());
             for (AnsweredItem item : items) {
                 int questionId = item.getQuestionId();
+                questionIds.add(questionId);
                 QuestionModel question = questionDAO.getQuestionById(questionId);
                 QuestionInfo info;
                 try {
@@ -410,8 +416,9 @@ public class ExamServiceImpl implements IExamService {
             }
 
             String password = studentExamDAO.getExamPassword(examId, email);
+            double sum = questionDAO.getTotalMarkOfQuestions(examId, questionIds);
             return new ResultInfo(true, "成功返回试卷信息",
-                    paper.toInfo(questions, password));
+                    paper.toInfo(questions, password, sum));
         } catch (IOException e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);

@@ -18,6 +18,7 @@ public class AnsweredPaperInfo {
     private int paperId;
     private int examId;
     private double mark;
+    private double sum;
     private String studentEmail;
     private String password;
     private List<AnsweredQuestion> answeredQuestions;
@@ -25,12 +26,13 @@ public class AnsweredPaperInfo {
     public AnsweredPaperInfo() {
     }
 
-    public AnsweredPaperInfo(int paperId, int examId,
-                             double mark, String studentEmail, String password,
+    public AnsweredPaperInfo(int paperId, int examId, double mark,
+                             double sum, String studentEmail, String password,
                              List<AnsweredQuestion> answeredQuestions) {
         this.paperId = paperId;
         this.examId = examId;
         this.mark = mark;
+        this.sum = sum;
         this.studentEmail = studentEmail;
         this.password = password;
         this.answeredQuestions = answeredQuestions;
@@ -58,6 +60,14 @@ public class AnsweredPaperInfo {
 
     public void setMark(double mark) {
         this.mark = mark;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
+    public void setSum(double sum) {
+        this.sum = sum;
     }
 
     public String getStudentEmail() {

@@ -34,9 +34,9 @@ public class PaperModel {
     }
 
     public AnsweredPaperInfo toInfo(List<AnsweredQuestion> questions,
-                                    String password) {
+                                    String password, double sum) {
         return new AnsweredPaperInfo(
-                paperId, examId, mark, studentEmail, password, questions
+                paperId, examId, mark, sum, studentEmail, password, questions
         );
     }
 
