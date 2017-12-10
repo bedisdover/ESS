@@ -21,7 +21,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (!isLogin) {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json;charset=utf-8");
-            PrintStream out = new PrintStream(response.getOutputStream());
+            PrintStream out = new PrintStream(response.getOutputStream(), true, "utf-8");
             out.println(JsonUtil.toJson(new ResultInfo(
                     false, "请先登录", null
             )));
@@ -32,10 +32,10 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request,
                            HttpServletResponse response,
-                           Object o, ModelAndView modelAndView) throws Exception {}
+                           Object o, ModelAndView modelAndView) {}
 
     @Override
     public void afterCompletion(HttpServletRequest request,
                                 HttpServletResponse response,
-                                Object o, Exception e) throws Exception {}
+                                Object o, Exception e) {}
 }

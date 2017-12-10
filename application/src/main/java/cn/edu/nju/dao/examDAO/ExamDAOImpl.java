@@ -3,6 +3,7 @@ package cn.edu.nju.dao.examDAO;
 import cn.edu.nju.mapper.examMapper.ExamMapper;
 import cn.edu.nju.model.examModel.ExamModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,7 @@ public class ExamDAOImpl implements IExamDAO {
     private final ExamMapper examMapper;
 
     @Autowired
-    public ExamDAOImpl(ExamMapper examMapper) {
+    public ExamDAOImpl(@Qualifier("examMapper") ExamMapper examMapper) {
         this.examMapper = examMapper;
     }
 
@@ -61,7 +62,7 @@ public class ExamDAOImpl implements IExamDAO {
     }
 
     @Override
-    public ExamModel getExamModelById(int examId) {
+    public ExamModel getExamModelById(int examId) throws Exception {
         return roundTime(examMapper.getExamModelById(examId));
     }
 

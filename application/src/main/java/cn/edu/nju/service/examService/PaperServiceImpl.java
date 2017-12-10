@@ -79,6 +79,10 @@ public class PaperServiceImpl implements IPaperService {
             return timeCheckResult;
         }
 
+        if (paperDAO.doesSubmitPaper(examId, email)) {
+            return new ResultInfo(false, "试卷已经提交", null);
+        }
+
         ExamModel examModel = examDAO.getExamModelById(examId);
         int courseId = examModel.getCourseId();
         String[] numArray = examModel.getNum().split(",");

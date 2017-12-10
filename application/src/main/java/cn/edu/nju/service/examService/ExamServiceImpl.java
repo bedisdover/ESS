@@ -175,7 +175,12 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ResultInfo getExamSimpleInfo(int examId) {
-        ExamModel model = examDAO.getExamModelById(examId);
+        ExamModel model = null;
+        try {
+            model = examDAO.getExamModelById(examId);
+        } catch (Exception e) {
+            return new ResultInfo(false, "考试信息不存在", null);
+        }
         return new ResultInfo(true, "成功获得考试信息",
                 model.toInfo(null, null, null));
     }

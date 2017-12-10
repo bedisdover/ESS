@@ -23,6 +23,6 @@ public interface IExamDAO {
 
     List<ExamModel> getCreateExam(List<Integer> courseIdList);
 
-    ExamModel getExamModelById(int examId);
+    ExamModel getExamModelById(int examId) throws Exception;
 
 }
