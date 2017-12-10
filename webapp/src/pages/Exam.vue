@@ -1,6 +1,16 @@
 <template>
   <div class="exam-main">
-    <component :is="currentView" :exam="exam" :questionList="questionList" @onStartExam="loadPaper"></component>
+    <Paper
+      v-if="paperVisible"
+      :exam="exam"
+      :questionList="questionList"
+      @onEndExam="submitPaper">
+    </Paper>
+    <Countdown
+      v-else
+      :exam="exam"
+      @onStartExam="loadPaper">
+    </Countdown>
   </div>
 </template>
 
@@ -13,11 +23,13 @@
   export default {
     name: 'Exam',
 
+    props: ['examId', 'examKey'],
+
     components: {Countdown, Paper},
 
     data () {
       return {
-        currentView: 'Countdown',
+        paperVisible: false,
         exam: {},
         questionList: []
       }
@@ -25,13 +37,14 @@
 
     mounted () {
       let params = {
-        examId: this.$route.query.examId
+        examId: this.examId
       }
 
       request('/exam/query/simple', 'post', params, (success, message, data) => {
         if (success) {
           this.exam = data
 
+          Util.title(this.exam.name + '在线考试')
           let time = Util.formatTime(new Date())
           if (time >= this.exam.startTime && time < this.exam.endTime) {
             const paper = Util.getCookie('paper')
@@ -48,22 +61,41 @@
     methods: {
       loadPaper: function () {
         let params = {
-          examId: this.$route.query.examId,
-          email: this.$route.query.email,
-          password: this.$route.query.password
+          key: this.examKey
         }
 
         request('/paper/create', 'post', params, (success, message, data) => {
           if (success) {
+            data.forEach(function (question) {
+              question.options = Util.shuffle(question.options)
+            })
+
             Util.setCookie('paper', data)
 
             this.showPaper(data)
+          } else {
+            Util.notifyError(message)
+          }
+        })
+      },
+      submitPaper: function (questionList) {
+        request('/paper/submit?key=' + this.examKey, 'post', JSON.stringify(questionList), (success, message) => {
+          if (success) {
+            Util.removeCookie('paper')
+
+            this.hidePaper()
+          } else {
+            Util.notifyError(message)
           }
         })
       },
       showPaper: function (data) {
         this.questionList = data
-        this.currentView = 'Paper'
+        this.paperVisible = true
+      },
+      hidePaper: function () {
+        this.questionList = null
+        this.paperVisible = false
       }
     }
   }

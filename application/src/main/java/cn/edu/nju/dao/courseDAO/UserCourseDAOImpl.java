@@ -1,10 +1,9 @@
 package cn.edu.nju.dao.courseDAO;
 
-import cn.edu.nju.dao.SessionFactory;
-import cn.edu.nju.mapper.courseMapper.CourseMapper;
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.courseMapper.UserCourseMapper;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,7 @@ public class UserCourseDAOImpl implements IUserCourseDAO {
     private final UserCourseMapper userCourseMapper;
 
     @Autowired
-    public UserCourseDAOImpl(UserCourseMapper userCourseMapper) {
+    public UserCourseDAOImpl(@Qualifier("userCourseMapper") UserCourseMapper userCourseMapper) {
         this.userCourseMapper = userCourseMapper;
     }
 
@@ -32,7 +31,11 @@ public class UserCourseDAOImpl implements IUserCourseDAO {
     }
 
     @Override
-    public List<Integer> getCourseIdsByUserId(int userId) {
-        return userCourseMapper.getCourseIdsByUserId(userId);
+    public List<Integer> getCourseIdsByUserId(int userId) throws DataException {
+        try {
+            return userCourseMapper.getCourseIdsByUserId(userId);
+        } catch (Exception e) {
+            throw new DataException("该用户不存在");
+        }
     }
 }

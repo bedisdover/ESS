@@ -2,7 +2,7 @@ package cn.edu.nju.utils;
 
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.ExamInfo;
-import cn.edu.nju.info.examInfo.StudentInfo;
+import cn.edu.nju.model.examModel.StudentExamModel;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
@@ -114,17 +114,17 @@ public class EmailUtil {
         return new ResultInfo(true, "发送邮件成功,请前往邮箱进行验证", null);
     }
 
-    public static ResultInfo sendExamNotificationEmail(ExamInfo examInfo) {
-        List<StudentInfo> students = examInfo.getStudents();
-        for (StudentInfo info : students) {
+    public static ResultInfo sendExamNotificationEmail(ExamInfo examInfo,
+                                                       List<StudentExamModel> records) {
+        for (StudentExamModel record : records) {
             String newContent = noticeContent + generateExamInfoContent(
                     examInfo.getExamId(), examInfo.getName(),
                     examInfo.getStartTime(), examInfo.getEndTime(),
-                    info.getEmail(), examInfo.getPassword()
+                    record.getEmail(), record.getPassword()
             );
 
             List<NameValuePair> data = new ArrayList<>();
-            data.add(new BasicNameValuePair(emailKey, info.getEmail()));
+            data.add(new BasicNameValuePair(emailKey, record.getEmail()));
             data.add(new BasicNameValuePair(subjectKey, noticeSubject));
             data.add(new BasicNameValuePair(contentKey, newContent));
 
@@ -164,7 +164,7 @@ public class EmailUtil {
                                                   String endTime,
                                                   String email,
                                                   String password) {
-        String url = noticeUrl + "?summary=" + EncryptionUtil.base64Encode(
+        String url = noticeUrl + "/" + examId + "/" + EncryptionUtil.base64Encode(
                         "email=" + email + "&password=" + password + "&examId=" + examId);
         return  "<br/>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;考试名称: " + name + "<br/>" +

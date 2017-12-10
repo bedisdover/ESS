@@ -4,21 +4,34 @@
       <strong class="index">{{index + 1}}.</strong>
       <pre>{{question.content}}</pre>
     </div>
-    <el-checkbox-group class="options" v-model="checked">
-      <el-checkbox v-for="option in question.options" :label="option.optionId" :key="option.optionId"
-                   border></el-checkbox>
-    </el-checkbox-group>
+    <div class="options" :clsss="{editable: editable}">
+      <div v-if="editable">
+        <el-checkbox-group v-model="checked" @change="handleChange">
+          <el-checkbox
+            :key="option.optionId"
+            v-for="option in question.options"
+            :label="option.optionId">
+            {{option.content}}
+          </el-checkbox>
+        </el-checkbox-group>
+      </div>
+      <div v-else>
+        <label
+          :key="option.optionId"
+          v-for="option in question.options">
+          <input type="checkbox">
+          <span>{{option.content}}</span>
+        </label>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  import ElCheckboxGroup from '../../../node_modules/element-ui/packages/checkbox/src/checkbox-group.vue'
-
   export default {
-    components: {ElCheckboxGroup},
     name: 'Question',
 
-    props: ['question', 'index'],
+    props: ['question', 'index', 'editable'],
 
     data () {
       return {
@@ -27,9 +40,14 @@
     },
 
     watch: {
-      checked: function () {
-        console.log(this.checked)
-        this.$emit('onUpdateAnswer', this.checked)
+      index: function () {
+        this.checked = this.question.answer ? [...this.question.answer] : []
+      }
+    },
+
+    methods: {
+      handleChange: function () {
+        this.$emit('onChange', this.checked)
       }
     }
   }
@@ -56,9 +74,11 @@
     margin-right: 15px;
   }
 
-  .options > label {
+  .options label {
     display: block;
     padding: 10px;
     margin: 15px;
+    border: 1px solid #d8dce5;
+    border-radius: 4px;
   }
 </style>

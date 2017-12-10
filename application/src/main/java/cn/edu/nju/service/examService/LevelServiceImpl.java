@@ -1,6 +1,7 @@
 package cn.edu.nju.service.examService;
 
 import cn.edu.nju.config.ExamConfig;
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.ILevelDAO;
 import cn.edu.nju.info.ResultInfo;
@@ -62,9 +63,13 @@ public class LevelServiceImpl implements ILevelService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ResultInfo getLevelInfoList(int courseId) {
-        List<LevelModel> list = levelDAO.getLevelModelList(courseId);
+        List<LevelModel> list;
+        try {
+            list = levelDAO.getLevelModelList(courseId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
         return new ResultInfo(
                 true, "成功获取等级信息",
                 LevelModel.toInfoList(list)

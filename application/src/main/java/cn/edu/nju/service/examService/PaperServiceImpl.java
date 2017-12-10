@@ -1,14 +1,18 @@
 package cn.edu.nju.service.examService;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
+import cn.edu.nju.info.examInfo.AnsweredItem;
 import cn.edu.nju.info.examInfo.AnsweredQuestion;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.PaperModel;
 import cn.edu.nju.model.examModel.QuestionModel;
+import cn.edu.nju.model.examModel.StudentExamModel;
 import cn.edu.nju.utils.DateTimeUtil;
 import cn.edu.nju.utils.EmailUtil;
+import cn.edu.nju.utils.EncryptionUtil;
+import cn.edu.nju.utils.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,23 +60,44 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     @Override
-    public ResultInfo generatePaper(int examId, String email, String password) {
-        if (!studentExamDAO.doesStudentJoinExam(email, examId)) {
+    public ResultInfo generatePaper(String key) {
+        ResultInfo paramCheckResult = extractKey(key);
+        if (!paramCheckResult.isSuccess()) {
+            return paramCheckResult;
+        }
+
+        StudentExamModel studentExamModel = (StudentExamModel) paramCheckResult.getData();
+        int examId = studentExamModel.getExamId();
+        String email = studentExamModel.getEmail();
+        String password = studentExamModel.getPassword();
+        if (!studentExamDAO.doesStudentJoinExam(password, email, examId)) {
             return new ResultInfo(false, "该学生没有参加这场考试", null);
         }
 
-        String examPassword = examDAO.getPasswordByExamId(examId);
-        if (!password.equals(examPassword)) {
-            return new ResultInfo(false, "考试密码错误", null);
+        ExamModel model;
+        try {
+            model = examDAO.getExamModelById(examId);
+        } catch (Exception e) {
+            return new ResultInfo(false, "考试不存在", null);
         }
 
-        ExamModel model = examDAO.getExamModelById(examId);
         ResultInfo timeCheckResult = doTimeCheck(model.getStartTime(), model.getEndTime());
         if (!timeCheckResult.isSuccess()) {
             return timeCheckResult;
         }
 
-        ExamModel examModel = examDAO.getExamModelById(examId);
+        if (paperDAO.doesSubmitPaper(examId, email)) {
+            return new ResultInfo(false, "试卷已经提交", null);
+        }
+
+        ExamModel examModel;
+        try {
+            examModel = examDAO.getExamModelById(examId);
+        } catch (DataException e) {
+            Logger.getLogger(PaperServiceImpl.class).error(e);
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         int courseId = examModel.getCourseId();
         String[] numArray = examModel.getNum().split(",");
         List<Integer> numList = new ArrayList<>(numArray.length);
@@ -84,7 +109,11 @@ public class PaperServiceImpl implements IPaperService {
             synchronized (this) {
                 if (!hasGetQuestions) {
                     hasGetQuestions = true;
-                    initQuestionMap(courseId);
+                    try {
+                        initQuestionMap(courseId);
+                    } catch (DataException e) {
+                        return new ResultInfo(false, e.getMessage(), null);
+                    }
                 }
             }
         }
@@ -102,31 +131,47 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     @Override
-    public ResultInfo submitPaper(AnsweredPaperInfo paper) {
-        int examId = paper.getExamId();
-        ExamModel model = examDAO.getExamModelById(examId);
+    public ResultInfo submitPaper(String key, List<AnsweredQuestion> questions) {
+        ResultInfo paramCheckResult = extractKey(key);
+        if (!paramCheckResult.isSuccess()) {
+            return paramCheckResult;
+        }
+
+        StudentExamModel studentExamModel = (StudentExamModel) paramCheckResult.getData();
+        int examId = studentExamModel.getExamId();
+        String email = studentExamModel.getEmail();
+
+        ExamModel model;
+        try {
+            model = examDAO.getExamModelById(examId);
+        } catch (Exception e) {
+            return new ResultInfo(false, "考试不存在", null);
+        }
+
         ResultInfo timeCheckResult = doTimeCheck(model.getStartTime(), model.getEndTime());
         if (!timeCheckResult.isSuccess()) {
             return timeCheckResult;
         }
 
+        if (!studentExamDAO.doesStudentJoinExam(
+                studentExamModel.getPassword(), email, examId)) {
+            return new ResultInfo(false, "该学生没有参加这场考试", null);
+        }
+
         // add paper to database
-        PaperModel paperModel;
         int paperId;
         try {
-            paperModel = paper.toModel();
-            paperId = paperDAO.addPaper(paperModel);
+            paperId = paperDAO.addPaper(new PaperModel(
+                    0, examId, email,
+                    0, 1, createAnswerContent(questions)
+            ));
         } catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(PaperServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
 
-        saveAndInformMark(
-                paperId, paper.getExamId(),
-                paper.getStudentEmail(),
-                paper.getAnsweredQuestions()
-        );
+        saveAndInformMark(paperId, examId, email, model, questions);
         return new ResultInfo(true, "成功提交试卷,考试成绩稍后会发送到您的邮箱", null);
     }
 
@@ -140,6 +185,40 @@ public class PaperServiceImpl implements IPaperService {
             Logger.getLogger(ExamServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
+    }
+
+    private ResultInfo extractKey(String key) {
+        String info = EncryptionUtil.base64Decode(key);
+        String[] params = info.split("&");
+        if (params.length != 3) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+
+        String[] emailKeyValue = params[0].split("=");
+        if (emailKeyValue.length != 2) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+        String email = emailKeyValue[1];
+
+        String[] passwordKeyValue = params[1].split("=");
+        if (passwordKeyValue.length != 2) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+        String password = passwordKeyValue[1];
+
+        String[] examIdKeyValue = params[2].split("=");
+        if (examIdKeyValue.length != 2) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+        int examId;
+        try {
+            examId = Integer.parseInt(examIdKeyValue[1]);
+        } catch (NumberFormatException e) {
+            return new ResultInfo(false, "错误的链接", null);
+        }
+
+        return new ResultInfo(true, null,
+                new StudentExamModel(examId, email, password, 1));
     }
 
     private ResultInfo doTimeCheck(String startTime, String endTime) {
@@ -164,14 +243,16 @@ public class PaperServiceImpl implements IPaperService {
         return new ResultInfo(true, null, null);
     }
 
-    private void saveAndInformMark(int paperId, int examId, String email,
+    private void saveAndInformMark(int paperId, int examId,
+                                   String email, ExamModel examModel,
                                    List<AnsweredQuestion> answeredQuestions) {
         Runnable task = () -> {
             // calculate and save mark
-            double mark = calculateMark(
-                    examId, answeredQuestions
-            );
+            double mark = 0.0;
             try {
+                mark = calculateMark(
+                        examId, answeredQuestions
+                );
                 paperDAO.updateMarkOfPaper(paperId, mark);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -179,7 +260,6 @@ public class PaperServiceImpl implements IPaperService {
             }
 
             // send email to inform student of mark
-            ExamModel examModel = examDAO.getExamModelById(examId);
             ResultInfo resultInfo = EmailUtil.sendExamGrade(
                     mark, email, examModel.getName(),
                     examModel.getStartTime(),
@@ -193,15 +273,15 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     private double calculateMark(int examId,
-                                 List<AnsweredQuestion> answeredQuestions) {
+                                 List<AnsweredQuestion> answeredQuestions
+    ) throws DataException {
         double mark = 0;
         for (AnsweredQuestion q : answeredQuestions) {
             // assume that questionId must be existed
             int questionId = q.getQuestion().getQuestionId();
             QuestionModel question = questionDAO.getQuestionById(questionId);
             Set<Integer> correctAnswers = extractIntegers(question.getAnswer());
-            Set<Integer> studentAnswers = new HashSet<>();
-            studentAnswers.addAll(q.getAnswer());
+            Set<Integer> studentAnswers = new HashSet<>(q.getAnswer());
 
             if (isSetEqual(correctAnswers, studentAnswers)) {
                 mark += levelDAO.getMarkOfQuestion(
@@ -230,7 +310,7 @@ public class PaperServiceImpl implements IPaperService {
         return true;
     }
 
-    private void initQuestionMap(int courseId) {
+    private void initQuestionMap(int courseId) throws DataException {
         List<QuestionModel> questions = questionDAO.getAllQuestionsByCourseId(courseId);
         for (QuestionModel q : questions) {
             int level = q.getLevel();
@@ -255,5 +335,11 @@ public class PaperServiceImpl implements IPaperService {
             }
         }
         return result;
+    }
+
+    private String createAnswerContent(
+            List<AnsweredQuestion> answeredQuestions) throws IOException {
+        List<AnsweredItem> answeredItems = AnsweredQuestion.toAnsweredItem(answeredQuestions);
+        return JsonUtil.toJson(answeredItems);
     }
 }

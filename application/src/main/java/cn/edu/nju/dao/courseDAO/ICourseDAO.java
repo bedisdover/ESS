@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.courseDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.model.courseModel.CourseModel;
 
 import java.util.List;
@@ -14,9 +15,12 @@ public interface ICourseDAO {
 
     void quitCourse(int userId, int courseId) throws Exception;
 
-    String getCourseKeyById(int courseId);
+    String getCourseKeyById(
+            int courseId) throws DataException;
 
-    List<CourseModel> getNotSelectCourses(int userId);
+    List<CourseModel> getNotSelectCourses(
+            int userId) throws DataException;
 
-    List<CourseModel> getSelectCourses(int userId);
+    List<CourseModel> getSelectCourses(
+            int userId) throws DataException;
 }

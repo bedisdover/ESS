@@ -43,4 +43,9 @@
         SELECT * FROM t_paper
         WHERE examId = #{examId} AND studentEmail = #{email} AND enable = 1
     </select>
+
+    <select id="getPaperNum" resultType="int">
+        SELECT COUNT(*) FROM t_paper
+        WHERE examId = #{examId} AND studentEmail = #{email} AND enable = 1
+    </select>
 </mapper>

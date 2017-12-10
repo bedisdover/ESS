@@ -1,8 +1,10 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.examMapper.StudentMapper;
 import cn.edu.nju.model.examModel.StudentModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,23 +20,34 @@ public class StudentDAOImpl implements IStudentDAO {
     private final StudentMapper studentMapper;
 
     @Autowired
-    public StudentDAOImpl(StudentMapper studentMapper) {
+    public StudentDAOImpl(@Qualifier("studentMapper") StudentMapper studentMapper) {
         this.studentMapper = studentMapper;
     }
 
     @Override
-    public List<StudentModel> getCourseStudents(int courseId) {
-        return studentMapper.getCourseStudents(courseId);
+    public List<StudentModel> getCourseStudents(
+            int courseId) throws DataException {
+        try {
+            return studentMapper.getCourseStudents(courseId);
+        } catch (Exception e) {
+            throw new DataException("该课程不存在");
+        }
     }
 
     @Override
-    public void deleteCourseStudents(int courseId, List<String> emails) throws Exception {
+    public void deleteCourseStudents(
+            int courseId, List<String> emails) throws Exception {
         studentMapper.deleteCourseStudents(courseId, emails);
     }
 
     @Override
-    public List<StudentModel> getExamStudents(int examId) {
-        return studentMapper.getExamStudents(examId);
+    public List<StudentModel> getExamStudents(
+            int examId) throws DataException {
+        try {
+            return studentMapper.getExamStudents(examId);
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
     }
 
     @Override
@@ -44,6 +57,8 @@ public class StudentDAOImpl implements IStudentDAO {
 
     @Override
     public void updateStudents(List<StudentModel> students) throws Exception {
-        students.forEach(studentMapper::updateStudent);
+        for (StudentModel student : students) {
+            studentMapper.updateStudent(student);
+        }
     }
 }

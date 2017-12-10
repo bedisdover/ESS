@@ -1,5 +1,6 @@
 package cn.edu.nju.service.examService;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IQuestionDAO;
 import cn.edu.nju.info.ResultInfo;
@@ -78,9 +79,14 @@ public class QuestionServiceImpl implements IQuestionService {
 
     @Override
     public ResultInfo getCourseQuestions(int courseId, int page, int size) {
-        List<QuestionModel> list = questionDAO.getCourseQuestions(
-                courseId, (page - 1) * size, size
-        );
+        List<QuestionModel> list;
+        try {
+            list = questionDAO.getCourseQuestions(
+                    courseId, (page - 1) * size, size
+            );
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
         int num = questionDAO.getNumOfCourseQuestions(courseId);
 
         List<QuestionInfo> questions;
@@ -102,7 +108,13 @@ public class QuestionServiceImpl implements IQuestionService {
         }
 
         int questionId = questionIdList.get(0);
-        int courseId = questionDAO.getCourseIdByQuestionId(questionId);
+        int courseId;
+        try {
+            courseId = questionDAO.getCourseIdByQuestionId(questionId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         if (!userCourseDAO.doesUserHaveCourse(userId, courseId)) {
             return new ResultInfo(
                     false, "只有该门课的老师才能删除试题", null

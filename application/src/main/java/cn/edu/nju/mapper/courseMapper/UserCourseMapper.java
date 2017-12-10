@@ -14,25 +14,25 @@ import java.util.List;
 public interface UserCourseMapper {
 
     void addUserCourseRecord(
-                    @Param("userId") int userId,
-                    @Param("courseId") int courseId);
+            @Param("userId") int userId,
+            @Param("courseId") int courseId) throws Exception;
 
     void removeUserCourseRecord(
-                    @Param("userId") int userId,
-                    @Param("courseId") int courseId);
+            @Param("userId") int userId,
+            @Param("courseId") int courseId) throws Exception;
 
     int getCourseUserRecordNum(
-                    @Param("userId") int userId,
-                    @Param("courseId") int courseId);
+            @Param("userId") int userId,
+            @Param("courseId") int courseId);
 
     int getRemovedRecordNum(
-                    @Param("userId") int userId,
-                    @Param("courseId") int courseId);
+            @Param("userId") int userId,
+            @Param("courseId") int courseId);
 
     void recoverRemovedRecord(
-                    @Param("userId") int userId,
-                    @Param("courseId") int courseId);
+            @Param("userId") int userId,
+            @Param("courseId") int courseId) throws Exception;
 
     List<Integer> getCourseIdsByUserId(
-                    @Param("userId") int userId);
+            @Param("userId") int userId) throws Exception;
 }

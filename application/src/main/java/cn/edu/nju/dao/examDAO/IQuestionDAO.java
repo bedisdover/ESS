@@ -1,8 +1,7 @@
 package cn.edu.nju.dao.examDAO;
 
-import cn.edu.nju.model.examModel.LevelModel;
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.model.examModel.QuestionModel;
-import cn.edu.nju.info.ResultInfo;
 
 import java.util.List;
 
@@ -10,21 +9,28 @@ public interface IQuestionDAO {
 
     boolean isMD5Exist(String md5);
 
-    void saveQuestions(List<QuestionModel> questions) throws Exception;
+    void saveQuestions(
+            List<QuestionModel> questions) throws Exception;
 
-    List<QuestionModel> getCourseQuestions(int courseId, int offset, int size);
+    List<QuestionModel> getCourseQuestions(
+            int courseId, int offset, int size) throws DataException;
 
-    void deleteQuestions(int courseId, List<Integer> questionIdList) throws Exception;
+    void deleteQuestions(
+            int courseId, List<Integer> questionIdList) throws Exception;
 
-    int getCourseIdByQuestionId(int questionId);
+    int getCourseIdByQuestionId(
+            int questionId) throws DataException;
 
-    int getLevelNumByCourseId(int courseId);
+    int getLevelNumByCourseId(
+            int courseId) throws DataException;
 
     int getNumOfQuestions(int courseId, int level);
 
     int getNumOfCourseQuestions(int courseId);
 
-    List<QuestionModel> getAllQuestionsByCourseId(int courseId);
+    List<QuestionModel> getAllQuestionsByCourseId(
+            int courseId) throws DataException;
 
-    QuestionModel getQuestionById(int questionId);
+    QuestionModel getQuestionById(
+            int questionId) throws DataException;
 }

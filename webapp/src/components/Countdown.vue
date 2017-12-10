@@ -14,7 +14,9 @@
           </div>
         </div>
         <div v-else>
-          本场考试已经结束
+          <div class="title">
+            本场考试已经结束
+          </div>
         </div>
       </div>
       <div class="footer">
@@ -77,23 +79,13 @@
       }
     },
 
-    distroy () {
+    destroyed () {
       clearTimeout(this.timeout)
     }
   }
 </script>
 
 <style scoped>
-  .countdown {
-    height: calc(100vh - 140px);
-  }
-
-  .countdown-body {
-    height: calc(100vh - 180px);
-    display: flex;
-    flex-direction: column;
-  }
-
   .name {
     color: #409EFF;
     margin: 20px;
@@ -104,17 +96,16 @@
 
   .notice {
     margin: 0 20px;
-    flex: 1;
+    background: #f4f4f4;
+    border-radius: 4px;
   }
 
   .title {
-    padding: 40px 0 0;
-    background: #f4f4f4;
+    padding: 40px;
   }
 
   .content {
-    background: #f4f4f4;
-    padding: 40px;
+    padding: 0 20px 20px;
     text-align: left;
   }
 

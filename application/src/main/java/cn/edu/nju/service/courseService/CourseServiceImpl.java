@@ -1,5 +1,6 @@
 package cn.edu.nju.service.courseService;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.courseDAO.ICourseDAO;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.userDAO.IUserDAO;
@@ -33,7 +34,14 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public ResultInfo addCourse(int userId, CourseInfo info) {
-        if (userDAO.getRoleById(userId) != Role.teacher) {
+        Role role;
+        try {
+            role = userDAO.getRoleById(userId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
+        if (role != Role.teacher) {
             return new ResultInfo(false, "只有教师才能添加课程", null);
         }
 
@@ -66,7 +74,14 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public ResultInfo enrollCourse(int userId, int courseId, String courseKey) {
-        boolean isTeacher = userDAO.getRoleById(userId) == Role.teacher;
+        Role role;
+        try {
+            role = userDAO.getRoleById(userId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
+        boolean isTeacher = role == Role.teacher;
         if (isTeacher) {
             return new ResultInfo(false, "教师无法选课", null);
         }
@@ -76,7 +91,13 @@ public class CourseServiceImpl implements ICourseService {
             return new ResultInfo(false, "已经选择了这门课,无需重新加入", null);
         }
 
-        String key = courseDAO.getCourseKeyById(courseId);
+        String key;
+        try {
+            key = courseDAO.getCourseKeyById(courseId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         if (!key.equals(courseKey)) {
             return new ResultInfo(false, "选课密码错误", null);
         }
@@ -93,7 +114,14 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public ResultInfo quitCourse(int userId, int courseId) {
-        boolean isTeacher = userDAO.getRoleById(userId) == Role.teacher;
+        Role role;
+        try {
+            role = userDAO.getRoleById(userId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
+        boolean isTeacher = role == Role.teacher;
         if (isTeacher) {
             return new ResultInfo(false, "教师无法退课", null);
         }
@@ -115,7 +143,13 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public ResultInfo getNotSelectCourses(int userId) {
-        List<CourseModel> list = courseDAO.getNotSelectCourses(userId);
+        List<CourseModel> list;
+        try {
+            list = courseDAO.getNotSelectCourses(userId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         return new ResultInfo(
                 true, "成功获取课程信息列表",
                 CourseModel.toInfoList(list)
@@ -124,7 +158,13 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public ResultInfo getSelectCourses(int userId) {
-        List<CourseModel> list =  courseDAO.getSelectCourses(userId);
+        List<CourseModel> list;
+        try {
+            list = courseDAO.getSelectCourses(userId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         return new ResultInfo(
                 true, "成功获取所选课程信息列表",
                 CourseModel.toInfoList(list)

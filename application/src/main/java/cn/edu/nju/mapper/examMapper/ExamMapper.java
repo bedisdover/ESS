@@ -9,25 +9,28 @@ import java.util.List;
 @Service(value = "examMapper")
 public interface ExamMapper {
 
-    void createExam(@Param("exam")ExamModel exam);
+    void createExam(@Param("exam")ExamModel exam) throws Exception;
 
-    void deleteExam(@Param("examId")int examId);
+    void deleteExam(@Param("examId")int examId) throws Exception;
 
-    void updateExam(@Param("exam")ExamModel exam);
+    void updateExam(@Param("exam")ExamModel exam) throws Exception;
 
-    void updateNumOfQuestions(@Param("examId") int examId,
-                              @Param("num") String num);
+    void updateNumOfQuestions(
+            @Param("examId") int examId,
+            @Param("num") String num) throws Exception;
 
-    int getCourseIdByExamId(@Param("examId") int examId);
+    int getCourseIdByExamId(
+            @Param("examId") int examId) throws Exception;
 
-    String getPasswordByExamId(@Param("examId") int examId);
+    List<ExamModel> getExamList(
+            @Param("courseId") int courseId) throws Exception;
 
-    List<ExamModel> getExamList(@Param("courseId") int courseId);
+    List<ExamModel> getJoinExam(
+            @Param("email") String email) throws Exception;
 
-    List<ExamModel> getJoinExam(@Param("email") String email);
+    List<ExamModel> getCreateExam(
+            @Param("courseIdList") List<Integer> courseIdList) throws Exception;
 
-    List<ExamModel> getCreateExam(@Param("courseIdList")
-                                  List<Integer> courseIdList);
-
-    ExamModel getExamModelById(@Param("examId") int examId);
+    ExamModel getExamModelById(
+            @Param("examId") int examId) throws Exception;
 }

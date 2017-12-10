@@ -1,5 +1,6 @@
 package cn.edu.nju.service.examService;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.IStudentDAO;
 import cn.edu.nju.info.ResultInfo;
@@ -40,7 +41,13 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public ResultInfo getCourseStudents(int courseId) {
-        List<StudentModel> list = studentDAO.getCourseStudents(courseId);
+        List<StudentModel> list;
+        try {
+            list = studentDAO.getCourseStudents(courseId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         return new ResultInfo(true, "成功获取学生列表信息",
                 StudentModel.toInfoList(list));
     }

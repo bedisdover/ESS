@@ -44,11 +44,11 @@ public class AccountController {
         if (session.getAttribute(AccountConfig.LOGIN_KEY) == null) {
             if (accountService.isAccountValid(info)) {
                 session.setAttribute(AccountConfig.LOGIN_KEY,
-                        userService.getUserIdByEmail(info.getEmail())
+                        userService.getUserIdByEmail(info.getEmail()).getData()
                 );
                 return new ResultInfo(
                         true, "登录成功",
-                        userService.getUserInfoByEmail(info.getEmail())
+                        userService.getUserInfoByEmail(info.getEmail()).getData()
                 );
             }
             else {
@@ -58,7 +58,7 @@ public class AccountController {
         else {
             return new ResultInfo(
                     false, "账号已经登录,无需重新登录",
-                    userService.getUserInfoByEmail(info.getEmail())
+                    userService.getUserInfoByEmail(info.getEmail()).getData()
             );
         }
     }
@@ -72,7 +72,7 @@ public class AccountController {
         }
         return new ResultInfo(
                 true, "已经登录",
-                userService.getUserInfoById(userId)
+                userService.getUserInfoById(userId).getData()
         );
     }
 

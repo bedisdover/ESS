@@ -1,8 +1,10 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.examMapper.QuestionMapper;
 import cn.edu.nju.model.examModel.QuestionModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +17,7 @@ public class QuestionDAOImpl implements IQuestionDAO {
     private final QuestionMapper questionMapper;
 
     @Autowired
-    public QuestionDAOImpl(QuestionMapper questionMapper) {
+    public QuestionDAOImpl(@Qualifier("questionMapper") QuestionMapper questionMapper) {
         this.questionMapper = questionMapper;
     }
 
@@ -30,8 +32,13 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
-    public List<QuestionModel> getCourseQuestions(int courseId, int offset, int size) {
-        return questionMapper.getCourseQuestions(courseId, offset, size);
+    public List<QuestionModel> getCourseQuestions(
+            int courseId, int offset, int size) throws DataException {
+        try {
+            return questionMapper.getCourseQuestions(courseId, offset, size);
+        } catch (Exception e) {
+            throw new DataException("该课程不存在");
+        }
     }
 
     @Override
@@ -40,13 +47,23 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
-    public int getCourseIdByQuestionId(int questionId) {
-        return questionMapper.getCourseIdByQuestionId(questionId);
+    public int getCourseIdByQuestionId(
+            int questionId) throws DataException {
+        try {
+            return questionMapper.getCourseIdByQuestionId(questionId);
+        } catch (Exception e) {
+            throw new DataException("该问题不存在");
+        }
     }
 
     @Override
-    public int getLevelNumByCourseId(int courseId) {
-        return questionMapper.getLevelNumByCourseId(courseId);
+    public int getLevelNumByCourseId(
+            int courseId) throws DataException {
+        try {
+            return questionMapper.getLevelNumByCourseId(courseId);
+        } catch (Exception e) {
+            throw new DataException("该课程不存在");
+        }
     }
 
     @Override
@@ -60,13 +77,23 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
-    public List<QuestionModel> getAllQuestionsByCourseId(int courseId) {
-        return questionMapper.getAllQuestionsByCourseId(courseId);
+    public List<QuestionModel> getAllQuestionsByCourseId(
+            int courseId) throws DataException {
+        try {
+            return questionMapper.getAllQuestionsByCourseId(courseId);
+        } catch (Exception e) {
+            throw new DataException("课程不存在");
+        }
     }
 
     @Override
-    public QuestionModel getQuestionById(int questionId) {
-        return questionMapper.getQuestionById(questionId);
+    public QuestionModel getQuestionById(
+            int questionId) throws DataException {
+        try {
+            return questionMapper.getQuestionById(questionId);
+        } catch (Exception e) {
+            throw new DataException("问题不存在");
+        }
     }
 
 }

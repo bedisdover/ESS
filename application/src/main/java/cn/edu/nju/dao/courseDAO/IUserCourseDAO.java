@@ -8,5 +8,6 @@ public interface IUserCourseDAO {
 
     int getCourseUserRecordNum(int courseId, int userId);
 
-    List<Integer> getCourseIdsByUserId(int userId);
+    List<Integer> getCourseIdsByUserId(
+            int userId) throws Exception;
 }

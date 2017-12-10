@@ -1,9 +1,11 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.examMapper.PaperMapper;
 import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.model.examModel.PaperModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class PaperDAOImpl implements IPaperDAO {
     private final PaperMapper paperMapper;
 
     @Autowired
-    public PaperDAOImpl(PaperMapper paperMapper) {
+    public PaperDAOImpl(@Qualifier("paperMapper") PaperMapper paperMapper) {
         this.paperMapper = paperMapper;
     }
 
@@ -40,17 +42,36 @@ public class PaperDAOImpl implements IPaperDAO {
     }
 
     @Override
-    public PaperModel getPaperModel(int examId, String email) {
-        return paperMapper.getPaperModel(examId, email);
+    public boolean doesSubmitPaper(int examId, String email) {
+        return paperMapper.getPaperNum(examId, email) > 0;
     }
 
     @Override
-    public List<Double> getStudentMarks(int examId) {
-        return paperMapper.getStudentMarks(examId);
+    public PaperModel getPaperModel(
+            int examId, String email) throws DataException {
+        try {
+            return paperMapper.getPaperModel(examId, email);
+        } catch (Exception e) {
+            throw new DataException("该试卷不存在");
+        }
     }
 
     @Override
-    public List<ExamScoreModel> getStudentScores(int examId) {
-        return paperMapper.getStudentScores(examId);
+    public List<Double> getStudentMarks(int examId) throws DataException {
+        try {
+            return paperMapper.getStudentMarks(examId);
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
+    }
+
+    @Override
+    public List<ExamScoreModel> getStudentScores(
+            int examId) throws DataException {
+        try {
+            return paperMapper.getStudentScores(examId);
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
     }
 }

@@ -10,7 +10,6 @@ public class ExamInfo {
     private int examId;
     private int courseId;
     private String name;
-    private String password;
     private String startTime;   //yyyy-MM-dd HH:mm:ss
     private String endTime;     //yyyy-MM-dd HH:mm:ss
 
@@ -22,14 +21,13 @@ public class ExamInfo {
     public ExamInfo() {
     }
 
-    public ExamInfo(int examId, int courseId, String name, String password,
+    public ExamInfo(int examId, int courseId, String name,
                     String startTime, String endTime,
                     List<Integer> num, List<Integer> maxNum,
                     List<Double> marks, List<StudentInfo> students) {
         this.examId = examId;
         this.courseId = courseId;
         this.name = name;
-        this.password = password;
         this.startTime = startTime;
         this.endTime = endTime;
         this.num = num;
@@ -40,7 +38,7 @@ public class ExamInfo {
 
     public ExamModel toModel() {
         return new ExamModel(
-                examId, courseId, 1, name, password,
+                examId, courseId, 1, name,
                 StringUtil.stringify(num, ","), startTime, endTime
         );
     }
@@ -63,14 +61,6 @@ public class ExamInfo {
 
     public String getName() {
         return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setName(String name) {

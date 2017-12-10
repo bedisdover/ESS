@@ -9,15 +9,15 @@ import java.util.List;
 @Service("courseMapper")
 public interface CourseMapper {
 
-    void addCourse(@Param("course") CourseModel course);
+    void addCourse(@Param("course") CourseModel course) throws Exception;
 
-    void updateCourse(@Param("course") CourseModel course);
+    void updateCourse(@Param("course") CourseModel course) throws Exception;
 
     int getRemovedCourseNum(@Param("courseId") int courseId);
 
-    String getCourseKeyById(@Param("courseId") int courseId);
+    String getCourseKeyById(@Param("courseId") int courseId) throws Exception;
 
-    List<CourseModel> getNotSelectCourses(@Param("userId") int userId);
+    List<CourseModel> getNotSelectCourses(@Param("userId") int userId) throws Exception;
 
-    List<CourseModel> getSelectCourses(@Param("userId") int userId);
+    List<CourseModel> getSelectCourses(@Param("userId") int userId) throws Exception;
 }
