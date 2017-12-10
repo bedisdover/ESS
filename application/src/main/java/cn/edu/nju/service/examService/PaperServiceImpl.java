@@ -1,5 +1,6 @@
 package cn.edu.nju.service.examService;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.AnsweredItem;
@@ -73,7 +74,7 @@ public class PaperServiceImpl implements IPaperService {
             return new ResultInfo(false, "该学生没有参加这场考试", null);
         }
 
-        ExamModel model = null;
+        ExamModel model;
         try {
             model = examDAO.getExamModelById(examId);
         } catch (Exception e) {
@@ -89,12 +90,14 @@ public class PaperServiceImpl implements IPaperService {
             return new ResultInfo(false, "试卷已经提交", null);
         }
 
-        ExamModel examModel = null;
+        ExamModel examModel;
         try {
             examModel = examDAO.getExamModelById(examId);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (DataException e) {
+            Logger.getLogger(PaperServiceImpl.class).error(e);
+            return new ResultInfo(false, e.getMessage(), null);
         }
+
         int courseId = examModel.getCourseId();
         String[] numArray = examModel.getNum().split(",");
         List<Integer> numList = new ArrayList<>(numArray.length);
@@ -106,7 +109,11 @@ public class PaperServiceImpl implements IPaperService {
             synchronized (this) {
                 if (!hasGetQuestions) {
                     hasGetQuestions = true;
-                    initQuestionMap(courseId);
+                    try {
+                        initQuestionMap(courseId);
+                    } catch (DataException e) {
+                        return new ResultInfo(false, e.getMessage(), null);
+                    }
                 }
             }
         }
@@ -134,7 +141,7 @@ public class PaperServiceImpl implements IPaperService {
         int examId = studentExamModel.getExamId();
         String email = studentExamModel.getEmail();
 
-        ExamModel model = null;
+        ExamModel model;
         try {
             model = examDAO.getExamModelById(examId);
         } catch (Exception e) {
@@ -241,10 +248,11 @@ public class PaperServiceImpl implements IPaperService {
                                    List<AnsweredQuestion> answeredQuestions) {
         Runnable task = () -> {
             // calculate and save mark
-            double mark = calculateMark(
-                    examId, answeredQuestions
-            );
+            double mark = 0.0;
             try {
+                mark = calculateMark(
+                        examId, answeredQuestions
+                );
                 paperDAO.updateMarkOfPaper(paperId, mark);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -265,7 +273,8 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     private double calculateMark(int examId,
-                                 List<AnsweredQuestion> answeredQuestions) {
+                                 List<AnsweredQuestion> answeredQuestions
+    ) throws DataException {
         double mark = 0;
         for (AnsweredQuestion q : answeredQuestions) {
             // assume that questionId must be existed
@@ -301,7 +310,7 @@ public class PaperServiceImpl implements IPaperService {
         return true;
     }
 
-    private void initQuestionMap(int courseId) {
+    private void initQuestionMap(int courseId) throws DataException {
         List<QuestionModel> questions = questionDAO.getAllQuestionsByCourseId(courseId);
         for (QuestionModel q : questions) {
             int level = q.getLevel();

@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.examMapper.PaperMapper;
 import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.model.examModel.PaperModel;
@@ -46,17 +47,31 @@ public class PaperDAOImpl implements IPaperDAO {
     }
 
     @Override
-    public PaperModel getPaperModel(int examId, String email) {
-        return paperMapper.getPaperModel(examId, email);
+    public PaperModel getPaperModel(
+            int examId, String email) throws DataException {
+        try {
+            return paperMapper.getPaperModel(examId, email);
+        } catch (Exception e) {
+            throw new DataException("该试卷不存在");
+        }
     }
 
     @Override
-    public List<Double> getStudentMarks(int examId) {
-        return paperMapper.getStudentMarks(examId);
+    public List<Double> getStudentMarks(int examId) throws DataException {
+        try {
+            return paperMapper.getStudentMarks(examId);
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
     }
 
     @Override
-    public List<ExamScoreModel> getStudentScores(int examId) {
-        return paperMapper.getStudentScores(examId);
+    public List<ExamScoreModel> getStudentScores(
+            int examId) throws DataException {
+        try {
+            return paperMapper.getStudentScores(examId);
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
     }
 }

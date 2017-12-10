@@ -14,23 +14,24 @@ import java.util.List;
 @Service(value = "levelMapper")
 public interface LevelMapper {
 
-    void setMarkOfLevel(@Param("courseId") int courseId,
-                        @Param("examId") int examId,
-                        @Param("marks") List<Double> marks);
+    void setMarkOfLevel(
+            @Param("courseId") int courseId,
+            @Param("examId") int examId,
+            @Param("marks") List<Double> marks) throws Exception;
 
     double getMarkOfQuestion(
-                        @Param("examId") int examId,
-                        @Param("courseId") int courseId,
-                        @Param("level") int level);
+            @Param("examId") int examId,
+            @Param("courseId") int courseId,
+            @Param("level") int level) throws Exception;
 
     List<Double> getMarksOfQuestions(
-                        @Param("examId") int examId,
-                        @Param("courseId") int courseId,
-                        @Param("levels") List<Integer> levels);
+            @Param("examId") int examId,
+            @Param("courseId") int courseId,
+            @Param("levels") List<Integer> levels) throws Exception;
 
     List<LevelModel> getLevelModelList(
-                        @Param("courseId") int courseId);
+            @Param("courseId") int courseId) throws Exception;
 
-    void addLevelsOfExam(@Param("levelModelList")
-                         List<LevelModel> levelModelList);
+    void addLevelsOfExam(
+            @Param("levelModelList") List<LevelModel> levelModelList) throws Exception;
 }

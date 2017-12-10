@@ -14,14 +14,17 @@ import java.util.List;
 @Service(value = "studentMapper")
 public interface StudentMapper {
 
-    List<StudentModel> getCourseStudents(@Param("courseId") int courseId);
+    List<StudentModel> getCourseStudents(
+            @Param("courseId") int courseId) throws Exception;
 
-    List<StudentModel> getExamStudents(@Param("examId") int examId);
+    List<StudentModel> getExamStudents(
+            @Param("examId") int examId) throws Exception;
 
-    void deleteCourseStudents(@Param("courseId") int courseId,
-                              @Param("emails") List<String> emails);
+    void deleteCourseStudents(
+            @Param("courseId") int courseId,
+            @Param("emails") List<String> emails) throws Exception;
 
-    void updateStudent(@Param("student") StudentModel student);
+    void updateStudent(@Param("student") StudentModel student) throws Exception;
 
     int getStudentMD5Count(@Param("md5Value") String md5Value);
 }

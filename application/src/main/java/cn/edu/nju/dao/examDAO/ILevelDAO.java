@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.model.examModel.LevelModel;
 
 import java.util.List;
@@ -11,13 +12,21 @@ import java.util.List;
  */
 public interface ILevelDAO {
 
-    void setMarkOfLevel(int courseId, int examId, List<Double> marks) throws Exception;
+    void setMarkOfLevel(
+            int courseId, int examId,
+            List<Double> marks) throws Exception;
 
-    double getMarkOfQuestion(int examId, int courseId, int level);
+    double getMarkOfQuestion(
+            int examId, int courseId,
+            int level) throws DataException;
 
-    List<Double> getMarksOfQuestions(int examId, int courseId, List<Integer> levels);
+    List<Double> getMarksOfQuestions(
+            int examId, int courseId,
+            List<Integer> levels) throws DataException;
 
-    List<LevelModel> getLevelModelList(int courseId);
+    List<LevelModel> getLevelModelList(
+            int courseId) throws DataException;
 
-    void addLevelsOfExam(List<LevelModel> levelModelList) throws Exception;
+    void addLevelsOfExam(
+            List<LevelModel> levelModelList) throws Exception;
 }

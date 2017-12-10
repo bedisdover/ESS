@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.courseDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.courseMapper.CourseMapper;
 import cn.edu.nju.mapper.courseMapper.UserCourseMapper;
 import cn.edu.nju.model.courseModel.CourseModel;
@@ -60,17 +61,29 @@ public class CourseDAOImpl implements ICourseDAO {
     }
 
     @Override
-    public String getCourseKeyById(int courseId) {
-        return courseMapper.getCourseKeyById(courseId);
+    public String getCourseKeyById(int courseId) throws DataException {
+        try {
+            return courseMapper.getCourseKeyById(courseId);
+        } catch (Exception e) {
+            throw new DataException("该课程不存在");
+        }
     }
 
     @Override
-    public List<CourseModel> getNotSelectCourses(int userId) {
-        return courseMapper.getNotSelectCourses(userId);
+    public List<CourseModel> getNotSelectCourses(int userId) throws DataException {
+        try {
+            return courseMapper.getNotSelectCourses(userId);
+        } catch (Exception e) {
+            throw new DataException("该用户不存在");
+        }
     }
 
     @Override
-    public List<CourseModel> getSelectCourses(int userId) {
-        return courseMapper.getSelectCourses(userId);
+    public List<CourseModel> getSelectCourses(int userId) throws DataException {
+        try {
+            return courseMapper.getSelectCourses(userId);
+        } catch (Exception e) {
+            throw new DataException("该用户不存在");
+        }
     }
 }

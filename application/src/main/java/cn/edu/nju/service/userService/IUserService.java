@@ -1,6 +1,7 @@
 package cn.edu.nju.service.userService;
 
 import cn.edu.nju.config.Role;
+import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.userInfo.UserInfo;
 
 /**
@@ -13,16 +14,16 @@ public interface IUserService {
      * @param email user email
      * @return user id
      */
-    int getUserIdByEmail(String email);
+    ResultInfo getUserIdByEmail(String email);
 
     /**
      * get user information by email
      * @param email user email
      * @return user information
      */
-    UserInfo getUserInfoByEmail(String email);
+    ResultInfo getUserInfoByEmail(String email);
 
-    UserInfo getUserInfoById(int userId);
+    ResultInfo getUserInfoById(int userId);
 
-    Role getUserRoleById(int userId);
+    ResultInfo getUserRoleById(int userId);
 }

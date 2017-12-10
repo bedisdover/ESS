@@ -1,8 +1,8 @@
 package cn.edu.nju.service.userService;
 
-import cn.edu.nju.config.Role;
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.userDAO.IUserDAO;
-import cn.edu.nju.info.userInfo.UserInfo;
+import cn.edu.nju.info.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,22 +20,42 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public int getUserIdByEmail(String email) {
-        return userDAO.getUserIdByEmail(email);
+    public ResultInfo getUserIdByEmail(String email) {
+        try {
+            return new ResultInfo(true, null,
+                    userDAO.getUserIdByEmail(email));
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
     }
 
     @Override
-    public UserInfo getUserInfoByEmail(String email) {
-        return userDAO.getUserInfoByEmail(email).toUserInfo();
+    public ResultInfo getUserInfoByEmail(String email) {
+        try {
+            return new ResultInfo(true, null,
+                    userDAO.getUserInfoByEmail(email).toUserInfo());
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
     }
 
     @Override
-    public UserInfo getUserInfoById(int userId) {
-        return userDAO.getUserInfoById(userId).toUserInfo();
+    public ResultInfo getUserInfoById(int userId) {
+        try {
+            return new ResultInfo(true, null,
+                    userDAO.getUserInfoById(userId).toUserInfo());
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
     }
 
     @Override
-    public Role getUserRoleById(int userId) {
-        return userDAO.getRoleById(userId);
+    public ResultInfo getUserRoleById(int userId) {
+        try {
+            return new ResultInfo(true, null,
+                    userDAO.getRoleById(userId));
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
     }
 }

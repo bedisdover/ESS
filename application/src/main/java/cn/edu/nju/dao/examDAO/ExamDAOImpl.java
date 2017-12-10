@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.examMapper.ExamMapper;
 import cn.edu.nju.model.examModel.ExamModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,28 +43,48 @@ public class ExamDAOImpl implements IExamDAO {
     }
 
     @Override
-    public int getCourseIdByExamId(int examId) {
-        return examMapper.getCourseIdByExamId(examId);
+    public int getCourseIdByExamId(int examId) throws DataException {
+        try {
+            return examMapper.getCourseIdByExamId(examId);
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
     }
 
     @Override
-    public List<ExamModel> getExamList(int courseId) {
-        return roundTime(examMapper.getExamList(courseId));
+    public List<ExamModel> getExamList(int courseId) throws DataException {
+        try {
+            return roundTime(examMapper.getExamList(courseId));
+        } catch (Exception e) {
+            throw new DataException("该课程不存在");
+        }
     }
 
     @Override
-    public List<ExamModel> getJoinExam(String email) {
-        return roundTime(examMapper.getJoinExam(email));
+    public List<ExamModel> getJoinExam(String email) throws DataException {
+        try {
+            return roundTime(examMapper.getJoinExam(email));
+        } catch (Exception e) {
+            throw new DataException("该邮箱不存在");
+        }
     }
 
     @Override
-    public List<ExamModel> getCreateExam(List<Integer> courseIdList) {
-        return roundTime(examMapper.getCreateExam(courseIdList));
+    public List<ExamModel> getCreateExam(List<Integer> courseIdList) throws DataException {
+        try {
+            return roundTime(examMapper.getCreateExam(courseIdList));
+        } catch (Exception e) {
+            throw new DataException("该课程不存在");
+        }
     }
 
     @Override
-    public ExamModel getExamModelById(int examId) throws Exception {
-        return roundTime(examMapper.getExamModelById(examId));
+    public ExamModel getExamModelById(int examId) throws DataException {
+        try {
+            return roundTime(examMapper.getExamModelById(examId));
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
     }
 
     private ExamModel roundTime(ExamModel model) {

@@ -1,6 +1,7 @@
 package cn.edu.nju.service.examService;
 
 import cn.edu.nju.config.Role;
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.dao.userDAO.IUserDAO;
@@ -175,7 +176,7 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ResultInfo getExamSimpleInfo(int examId) {
-        ExamModel model = null;
+        ExamModel model;
         try {
             model = examDAO.getExamModelById(examId);
         } catch (Exception e) {
@@ -187,9 +188,19 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ResultInfo getExamList(int courseId) {
-        List<ExamModel> list = examDAO.getExamList(courseId);
+        List<ExamModel> list;
+        try {
+            list = examDAO.getExamList(courseId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
 
-        List<Integer> maxNum = getQuestionMaxNum(courseId);
+        List<Integer> maxNum;
+        try {
+            maxNum = getQuestionMaxNum(courseId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
 
         List<ExamsOfCourse.ExamInfo> infoList = new ArrayList<>();
         for (ExamModel exam : list) {
@@ -199,10 +210,19 @@ public class ExamServiceImpl implements IExamService {
                 num.add(Integer.parseInt(array[i - 1]));
             }
 
-            List<Double> marks = getQuestionMarks(exam);
+            List<Double> marks;
+            try {
+                marks = getQuestionMarks(exam);
+            } catch (DataException e) {
+                return new ResultInfo(false, e.getMessage(), null);
+            }
 
-            List<StudentModel> studentModelList =
-                    studentDAO.getExamStudents(exam.getExamId());
+            List<StudentModel> studentModelList;
+            try {
+                studentModelList = studentDAO.getExamStudents(exam.getExamId());
+            } catch (DataException e) {
+                return new ResultInfo(false, e.getMessage(), null);
+            }
 
             infoList.add(new ExamsOfCourse.ExamInfo(
                     exam.getExamId(), exam.getName(),
@@ -220,18 +240,47 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ResultInfo getAllExams(int userId) {
-        Role role = userDAO.getRoleById(userId);
-        if (role == Role.student) {
-            UserModel userInfo = userDAO.getUserInfoById(userId);
-            String email = userInfo.getEmail();
-            List<ExamModel> examModelList = examDAO.getJoinExam(email);
-            List<ExamInfo> examInfoList = toExamInfoList(examModelList);
+        Role role;
+        try {
+            role = userDAO.getRoleById(userId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
 
+        if (role == Role.student) {
+            List<ExamModel> examModelList;
+            UserModel userInfo;
+            try {
+                userInfo = userDAO.getUserInfoById(userId);
+                String email = userInfo.getEmail();
+                examModelList = examDAO.getJoinExam(email);
+            } catch (DataException e) {
+                return new ResultInfo(false, e.getMessage(), null);
+            }
+
+            List<ExamInfo> examInfoList;
+            try {
+                examInfoList = toExamInfoList(examModelList);
+            } catch (DataException e) {
+                return new ResultInfo(false, e.getMessage(), null);
+            }
             return new ResultInfo(true, "成功获取考试信息列表", examInfoList);
         } else if (role == Role.teacher) {
-            List<Integer> courseIds = userCourseDAO.getCourseIdsByUserId(userId);
-            List<ExamModel> examModelList = examDAO.getCreateExam(courseIds);
-            List<ExamInfo> examInfoList = toExamInfoList(examModelList);
+            List<Integer> courseIds;
+            List<ExamModel> examModelList;
+            try {
+                courseIds = userCourseDAO.getCourseIdsByUserId(userId);
+                examModelList = examDAO.getCreateExam(courseIds);
+            } catch (Exception e) {
+                return new ResultInfo(false, e.getMessage(), null);
+            }
+
+            List<ExamInfo> examInfoList;
+            try {
+                examInfoList = toExamInfoList(examModelList);
+            } catch (DataException e) {
+                return new ResultInfo(false, e.getMessage(), null);
+            }
 
             return new ResultInfo(true, "成功获取考试信息列表", examInfoList);
         } else {
@@ -242,28 +291,53 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ResultInfo getExamStatistics(int userId, int examId) {
+        int courseId;
+        try {
+            courseId = examDAO.getCourseIdByExamId(examId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         ResultInfo permissionResult = checkPermission(
-                userId, examDAO.getCourseIdByExamId(examId),
+                userId, courseId,
                 "只有该门课的老师才能查看该门课的统计信息");
         if (!permissionResult.isSuccess()) {
             return permissionResult;
         }
 
-        List<Double> marks = paperDAO.getStudentMarks(examId);
+        List<Double> marks;
+        try {
+            marks = paperDAO.getStudentMarks(examId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         return new ResultInfo(true, "成功获得统计信息",
                 new ExamAnalysis(examId, marks));
     }
 
     @Override
     public ResultInfo getAnsweredPaper(int userId, int examId) {
-        UserModel user = userDAO.getUserInfoById(userId);
+        UserModel user;
+        try {
+            user = userDAO.getUserInfoById(userId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
         return getAnsweredPaper(examId, user.getEmail());
     }
 
     @Override
     public ResultInfo getAnsweredPaper(int userId, int examId, String email) {
+        int courseId;
+        try {
+            courseId = examDAO.getCourseIdByExamId(examId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
         ResultInfo permissionResult = checkPermission(
-                userId, examDAO.getCourseIdByExamId(examId),
+                userId, courseId,
                 "只有该门课的老师才能查看该门考试学生的试卷");
         if (!permissionResult.isSuccess()) {
             return permissionResult;
@@ -274,8 +348,16 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public String generateExamResultFile(int userId, int examId, String context) {
+        int courseId;
+        try {
+            courseId = examDAO.getCourseIdByExamId(examId);
+        } catch (DataException e) {
+            Logger.getLogger(ExamServiceImpl.class).error(e.getMessage());
+            return null;
+        }
+
         ResultInfo permissionResult = checkPermission(
-                userId, examDAO.getCourseIdByExamId(examId),
+                userId, courseId,
                 "只有该门课的老师才能查看该门课的考试结果");
         if (!permissionResult.isSuccess()) {
             Logger.getLogger(ExamServiceImpl.class).info(permissionResult.getMessage());
@@ -294,14 +376,21 @@ public class ExamServiceImpl implements IExamService {
             }
         }
 
-        List<ExamScoreModel> scores = paperDAO.getStudentScores(examId);
+        List<ExamScoreModel> scores;
+        try {
+            scores = paperDAO.getStudentScores(examId);
+        } catch (DataException e) {
+            Logger.getLogger(ExamServiceImpl.class).error(e.getMessage());
+            return null;
+        }
+
         boolean success = ExcelUtil.generateScoreFile(file, scores);
         return success ? targetName : null;
     }
 
     private ResultInfo getAnsweredPaper(int examId, String email) {
-        PaperModel paper = paperDAO.getPaperModel(examId, email);
         try {
+            PaperModel paper = paperDAO.getPaperModel(examId, email);
             List<AnsweredItem> items = JsonUtil.toCollection(
                     paper.getContent(), ArrayList.class, AnsweredItem.class
             );
@@ -327,12 +416,15 @@ public class ExamServiceImpl implements IExamService {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
         }
     }
 
-    private List<ExamInfo> toExamInfoList(List<ExamModel> examModelList) {
+    private List<ExamInfo> toExamInfoList(
+            List<ExamModel> examModelList) throws DataException {
         List<ExamInfo> examInfoList = new ArrayList<>(examModelList.size());
-        examModelList.forEach(model -> {
+        for (ExamModel model : examModelList) {
             int courseId = model.getCourseId();
             List<Integer> maxNum = getQuestionMaxNum(courseId);
             List<Double> marks = getQuestionMarks(model);
@@ -340,11 +432,11 @@ public class ExamServiceImpl implements IExamService {
                     studentDAO.getExamStudents(model.getExamId())
             );
             examInfoList.add(model.toInfo(maxNum, marks, students));
-        });
+        }
         return examInfoList;
     }
 
-    private List<Integer> getQuestionMaxNum(int courseId) {
+    private List<Integer> getQuestionMaxNum(int courseId) throws DataException {
         int levelNum = questionDAO.getLevelNumByCourseId(courseId);
         List<Integer> maxNum = new ArrayList<>(levelNum);
         for (int i = 1; i <= levelNum; ++i) {
@@ -353,7 +445,7 @@ public class ExamServiceImpl implements IExamService {
         return maxNum;
     }
 
-    private List<Double> getQuestionMarks(ExamModel exam) {
+    private List<Double> getQuestionMarks(ExamModel exam) throws DataException {
         String[] array = exam.getNum().split(",");
         List<Integer> levels = new ArrayList<>(array.length);
         for (int i = 1; i <= array.length; ++i) {

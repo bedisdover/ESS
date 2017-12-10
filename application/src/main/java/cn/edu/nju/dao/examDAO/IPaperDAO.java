@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.model.examModel.ExamScoreModel;
 import cn.edu.nju.model.examModel.PaperModel;
 
@@ -21,10 +22,13 @@ public interface IPaperDAO {
 
     boolean doesSubmitPaper(int examId, String email);
 
-    PaperModel getPaperModel(int examId, String email);
+    PaperModel getPaperModel(
+            int examId, String email) throws DataException;
 
-    List<Double> getStudentMarks(int examId);
+    List<Double> getStudentMarks(
+            int examId) throws DataException;
 
-    List<ExamScoreModel> getStudentScores(int examId);
+    List<ExamScoreModel> getStudentScores(
+            int examId) throws DataException;
 
 }

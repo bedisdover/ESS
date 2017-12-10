@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.model.examModel.StudentModel;
 
 import java.util.List;
@@ -11,13 +12,17 @@ import java.util.List;
  */
 public interface IStudentDAO {
 
-    List<StudentModel> getCourseStudents(int courseId);
+    List<StudentModel> getCourseStudents(
+            int courseId) throws DataException;
 
-    void deleteCourseStudents(int courseId, List<String> emails) throws Exception;
+    void deleteCourseStudents(
+            int courseId, List<String> emails) throws Exception;
 
-    List<StudentModel> getExamStudents(int examId);
+    List<StudentModel> getExamStudents(
+            int examId) throws DataException;
 
     boolean isStudentFileMD5Exist(String md5Value);
 
-    void updateStudents(List<StudentModel> students) throws Exception;
+    void updateStudents(
+            List<StudentModel> students) throws Exception;
 }

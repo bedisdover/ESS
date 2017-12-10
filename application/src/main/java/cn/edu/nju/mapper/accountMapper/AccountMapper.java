@@ -13,8 +13,8 @@ public interface AccountMapper {
     int getAccountNumByEmail(@Param("email") String email);
 
     int getVerifiedAccountNumByEmailAndPassword(
-                            @Param("email") String email,
-                            @Param("password") String password);
+            @Param("email") String email,
+            @Param("password") String password);
 
-    void addUser(@Param("user") UserModel user);
+    void addUser(@Param("user") UserModel user) throws Exception;
 }

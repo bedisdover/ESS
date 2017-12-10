@@ -1,8 +1,10 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.mapper.examMapper.StudentExamMapper;
 import cn.edu.nju.model.examModel.StudentExamModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class StudentExamDAOImpl implements IStudentExamDAO {
     private final StudentExamMapper studentExamMapper;
 
     @Autowired
-    public StudentExamDAOImpl(StudentExamMapper studentExamMapper) {
+    public StudentExamDAOImpl(@Qualifier("studentExamMapper") StudentExamMapper studentExamMapper) {
         this.studentExamMapper = studentExamMapper;
     }
 
@@ -38,8 +40,13 @@ public class StudentExamDAOImpl implements IStudentExamDAO {
     }
 
     @Override
-    public String getExamPassword(int examId, String email) {
-        return studentExamMapper.getExamPassword(examId, email);
+    public String getExamPassword(
+            int examId, String email) throws DataException {
+        try {
+            return studentExamMapper.getExamPassword(examId, email);
+        } catch (Exception e) {
+            throw new DataException("该考试不存在");
+        }
     }
 
     @Override

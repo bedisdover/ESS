@@ -15,20 +15,27 @@ import java.util.List;
 @Service(value = "paperMapper")
 public interface PaperMapper {
 
-    void deletePaperById(@Param("paperId") int paperId);
+    void deletePaperById(
+            @Param("paperId") int paperId) throws Exception;
 
-    void addPaper(@Param("paper")PaperModel paper);
+    void addPaper(
+            @Param("paper")PaperModel paper) throws Exception;
 
-    void updateMarkOfPaper(@Param("paperId") int paperId,
-                           @Param("mark") double mark);
+    void updateMarkOfPaper(
+            @Param("paperId") int paperId,
+            @Param("mark") double mark) throws Exception;
     
-    int getPaperNum(@Param("examId") int examId,
-                    @Param("email") String email);
+    int getPaperNum(
+            @Param("examId") int examId,
+            @Param("email") String email);
 
-    PaperModel getPaperModel(@Param("examId") int examId,
-                             @Param("email") String email);
+    PaperModel getPaperModel(
+            @Param("examId") int examId,
+            @Param("email") String email) throws Exception;
 
-    List<Double> getStudentMarks(@Param("examId") int examId);
+    List<Double> getStudentMarks(
+            @Param("examId") int examId) throws Exception;
 
-    List<ExamScoreModel> getStudentScores(@Param("examId") int examId);
+    List<ExamScoreModel> getStudentScores(
+            @Param("examId") int examId) throws Exception;
 }

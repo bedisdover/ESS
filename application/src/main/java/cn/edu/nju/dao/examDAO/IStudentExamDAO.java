@@ -1,5 +1,6 @@
 package cn.edu.nju.dao.examDAO;
 
+import cn.edu.nju.dao.DataException;
 import cn.edu.nju.model.examModel.StudentExamModel;
 
 import java.util.List;
@@ -15,9 +16,11 @@ public interface IStudentExamDAO {
 
     void quitExam(int examId, List<String> emails) throws Exception;
 
-    List<String> getExamStudentEmails(int examId);
+    List<String> getExamStudentEmails(
+            int examId) throws DataException;
 
-    String getExamPassword(int examId, String email);
+    String getExamPassword(
+            int examId, String email) throws DataException;
 
     boolean doesStudentJoinExam(String password, String email, int examId);
 }
