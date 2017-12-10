@@ -244,8 +244,7 @@ public class PaperServiceImpl implements IPaperService {
             int questionId = q.getQuestion().getQuestionId();
             QuestionModel question = questionDAO.getQuestionById(questionId);
             Set<Integer> correctAnswers = extractIntegers(question.getAnswer());
-            Set<Integer> studentAnswers = new HashSet<>();
-            studentAnswers.addAll(q.getAnswer());
+            Set<Integer> studentAnswers = new HashSet<>(q.getAnswer());
 
             if (isSetEqual(correctAnswers, studentAnswers)) {
                 mark += levelDAO.getMarkOfQuestion(
