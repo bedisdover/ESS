@@ -139,4 +139,25 @@ util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm:ss') {
   return format
 }
 
+/**
+ * 数组随机排列(Fisher–Yates shuffle 算法)
+ */
+util.shuffle = function (array) {
+  if (!array || !array.length) {
+    return []
+  }
+
+  let temp = array.slice()
+
+  for (let i = array.length - 1; i >= 0; i--) {
+    let randomIndex = Math.floor(Math.random() * (i + 1))
+
+    let itemAtIndex = temp[randomIndex]
+    temp[randomIndex] = temp[i]
+    temp[i] = itemAtIndex
+  }
+
+  return temp
+}
+
 export default util
