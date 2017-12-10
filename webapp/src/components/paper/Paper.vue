@@ -37,7 +37,14 @@
         editable: true,
         endTime: new Date(this.exam.endTime),
         countdown: '00:00:00',
-        timeout: null
+        timeout: null,
+        answerList: this.questionList.map((question) => {
+          return {
+            question: {
+              questionId: question.questionId
+            }
+          }
+        })
       }
     },
 
@@ -64,16 +71,20 @@
 
     methods: {
       getCountdown: function () {
-        let temp = this.endTime - new Date()
+        let time = this.endTime - new Date()
 
-        if (temp <= 0) {
+        if (time <= 0) {
           this.submit()
         }
 
-        this.countdown = Util.formatTime(new Date(temp), 'hh:mm:ss')
+        let day = Math.floor(time / 1000 / 60 / 60 / 24)
+        let dayText = day ? day + '天 ' : ''
+
+        this.countdown = dayText + Util.formatTime(new Date(time), 'hh:mm:ss')
       },
       updateAnswer: function (answer) {
         this.questionList[this.current].answer = answer
+        this.answerList[this.current].answer = answer
 
         Util.setCookie('paper', this.questionList)
       },
@@ -87,7 +98,7 @@
         this.current++
       },
       submit: function () {
-        this.$emit('onEndExam', this.questionList)
+        this.$emit('onEndExam', this.answerList)
 
         clearTimeout(this.timeout)
       }
@@ -101,14 +112,13 @@
 
 <style scoped>
   .paper {
-    height: calc(100vh - 122px);
     position: relative;
   }
 
   .header {
     height: 55px;
     line-height: 55px;
-    margin: -20px -20px 20px;
+    margin: -20px;
     background: #B4BCCC;
     font-size: 1.5em;
     color: white;

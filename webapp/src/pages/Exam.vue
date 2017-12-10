@@ -66,6 +66,10 @@
 
         request('/paper/create', 'post', params, (success, message, data) => {
           if (success) {
+            data.forEach(function (question) {
+              question.options = Util.shuffle(question.options)
+            })
+
             Util.setCookie('paper', data)
 
             this.showPaper(data)
@@ -75,14 +79,7 @@
         })
       },
       submitPaper: function (questionList) {
-        let params = {
-          paper: {
-            examId: this.exam.examId,
-            answeredQuestions: questionList
-          }
-        }
-
-        request('/paper/submit', 'post', JSON.stringify(params), (success, message) => {
+        request('/paper/submit?key=' + this.examKey, 'post', JSON.stringify(questionList), (success, message) => {
           if (success) {
             Util.removeCookie('paper')
 
