@@ -36,19 +36,18 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/exam/add',
+                'url': '/paper/submit?key=' + 'ZW1haWw9MTI4Mjk3Njc0N0BxcS5jb20mcGFzc3dvcmQ9UVM3TlBPQkNYMkJLRlVCJmV4YW1JZD00Nw==',
                 'method': 'post',
-//                'traditional': true,
                 'contentType': 'application/json',
-                'data': JSON.stringify({
-                    'courseId': 9, 'name': '软件工程', 'marks': [15,25,35],
-                    'num': [1,1,1], 'startTime': '2018-01-01 00:00:00', 'endTime': '2018-01-01 00:10:00',
-                    'students': [{'email': '3061935560@qq.com', 'name': 'test1', 'courseId': 9},
-                        {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
-                }),
-//                'data': {
-//                    'examId': 14, 'email': '1483809252@qq.com'
-//                },
+               // 'traditional': true,
+               //  'contentType': 'application/x-www-form-urlencode',
+                // 'data': JSON.stringify({
+                //     'courseId': 9, 'name': '软件工程', 'marks': [15,25,35],
+                //     'num': [1,1,1], 'startTime': '2018-01-01 00:00:00', 'endTime': '2018-01-01 00:10:00',
+                //     'students': [{'email': '3061935560@qq.com', 'name': 'test1', 'courseId': 9},
+                //         {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
+                // }),
+               'data': JSON.stringify([{'question': {'questionId':32}, 'answer': [1]}]),
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },

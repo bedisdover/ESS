@@ -312,7 +312,7 @@ public class ExamServiceImpl implements IExamService {
                     Logger.getLogger(ExamServiceImpl.class).error(e);
                     return new ResultInfo(false, "系统异常", null);
                 }
-                questions.add(new AnsweredQuestion(info, item.getAnswerList()));
+                questions.add(new AnsweredQuestion(info, item.createAnswerList()));
             }
 
             String password = studentExamDAO.getExamPassword(examId, email);

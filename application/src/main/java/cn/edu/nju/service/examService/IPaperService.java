@@ -2,6 +2,9 @@ package cn.edu.nju.service.examService;
 
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
+import cn.edu.nju.info.examInfo.AnsweredQuestion;
+
+import java.util.List;
 
 /**
  * Created by Jiayiwu on 17/11/13.
@@ -12,7 +15,7 @@ public interface IPaperService {
 
     ResultInfo generatePaper(String key);
 
-    ResultInfo submitPaper(AnsweredPaperInfo paper);
+    ResultInfo submitPaper(String key, List<AnsweredQuestion> questions);
 
     ResultInfo deletePaper(int paperId);
 }

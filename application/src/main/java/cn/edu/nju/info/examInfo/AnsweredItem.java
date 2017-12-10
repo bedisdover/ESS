@@ -37,7 +37,7 @@ public class AnsweredItem {
         this.answer = answer;
     }
 
-    public List<Integer> getAnswerList() {
+    public List<Integer> createAnswerList() {
         String[] answerArray = answer.split(",");
         List<Integer> list = new ArrayList<>(answerArray.length);
         for (String answer : answerArray) {

@@ -2,7 +2,7 @@ package cn.edu.nju.service.examService;
 
 import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
+import cn.edu.nju.info.examInfo.AnsweredItem;
 import cn.edu.nju.info.examInfo.AnsweredQuestion;
 import cn.edu.nju.model.examModel.ExamModel;
 import cn.edu.nju.model.examModel.PaperModel;
@@ -11,6 +11,7 @@ import cn.edu.nju.model.examModel.StudentExamModel;
 import cn.edu.nju.utils.DateTimeUtil;
 import cn.edu.nju.utils.EmailUtil;
 import cn.edu.nju.utils.EncryptionUtil;
+import cn.edu.nju.utils.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,35 +109,41 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     @Override
-    public ResultInfo submitPaper(AnsweredPaperInfo paper) {
-        int examId = paper.getExamId();
+    public ResultInfo submitPaper(String key, List<AnsweredQuestion> questions) {
+        ResultInfo paramCheckResult = extractKey(key);
+        if (!paramCheckResult.isSuccess()) {
+            return paramCheckResult;
+        }
+
+        StudentExamModel studentExamModel = (StudentExamModel) paramCheckResult.getData();
+        int examId = studentExamModel.getExamId();
+        String email = studentExamModel.getEmail();
+
         ExamModel model = examDAO.getExamModelById(examId);
         ResultInfo timeCheckResult = doTimeCheck(model.getStartTime(), model.getEndTime());
         if (!timeCheckResult.isSuccess()) {
             return timeCheckResult;
         }
 
-        if (!studentExamDAO.doesStudentJoinExam(paper.getPassword(), paper.getStudentEmail(), examId)) {
+        if (!studentExamDAO.doesStudentJoinExam(
+                studentExamModel.getPassword(), email, examId)) {
             return new ResultInfo(false, "该学生没有参加这场考试", null);
         }
 
         // add paper to database
-        PaperModel paperModel;
         int paperId;
         try {
-            paperModel = paper.toModel();
-            paperId = paperDAO.addPaper(paperModel);
+            paperId = paperDAO.addPaper(new PaperModel(
+                    0, examId, email,
+                    0, 1, createAnswerContent(questions)
+            ));
         } catch (Exception e) {
             e.printStackTrace();
             Logger.getLogger(PaperServiceImpl.class).error(e);
             return new ResultInfo(false, "系统异常", null);
         }
 
-        saveAndInformMark(
-                paperId, paper.getExamId(),
-                paper.getStudentEmail(),
-                paper.getAnsweredQuestions()
-        );
+        saveAndInformMark(paperId, examId, email, questions);
         return new ResultInfo(true, "成功提交试卷,考试成绩稍后会发送到您的邮箱", null);
     }
 
@@ -298,5 +305,11 @@ public class PaperServiceImpl implements IPaperService {
             }
         }
         return result;
+    }
+
+    private String createAnswerContent(
+            List<AnsweredQuestion> answeredQuestions) throws IOException {
+        List<AnsweredItem> answeredItems = AnsweredQuestion.toAnsweredItem(answeredQuestions);
+        return JsonUtil.toJson(answeredItems);
     }
 }

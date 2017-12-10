@@ -2,10 +2,13 @@ package cn.edu.nju.controller;
 
 import cn.edu.nju.info.ResultInfo;
 import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
+import cn.edu.nju.info.examInfo.AnsweredQuestion;
 import cn.edu.nju.service.examService.IPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created by Jiayiwu on 17/11/13.
@@ -30,8 +33,9 @@ public class PaperController {
 
     @RequestMapping(value = "/paper/submit", method = RequestMethod.POST)
     @ResponseBody
-    public ResultInfo submitPaper(@RequestBody AnsweredPaperInfo paper) {
-        return paperService.submitPaper(paper);
+    public ResultInfo submitPaper(@RequestParam String key,
+                                  @RequestBody List<AnsweredQuestion> questions) {
+        return paperService.submitPaper(key, questions);
     }
 
     @RequestMapping(value = "/paper/delete", method = RequestMethod.POST)

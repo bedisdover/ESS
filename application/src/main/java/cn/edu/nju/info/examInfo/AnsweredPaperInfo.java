@@ -36,19 +36,6 @@ public class AnsweredPaperInfo {
         this.answeredQuestions = answeredQuestions;
     }
 
-    public PaperModel toModel() throws IOException {
-        return new PaperModel(
-                paperId, examId, studentEmail, mark, 1,
-                createAnswerContent(answeredQuestions)
-        );
-    }
-
-    private String createAnswerContent(
-            List<AnsweredQuestion> answeredQuestions) throws IOException {
-        List<AnsweredItem> answeredItems = AnsweredQuestion.toAnsweredItem(answeredQuestions);
-        return JsonUtil.toJson(answeredItems);
-    }
-
     public int getPaperId() {
         return paperId;
     }
