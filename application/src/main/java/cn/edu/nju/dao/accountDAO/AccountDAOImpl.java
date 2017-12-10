@@ -5,6 +5,7 @@ import cn.edu.nju.info.accountInfo.SigUpInfo;
 import cn.edu.nju.mapper.accountMapper.AccountMapper;
 import cn.edu.nju.model.userModel.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,7 @@ public class AccountDAOImpl implements IAccountDAO {
     private final AccountMapper accountMapper;
 
     @Autowired
-    public AccountDAOImpl(AccountMapper accountMapper) {
+    public AccountDAOImpl(@Qualifier("accountMapper") AccountMapper accountMapper) {
         this.accountMapper = accountMapper;
     }
 

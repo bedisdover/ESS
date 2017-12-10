@@ -73,7 +73,13 @@ public class PaperServiceImpl implements IPaperService {
             return new ResultInfo(false, "该学生没有参加这场考试", null);
         }
 
-        ExamModel model = examDAO.getExamModelById(examId);
+        ExamModel model = null;
+        try {
+            model = examDAO.getExamModelById(examId);
+        } catch (Exception e) {
+            return new ResultInfo(false, "考试不存在", null);
+        }
+
         ResultInfo timeCheckResult = doTimeCheck(model.getStartTime(), model.getEndTime());
         if (!timeCheckResult.isSuccess()) {
             return timeCheckResult;
@@ -83,7 +89,12 @@ public class PaperServiceImpl implements IPaperService {
             return new ResultInfo(false, "试卷已经提交", null);
         }
 
-        ExamModel examModel = examDAO.getExamModelById(examId);
+        ExamModel examModel = null;
+        try {
+            examModel = examDAO.getExamModelById(examId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         int courseId = examModel.getCourseId();
         String[] numArray = examModel.getNum().split(",");
         List<Integer> numList = new ArrayList<>(numArray.length);
@@ -123,7 +134,13 @@ public class PaperServiceImpl implements IPaperService {
         int examId = studentExamModel.getExamId();
         String email = studentExamModel.getEmail();
 
-        ExamModel model = examDAO.getExamModelById(examId);
+        ExamModel model = null;
+        try {
+            model = examDAO.getExamModelById(examId);
+        } catch (Exception e) {
+            return new ResultInfo(false, "考试不存在", null);
+        }
+
         ResultInfo timeCheckResult = doTimeCheck(model.getStartTime(), model.getEndTime());
         if (!timeCheckResult.isSuccess()) {
             return timeCheckResult;
@@ -147,7 +164,7 @@ public class PaperServiceImpl implements IPaperService {
             return new ResultInfo(false, "系统异常", null);
         }
 
-        saveAndInformMark(paperId, examId, email, questions);
+        saveAndInformMark(paperId, examId, email, model, questions);
         return new ResultInfo(true, "成功提交试卷,考试成绩稍后会发送到您的邮箱", null);
     }
 
@@ -219,7 +236,8 @@ public class PaperServiceImpl implements IPaperService {
         return new ResultInfo(true, null, null);
     }
 
-    private void saveAndInformMark(int paperId, int examId, String email,
+    private void saveAndInformMark(int paperId, int examId,
+                                   String email, ExamModel examModel,
                                    List<AnsweredQuestion> answeredQuestions) {
         Runnable task = () -> {
             // calculate and save mark
@@ -234,7 +252,6 @@ public class PaperServiceImpl implements IPaperService {
             }
 
             // send email to inform student of mark
-            ExamModel examModel = examDAO.getExamModelById(examId);
             ResultInfo resultInfo = EmailUtil.sendExamGrade(
                     mark, email, examModel.getName(),
                     examModel.getStartTime(),

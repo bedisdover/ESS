@@ -4,6 +4,7 @@ import cn.edu.nju.mapper.courseMapper.CourseMapper;
 import cn.edu.nju.mapper.courseMapper.UserCourseMapper;
 import cn.edu.nju.model.courseModel.CourseModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +19,8 @@ public class CourseDAOImpl implements ICourseDAO {
     private final UserCourseMapper userCourseMapper;
 
     @Autowired
-    public CourseDAOImpl(CourseMapper courseMapper,
-                         UserCourseMapper userCourseMapper) {
+    public CourseDAOImpl(@Qualifier("courseMapper") CourseMapper courseMapper,
+                         @Qualifier("userCourseMapper") UserCourseMapper userCourseMapper) {
         this.courseMapper = courseMapper;
         this.userCourseMapper = userCourseMapper;
     }
