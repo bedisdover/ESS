@@ -77,6 +77,16 @@ public class QuestionDAOImpl implements IQuestionDAO {
     }
 
     @Override
+    public double getTotalMarkOfQuestions(
+            int examId, List<Integer> questionIds) throws DataException {
+        try {
+            return questionMapper.getTotalMarkOfQuestions(examId, questionIds);
+        } catch (Exception e) {
+            throw new DataException("问题不存在");
+        }
+    }
+
+    @Override
     public List<QuestionModel> getAllQuestionsByCourseId(
             int courseId) throws DataException {
         try {

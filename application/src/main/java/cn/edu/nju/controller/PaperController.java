@@ -1,7 +1,6 @@
 package cn.edu.nju.controller;
 
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.AnsweredPaperInfo;
 import cn.edu.nju.info.examInfo.AnsweredQuestion;
 import cn.edu.nju.service.examService.IPaperService;
 import org.springframework.beans.factory.annotation.Autowired;

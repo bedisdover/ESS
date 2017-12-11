@@ -36,9 +36,9 @@
         'success': function(data) {
             alert(JSON.stringify(data));
             $.ajax({
-                'url': '/paper/submit?key=' + 'ZW1haWw9MTI4Mjk3Njc0N0BxcS5jb20mcGFzc3dvcmQ9UVM3TlBPQkNYMkJLRlVCJmV4YW1JZD00Nw==',
+                'url': '/exam/teacher/review',
                 'method': 'post',
-                'contentType': 'application/json',
+                // 'contentType': 'application/json',
                // 'traditional': true,
                //  'contentType': 'application/x-www-form-urlencode',
                 // 'data': JSON.stringify({
@@ -47,7 +47,8 @@
                 //     'students': [{'email': '3061935560@qq.com', 'name': 'test1', 'courseId': 9},
                 //         {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
                 // }),
-               'data': JSON.stringify([{'question': {'questionId':32}, 'answer': [1]}]),
+               // 'data': JSON.stringify([{'question': {'questionId':32}, 'answer': [1]}]),
+                'data': {'examId': 14, 'email': '1483809252@qq.com'},
                 'success': function(data) {
                     alert(JSON.stringify(data));
                 },

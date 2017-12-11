@@ -10,6 +10,8 @@ import java.util.List;
 public class StringUtil {
 
     public static String stringify(List<?> list, String separator) {
+        if (list == null) return "";
+
         int size = list.size();
         if (size == 0) return "";
         StringBuilder builder = new StringBuilder();

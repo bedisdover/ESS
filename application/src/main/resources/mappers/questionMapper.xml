@@ -71,4 +71,14 @@
     <select id="getQuestionById" resultMap="questionMap">
         SELECT * FROM t_question WHERE id = #{questionId} AND enable = 1
     </select>
+
+    <select id="getTotalMarkOfQuestions" resultType="double">
+        SELECT SUM(l.mark) FROM t_question AS q, t_level AS l
+        WHERE q.enable = 1 AND q.id IN
+        <foreach collection="questionIds" item="questionId" open="(" close=")" separator=",">
+            #{questionId}
+        </foreach>
+        AND q.level = l.level AND q.courseId = l.courseId
+        AND #{examId} = l.examId AND q.enable = 1
+    </select>
 </mapper>
