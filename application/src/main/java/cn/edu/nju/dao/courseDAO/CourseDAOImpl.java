@@ -70,6 +70,15 @@ public class CourseDAOImpl implements ICourseDAO {
     }
 
     @Override
+    public String getCourseNameById(int courseId) throws DataException {
+        try {
+            return courseMapper.getCourseNameById(courseId);
+        } catch (Exception e) {
+            throw new DataException("该课程不存在");
+        }
+    }
+
+    @Override
     public List<CourseModel> getNotSelectCourses(int userId) throws DataException {
         try {
             return courseMapper.getNotSelectCourses(userId);

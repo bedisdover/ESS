@@ -5,7 +5,7 @@ import cn.edu.nju.utils.StringUtil;
 
 import java.util.List;
 
-public class ExamInfo {
+public class ExamInfoForTeacher {
 
     private int examId;
     private int courseId;
@@ -18,13 +18,13 @@ public class ExamInfo {
     private List<Double> marks;
     private List<StudentInfo> students;
 
-    public ExamInfo() {
+    public ExamInfoForTeacher() {
     }
 
-    public ExamInfo(int examId, int courseId, String name,
-                    String startTime, String endTime,
-                    List<Integer> num, List<Integer> maxNum,
-                    List<Double> marks, List<StudentInfo> students) {
+    public ExamInfoForTeacher(int examId, int courseId, String name,
+                              String startTime, String endTime,
+                              List<Integer> num, List<Integer> maxNum,
+                              List<Double> marks, List<StudentInfo> students) {
         this.examId = examId;
         this.courseId = courseId;
         this.name = name;

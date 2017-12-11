@@ -17,6 +17,8 @@ public interface CourseMapper {
 
     String getCourseKeyById(@Param("courseId") int courseId) throws Exception;
 
+    String getCourseNameById(@Param("courseId") int courseId) throws Exception;
+
     List<CourseModel> getNotSelectCourses(@Param("userId") int userId) throws Exception;
 
     List<CourseModel> getSelectCourses(@Param("userId") int userId) throws Exception;

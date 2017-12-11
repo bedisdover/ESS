@@ -30,6 +30,10 @@
         SELECT password FROM t_course WHERE id = #{courseId} AND enable = 1
     </select>
 
+    <select id="getCourseNameById" resultType="String">
+        SELECT name FROM t_course WHERE id = #{courseId} AND enable = 1
+    </select>
+
     <resultMap id="courseMap" type="cn.edu.nju.model.courseModel.CourseModel">
         <id column="id" property="id"/>
         <result column="name" property="name"/>

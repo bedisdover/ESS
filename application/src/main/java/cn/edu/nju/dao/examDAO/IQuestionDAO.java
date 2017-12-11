@@ -28,10 +28,6 @@ public interface IQuestionDAO {
 
     int getNumOfCourseQuestions(int courseId);
 
-    double getTotalMarkOfQuestions(
-            int examId,
-            List<Integer> questionIds) throws DataException;
-
     List<QuestionModel> getAllQuestionsByCourseId(
             int courseId) throws DataException;
 

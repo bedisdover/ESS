@@ -1,6 +1,6 @@
 package cn.edu.nju.model.examModel;
 
-import cn.edu.nju.info.examInfo.ExamInfo;
+import cn.edu.nju.info.examInfo.ExamInfoForTeacher;
 import cn.edu.nju.info.examInfo.StudentInfo;
 
 import java.util.ArrayList;
@@ -31,15 +31,15 @@ public class ExamModel {
         this.endTime = endTime;
     }
 
-    public ExamInfo toInfo(List<Integer> maxNum,
-                           List<Double> marks,
-                           List<StudentInfo> students) {
+    public ExamInfoForTeacher toInfo(List<Integer> maxNum,
+                                     List<Double> marks,
+                                     List<StudentInfo> students) {
         String[] array = num.split(",");
         List<Integer> num = new ArrayList<>();
         for (String str : array) {
             num.add(Integer.parseInt(str));
         }
-        return new ExamInfo(
+        return new ExamInfoForTeacher(
                 examId, courseId, name, startTime,
                 endTime, num, maxNum, marks, students);
     }

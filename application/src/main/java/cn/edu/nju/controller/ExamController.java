@@ -2,7 +2,7 @@ package cn.edu.nju.controller;
 
 import cn.edu.nju.config.AccountConfig;
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.ExamInfo;
+import cn.edu.nju.info.examInfo.ExamInfoForTeacher;
 import cn.edu.nju.service.examService.IExamService;
 import cn.edu.nju.utils.HttpUtil;
 import org.apache.log4j.Logger;
@@ -27,7 +27,7 @@ public class ExamController {
     @RequestMapping(value = "/exam/add", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo createExam(HttpSession session,
-                                 @RequestBody ExamInfo examInfo) {
+                                 @RequestBody ExamInfoForTeacher examInfo) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         try {
             return examService.createExam(userId, examInfo);
@@ -41,7 +41,7 @@ public class ExamController {
     @RequestMapping(value = "/exam/update", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo updateExam(HttpSession session,
-                                 @RequestBody ExamInfo examInfo) {
+                                 @RequestBody ExamInfoForTeacher examInfo) {
         Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
         try {
             return examService.updateExam(userId, examInfo);

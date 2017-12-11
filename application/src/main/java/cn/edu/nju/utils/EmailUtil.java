@@ -1,7 +1,7 @@
 package cn.edu.nju.utils;
 
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.ExamInfo;
+import cn.edu.nju.info.examInfo.ExamInfoForTeacher;
 import cn.edu.nju.model.examModel.StudentExamModel;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -114,7 +114,7 @@ public class EmailUtil {
         return new ResultInfo(true, "发送邮件成功,请前往邮箱进行验证", null);
     }
 
-    public static ResultInfo sendExamNotificationEmail(ExamInfo examInfo,
+    public static ResultInfo sendExamNotificationEmail(ExamInfoForTeacher examInfo,
                                                        List<StudentExamModel> records) {
         for (StudentExamModel record : records) {
             String newContent = noticeContent + generateExamInfoContent(
