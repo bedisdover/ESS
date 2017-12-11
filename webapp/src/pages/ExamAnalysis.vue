@@ -15,9 +15,19 @@
               </el-tooltip>
             </a>
           </div>
-
-          <div id="chart">
-          </div>
+          <el-form ref="form" class="formClass" :inline="true">
+            <el-form-item label="考试课程：">
+              <span class="font">{{courseName}}</span>
+            </el-form-item>
+            <el-form-item label="考试开始时间：">
+              <span class="font">{{startTime}}</span>
+            </el-form-item>
+            <el-form-item label="考试结束时间：">
+              <span class="font">{{endTime}}</span>
+            </el-form-item>
+          </el-form>
+          <div id="chart"></div>
+          <div id="distributeChart"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -26,14 +36,20 @@
 <script>
   import request from '../lib/request'
   import util from '../lib/util'
+  import ElFormItem from '../../node_modules/element-ui/packages/form/src/form-item.vue'
 
   export default {
+    components: {ElFormItem},
     name: 'ExamAnalysis',
     props: ['examId'],
     data () {
       return {
-        scoreList: [],
-        downUrl: '/exam/score/download?examId=' + this.examId
+        score: 100,
+        scoreList: [33, 22, 45, 23, 12, 55, 66, 83, 1, 23, 5, 3, 5, 6, 7, 8, 99, 7, 54],
+        downUrl: '/exam/score/download?examId=' + this.examId,
+        courseName: '',
+        startTime: '',
+        endTime: ''
       }
     },
     mounted: function () {
@@ -43,50 +59,121 @@
       request('/exam/query/simple', 'post', params, (success, message, data) => {
         if (success) {
           console.log(data)
+          this.courseName = data.name
+          this.startTime = data.startTime
+          this.endTime = data.endTime
         } else {
           util.notifyError(message)
         }
       })
       request('/exam/analyze', 'post', params, (success, message, data) => {
         if (success) {
-          this.scoreList = data.scoreList
+          console.log(data)
+          var echarts = require('echarts')
+          // 基于准备好的dom，初始化echarts实例
+          var myChart = echarts.init(document.getElementById('chart'))
+          var distributeEchart = echarts.init(document.getElementById('distributeChart'))
+          myChart.showLoading()
+          distributeEchart.showLoading()
+//          this.scoreList = data.scoreList
           var echartData = []
           var xAxisData = []
-          var max = 0
+          var distributeXAxisData = []
+          var distributeEchartData = []
+
           for (var index in this.scoreList) {
-            var tmp = parseInt(this.scoreList[index] / 10)
-            max = tmp > max ? tmp : max
+            var tmp = Math.round(this.scoreList[index])
+            var distributeTmp = parseInt(this.scoreList[index] / 10)
             if (echartData[tmp] === undefined) {
               echartData[tmp] = 0
             }
             echartData[tmp]++
+            if (distributeEchartData[distributeTmp] === undefined) {
+              distributeEchartData[distributeTmp] = 0
+            }
+            distributeEchartData[distributeTmp]++
           }
-          for (var i = 0; i <= max; i++) {
-            xAxisData[i] = '[' + i * 10 + ' - ' + (i * 10 + 10) + ')'
+          for (var i = 0; i <= this.score; i++) {
+            xAxisData[i] = i
             if (echartData[i] === undefined) {
               echartData[i] = 0
             }
           }
-          var echarts = require('echarts')
-          // 基于准备好的dom，初始化echarts实例
-          var myChart = echarts.init(document.getElementById('chart'))
+          for (i = 0; i <= this.score / 10; i++) {
+            if (i === this.score / 10) {
+              distributeXAxisData[i] = '100'
+            } else {
+              distributeXAxisData[i] = '[' + 10 * i + ' - ' + 10 * (i + 1) + ')'
+            }
+
+            if (distributeEchartData[i] === undefined) {
+              distributeEchartData[i] = 0
+            }
+          }
+
           // 绘制图表
           myChart.setOption({
             title: {
               text: '考试成绩分布'
             },
-            tooltip: {},
-            xAxis: {
-              data: xAxisData
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'cross'
+              }
             },
-            yAxis: {},
+            xAxis: {
+              data: xAxisData,
+              boundaryGap: false
+            },
+            yAxis: {
+              minInterval: 1,
+              axisLabel: {
+                formatter: '{value} 人'
+              },
+              axisPointer: {
+                snap: true
+              }
+            },
             series: [{
               name: '成绩分布人数',
-              type: 'bar',
-              barMaxWidth: '10%',
+              smooth: true,
+              type: 'line',
               data: echartData
             }]
           })
+          myChart.hideLoading()
+
+          // 绘制图表
+          distributeEchart.setOption({
+            title: {
+              text: '考试成绩分数段分布'
+            },
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'cross'
+              }
+            },
+            xAxis: {
+              data: distributeXAxisData
+            },
+            yAxis: {
+              minInterval: 1,
+              axisLabel: {
+                formatter: '{value} 人'
+              },
+              axisPointer: {
+                snap: true
+              }
+            },
+            series: [{
+              name: '成绩分数段分布人数',
+              type: 'bar',
+              data: distributeEchartData
+            }]
+          })
+          distributeEchart.hideLoading()
         } else {
           util.notifyError(message)
         }
@@ -101,6 +188,17 @@
     margin: 0 auto;
   }
 
+  .formClass {
+    margin: 0 auto;
+    width: 800px;
+  }
+
+  #distributeChart {
+    width: 1000px;
+    height: 500px;
+    margin: 0 auto;
+  }
+
   .operation {
     font-size: 1.5em;
     float: right;
@@ -109,5 +207,9 @@
 
   .operation svg {
     cursor: pointer;
+  }
+
+  .font{
+    font-weight: bolder;
   }
 </style>
