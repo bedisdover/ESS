@@ -1,15 +1,13 @@
 package cn.edu.nju.service.examService;
 
 import cn.edu.nju.info.ResultInfo;
-import cn.edu.nju.info.examInfo.ExamInfo;
-
-import java.io.InputStream;
+import cn.edu.nju.info.examInfo.ExamInfoForTeacher;
 
 public interface IExamService {
 
-    ResultInfo createExam(int userId, ExamInfo examInfo) throws Exception;
+    ResultInfo createExam(int userId, ExamInfoForTeacher examInfo) throws Exception;
 
-    ResultInfo updateExam(int userId,ExamInfo examInfo) throws Exception;
+    ResultInfo updateExam(int userId,ExamInfoForTeacher examInfo) throws Exception;
 
     ResultInfo deleteExam(int userId, int examId) throws Exception;
 

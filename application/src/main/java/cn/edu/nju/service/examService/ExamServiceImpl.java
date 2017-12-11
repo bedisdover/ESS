@@ -2,6 +2,7 @@ package cn.edu.nju.service.examService;
 
 import cn.edu.nju.config.Role;
 import cn.edu.nju.dao.DataException;
+import cn.edu.nju.dao.courseDAO.ICourseDAO;
 import cn.edu.nju.dao.courseDAO.IUserCourseDAO;
 import cn.edu.nju.dao.examDAO.*;
 import cn.edu.nju.dao.userDAO.IUserDAO;
@@ -27,6 +28,8 @@ public class ExamServiceImpl implements IExamService {
 
     private final IUserCourseDAO userCourseDAO;
 
+    private final ICourseDAO courseDAO;
+
     private final IQuestionDAO questionDAO;
 
     private final ILevelDAO levelDAO;
@@ -43,6 +46,7 @@ public class ExamServiceImpl implements IExamService {
 
     @Autowired
     public ExamServiceImpl(IUserCourseDAO userCourseDAO,
+                           ICourseDAO courseDAO,
                            IQuestionDAO questionDAO,
                            ILevelDAO levelDAO,
                            IExamDAO examDAO,
@@ -51,6 +55,7 @@ public class ExamServiceImpl implements IExamService {
                            IStudentDAO studentDAO,
                            IPaperDAO paperDAO) {
         this.userCourseDAO = userCourseDAO;
+        this.courseDAO = courseDAO;
         this.questionDAO = questionDAO;
         this.levelDAO = levelDAO;
         this.examDAO = examDAO;
@@ -62,7 +67,7 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     @Transactional
-    public ResultInfo createExam(int userId, ExamInfo examInfo) throws Exception {
+    public ResultInfo createExam(int userId, ExamInfoForTeacher examInfo) throws Exception {
         ResultInfo checkResult = checkExamInfo(userId, examInfo,
                 "只有该门课的老师才能生成该门课的考试");
         if (!checkResult.isSuccess()) {
@@ -89,7 +94,7 @@ public class ExamServiceImpl implements IExamService {
         int examId = examDAO.createExam(new ExamModel(
                 0 /* placeholder */, courseId, 1,
                 examInfo.getName(),
-                numListToString(examInfo.getNum()),
+                StringUtil.stringify(examInfo.getNum(), ","),
                 startTime, endTime
         ));
         examInfo.setExamId(examId);
@@ -123,7 +128,7 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     @Transactional
-    public ResultInfo updateExam(int userId, ExamInfo examInfo) throws Exception {
+    public ResultInfo updateExam(int userId, ExamInfoForTeacher examInfo) throws Exception {
         ResultInfo checkResult = checkExamInfo(userId, examInfo,
                 "只有该门课的老师才能修改该门课的考试信息");
         if (!checkResult.isSuccess()) {
@@ -250,17 +255,18 @@ public class ExamServiceImpl implements IExamService {
         if (role == Role.student) {
             List<ExamModel> examModelList;
             UserModel userInfo;
+            String email;
             try {
                 userInfo = userDAO.getUserInfoById(userId);
-                String email = userInfo.getEmail();
+                email = userInfo.getEmail();
                 examModelList = examDAO.getJoinExam(email);
             } catch (DataException e) {
                 return new ResultInfo(false, e.getMessage(), null);
             }
 
-            List<ExamInfo> examInfoList;
+            List<ExamInfoForStudent> examInfoList;
             try {
-                examInfoList = toExamInfoList(examModelList);
+                examInfoList = toExamInfoForStudentList(examModelList, email);
             } catch (DataException e) {
                 return new ResultInfo(false, e.getMessage(), null);
             }
@@ -275,9 +281,9 @@ public class ExamServiceImpl implements IExamService {
                 return new ResultInfo(false, e.getMessage(), null);
             }
 
-            List<ExamInfo> examInfoList;
+            List<ExamInfoForTeacher> examInfoList;
             try {
-                examInfoList = toExamInfoList(examModelList);
+                examInfoList = toExamInfoForTeacherList(examModelList);
             } catch (DataException e) {
                 return new ResultInfo(false, e.getMessage(), null);
             }
@@ -306,14 +312,16 @@ public class ExamServiceImpl implements IExamService {
         }
 
         List<Double> marks;
+        double sum;
         try {
             marks = paperDAO.getStudentMarks(examId);
+            sum = calculateTotalMark(examId);
         } catch (DataException e) {
             return new ResultInfo(false, e.getMessage(), null);
         }
 
         return new ResultInfo(true, "成功获得统计信息",
-                new ExamAnalysis(examId, marks));
+                new ExamAnalysis(examId, sum, marks));
     }
 
     @Override
@@ -399,10 +407,8 @@ public class ExamServiceImpl implements IExamService {
                     paper.getContent(), ArrayList.class, AnsweredItem.class
             );
             List<AnsweredQuestion> questions = new ArrayList<>(items.size());
-            List<Integer> questionIds = new ArrayList<>(items.size());
             for (AnsweredItem item : items) {
                 int questionId = item.getQuestionId();
-                questionIds.add(questionId);
                 QuestionModel question = questionDAO.getQuestionById(questionId);
                 QuestionInfo info;
                 try {
@@ -416,9 +422,8 @@ public class ExamServiceImpl implements IExamService {
             }
 
             String password = studentExamDAO.getExamPassword(examId, email);
-            double sum = questionDAO.getTotalMarkOfQuestions(examId, questionIds);
             return new ResultInfo(true, "成功返回试卷信息",
-                    paper.toInfo(questions, password, sum));
+                    paper.toInfo(questions, password, calculateTotalMark(examId)));
         } catch (IOException e) {
             e.printStackTrace();
             Logger.getLogger(ExamServiceImpl.class).error(e);
@@ -428,9 +433,9 @@ public class ExamServiceImpl implements IExamService {
         }
     }
 
-    private List<ExamInfo> toExamInfoList(
+    private List<ExamInfoForTeacher> toExamInfoForTeacherList(
             List<ExamModel> examModelList) throws DataException {
-        List<ExamInfo> examInfoList = new ArrayList<>(examModelList.size());
+        List<ExamInfoForTeacher> examInfoList = new ArrayList<>(examModelList.size());
         for (ExamModel model : examModelList) {
             int courseId = model.getCourseId();
             List<Integer> maxNum = getQuestionMaxNum(courseId);
@@ -441,6 +446,37 @@ public class ExamServiceImpl implements IExamService {
             examInfoList.add(model.toInfo(maxNum, marks, students));
         }
         return examInfoList;
+    }
+
+    private List<ExamInfoForStudent> toExamInfoForStudentList(
+            List<ExamModel> exams, String email
+    ) throws DataException {
+        List<ExamInfoForStudent> result = new ArrayList<>(exams.size());
+        for (ExamModel exam : exams) {
+            int examId = exam.getExamId();
+            int courseId = exam.getCourseId();
+            String courseName = courseDAO.getCourseNameById(courseId);
+            PaperModel paper = paperDAO.getPaperModel(examId, email);
+            result.add(new ExamInfoForStudent(
+                    examId, exam.getName(),
+                    courseName, exam.getStartTime(),
+                    exam.getEndTime(), calculateTotalMark(examId),
+                    paper == null ? 0 : paper.getMark()
+            ));
+        }
+        return result;
+    }
+
+    private double calculateTotalMark(int examId) throws DataException {
+        double mark = 0.0;
+        ExamModel exam = examDAO.getExamModelById(examId);
+        List<Double> marks = getQuestionMarks(exam);
+        String[] array = exam.getNum().split(",");
+        for (int i = 0; i < array.length; ++i) {
+            double m = i == marks.size() ? 0 : marks.get(i);
+            mark += Integer.parseInt(array[i]) * m;
+        }
+        return mark;
     }
 
     private List<Integer> getQuestionMaxNum(int courseId) throws DataException {
@@ -463,7 +499,7 @@ public class ExamServiceImpl implements IExamService {
         );
     }
 
-    private ResultInfo checkExamInfo(int userId, ExamInfo examInfo,
+    private ResultInfo checkExamInfo(int userId, ExamInfoForTeacher examInfo,
                                      String permissionErrorMsg) {
         if (examInfo.getName() == null) {
             return new ResultInfo(false, "考试名称不能为空", null);
@@ -509,7 +545,7 @@ public class ExamServiceImpl implements IExamService {
         return new ResultInfo(true, null, null);
     }
 
-    private void sendNotificationEmail(final ExamInfo examInfo, final List<StudentExamModel> records) {
+    private void sendNotificationEmail(final ExamInfoForTeacher examInfo, final List<StudentExamModel> records) {
         Runnable task = () -> {
             ResultInfo emailResult = EmailUtil.sendExamNotificationEmail(examInfo, records);
             if (!emailResult.isSuccess()) {
@@ -579,17 +615,6 @@ public class ExamServiceImpl implements IExamService {
         }
 
         return new ResultInfo(true, null, null);
-    }
-
-    private String numListToString(List<Integer> num) {
-        StringBuilder builder = new StringBuilder(num.size() << 1);
-        int size = num.size();
-        if (size == 0) return "";
-        for (int i = 0; i < size - 1; ++i) {
-            builder.append(num.get(i)).append(",");
-        }
-        builder.append(num.get(size - 1));
-        return builder.toString();
     }
 
 }

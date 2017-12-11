@@ -5,13 +5,15 @@ import java.util.List;
 public class ExamAnalysis {
 
     private int examId;
+    private double sum;
     private List<Double> scoreList;
 
     public ExamAnalysis() {
     }
 
-    public ExamAnalysis(int examId, List<Double> scoreList) {
+    public ExamAnalysis(int examId, double sum, List<Double> scoreList) {
         this.examId = examId;
+        this.sum = sum;
         this.scoreList = scoreList;
     }
 
@@ -21,6 +23,14 @@ public class ExamAnalysis {
 
     public void setExamId(int examId) {
         this.examId = examId;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
+    public void setSum(double sum) {
+        this.sum = sum;
     }
 
     public List<Double> getScoreList() {

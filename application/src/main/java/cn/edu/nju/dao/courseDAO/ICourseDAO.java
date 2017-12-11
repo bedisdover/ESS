@@ -18,6 +18,9 @@ public interface ICourseDAO {
     String getCourseKeyById(
             int courseId) throws DataException;
 
+    String getCourseNameById(
+            int courseId) throws DataException;
+
     List<CourseModel> getNotSelectCourses(
             int userId) throws DataException;
 

@@ -86,7 +86,7 @@
         this.questionList[this.current].answer = answer
         this.answerList[this.current].answer = answer
 
-        Util.setCookie('paper', this.questionList)
+        localStorage.setItem('paper', JSON.stringify(this.questionList))
       },
       jumpTo: function (n) {
         this.current = n

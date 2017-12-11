@@ -47,7 +47,7 @@
           Util.title(this.exam.name + '在线考试')
           let time = Util.formatTime(new Date())
           if (time >= this.exam.startTime && time < this.exam.endTime) {
-            const paper = Util.getCookie('paper')
+            const paper = JSON.parse(localStorage.getItem('paper'))
             if (paper) {
               this.showPaper(paper)
             } else {
@@ -70,7 +70,7 @@
               question.options = Util.shuffle(question.options)
             })
 
-            Util.setCookie('paper', data)
+            localStorage.setItem('paper', JSON.stringify(data))
 
             this.showPaper(data)
           } else {
@@ -81,7 +81,7 @@
       submitPaper: function (questionList) {
         request('/paper/submit?key=' + this.examKey, 'post', JSON.stringify(questionList), (success, message) => {
           if (success) {
-            Util.removeCookie('paper')
+            localStorage.removeItem('paper')
 
             this.hidePaper()
           } else {
@@ -94,6 +94,7 @@
         this.paperVisible = true
       },
       hidePaper: function () {
+        this.exam.end = true
         this.questionList = null
         this.paperVisible = false
       }

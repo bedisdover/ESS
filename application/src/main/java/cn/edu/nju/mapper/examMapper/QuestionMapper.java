@@ -36,10 +36,6 @@ public interface QuestionMapper {
     int getNumOfCourseQuestions(
             @Param("courseId") int courseId);
 
-    double getTotalMarkOfQuestions(
-            @Param("examId") int examId,
-            @Param("questionIds") List<Integer> questionIds) throws Exception;
-
     List<QuestionModel> getAllQuestionsByCourseId(
             @Param("courseId") int courseId) throws Exception;
 
