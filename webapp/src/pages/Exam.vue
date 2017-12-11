@@ -94,6 +94,7 @@
         this.paperVisible = true
       },
       hidePaper: function () {
+        this.exam.end = true
         this.questionList = null
         this.paperVisible = false
       }

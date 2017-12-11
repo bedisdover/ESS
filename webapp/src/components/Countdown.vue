@@ -8,9 +8,10 @@
           <div class="content">
             <p>一、诚信考试，请自觉遵守诚信考试规范；</p>
             <p>二、请合理安排时间，考试结束时间一到，系统将自动收卷；</p>
-            <p>三、一旦开始考试，将无法暂停，所以请您进入答题之前确保您的电脑和网络正常；</p>
-            <p>四、如果中途您放弃考试，在考试结束时间之前未提交试卷，则作弃考处理，成绩为0分；</p>
-            <p>五、如遇浏览器崩溃、系统重启等异常情况，考试进行期间重启浏览器重新打开即可继续考试。</p>
+            <p>三、中途放弃考试，考试结束前未提交试卷，作弃考处理，成绩为0分；</p>
+            <p>四、为确保正常进行考试，请使用最新版本的 Chrome 或 Firefox 浏览器；</p>
+            <p>五、一旦开始考试，将无法暂停，所以请您进入答题之前确保您的电脑和网络正常；</p>
+            <p>六、如遇浏览器崩溃、系统重启等异常情况，考试进行期间重启浏览器重新打开即可继续考试。</p>
           </div>
         </div>
         <div v-else>
@@ -60,7 +61,7 @@
         return new Date() < new Date(this.exam.startTime)
       },
       ended: function () {
-        return new Date() > new Date(this.exam.endTime)
+        return this.exam.end || new Date() > new Date(this.exam.endTime)
       },
       getTime: function () {
         let time = new Date(this.exam.startTime) - new Date()
