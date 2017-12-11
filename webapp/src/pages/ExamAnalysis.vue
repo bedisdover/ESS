@@ -44,8 +44,8 @@
     props: ['examId'],
     data () {
       return {
-        score: 100,
-        scoreList: [33, 22, 45, 23, 12, 55, 66, 83, 1, 23, 5, 3, 5, 6, 7, 8, 99, 7, 54],
+        score: 0,
+        scoreList: [],
         downUrl: '/exam/score/download?examId=' + this.examId,
         courseName: '',
         startTime: '',
@@ -75,7 +75,8 @@
           var distributeEchart = echarts.init(document.getElementById('distributeChart'))
           myChart.showLoading()
           distributeEchart.showLoading()
-//          this.scoreList = data.scoreList
+          this.scoreList = data.scoreList
+          this.score = data.sum
           var echartData = []
           var xAxisData = []
           var distributeXAxisData = []
@@ -101,7 +102,7 @@
           }
           for (i = 0; i <= this.score / 10; i++) {
             if (i === this.score / 10) {
-              distributeXAxisData[i] = '100'
+              distributeXAxisData[i] = 10 * i
             } else {
               distributeXAxisData[i] = '[' + 10 * i + ' - ' + 10 * (i + 1) + ')'
             }
@@ -170,6 +171,7 @@
             series: [{
               name: '成绩分数段分布人数',
               type: 'bar',
+              barMaxWidth: '12%',
               data: distributeEchartData
             }]
           })
@@ -209,7 +211,7 @@
     cursor: pointer;
   }
 
-  .font{
+  .font {
     font-weight: bolder;
   }
 </style>
