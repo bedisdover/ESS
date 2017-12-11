@@ -35,7 +35,7 @@
 
     data () {
       return {
-        checked: []
+        checked: this.question.answer ? [...this.question.answer] : []
       }
     },
 
