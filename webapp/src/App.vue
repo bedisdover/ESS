@@ -24,7 +24,7 @@
         return Util.getCookie('user')
       },
       showNav: function () {
-        return this.getUser() !== undefined && this.$route.name !== 'Exam'
+        return this.getUser() !== undefined && this.$route.name !== 'Exam' && this.$route.name !== 'Paper'
       },
       showFooter: function () {
         return this.$router.currentRoute.name !== 'Index'
@@ -72,6 +72,10 @@
 
   input {
     text-align: left !important;
+  }
+
+  svg {
+    cursor: pointer;
   }
 
   .icon {

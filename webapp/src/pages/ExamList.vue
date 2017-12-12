@@ -198,10 +198,6 @@
   }
 
   .operation {
-    font-size: 1.5em;
-  }
-
-  .operation svg {
-    cursor: pointer;
+    font-size: 1.2rem;
   }
 </style>

@@ -9,7 +9,7 @@
 <script>
   import Util from '../lib/util'
   import ExamList from './ExamList'
-  import PaperList from '../components/paper/PaperList'
+  import PaperList from '../components/exam/PaperList'
 
   export default {
     name: 'MyExam',

@@ -18,7 +18,7 @@
   import Util from '../lib/util'
   import request from '../lib/request'
   import Countdown from '../components/Countdown'
-  import Paper from '../components/paper/Paper'
+  import Paper from '../components/exam/Paper'
 
   export default {
     name: 'Exam',

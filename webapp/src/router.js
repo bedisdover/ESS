@@ -13,6 +13,7 @@ import Exam from '@/pages/Exam'
 import ExamList from '@/pages/ExamList'
 import QuestionList from '@/pages/QuestionList'
 import ExamStudents from '@/pages/ExamStudents'
+import Paper from '@/pages/Paper'
 
 // 单独页面
 const singlePage = [
@@ -91,6 +92,14 @@ const pageRouter = [
     props: true,
     meta: {
       title: '在线考试'
+    }
+  }, {
+    path: '/paper/:examId/:email?',
+    name: 'Paper',
+    component: Paper,
+    props: true,
+    meta: {
+      title: '试卷分析'
     }
   }
 ]
