@@ -24,6 +24,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'lib$': resolve('src/lib')
     }
   },
   module: {
@@ -70,7 +71,13 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      // fix element-ui build error
+      // UglifyJs don't support es6
+      {
+        test: /element-ui.src.*?js$/,
+        loader: 'babel-loader'
+      },
     ]
   }
 }

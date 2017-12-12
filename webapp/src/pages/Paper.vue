@@ -64,7 +64,7 @@
       }
     },
 
-    mounted () {
+    mounted: function () {
       let url = '/exam/student/review'
       let params = {
         examId: this.examId

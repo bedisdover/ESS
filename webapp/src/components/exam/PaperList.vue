@@ -47,7 +47,7 @@
       }
     },
 
-    mounted () {
+    mounted: function () {
       request('/exam/all', 'post', '', (success, message, data) => {
         if (success) {
           data.map(paper => {

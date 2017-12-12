@@ -35,7 +35,7 @@
       }
     },
 
-    mounted () {
+    mounted: function () {
       let params = {
         examId: this.examId
       }
