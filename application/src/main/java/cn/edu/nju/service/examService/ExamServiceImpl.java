@@ -325,6 +325,32 @@ public class ExamServiceImpl implements IExamService {
     }
 
     @Override
+    public ResultInfo getExamScore(int userId, int examId) {
+        int courseId;
+        try {
+            courseId = examDAO.getCourseIdByExamId(examId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
+        ResultInfo permissionResult = checkPermission(
+                userId, courseId,
+                "只有该门课的老师才能查看该门课的考试结果");
+        if (!permissionResult.isSuccess()) {
+            return new ResultInfo(false, permissionResult.getMessage(), null);
+        }
+
+        List<ExamScoreModel> scores;
+        try {
+            scores = paperDAO.getStudentScores(examId);
+        } catch (DataException e) {
+            return new ResultInfo(false, e.getMessage(), null);
+        }
+
+        return new ResultInfo(true, "成功获得学生成绩", scores);
+    }
+
+    @Override
     public ResultInfo getAnsweredPaper(int userId, int examId) {
         UserModel user;
         try {
