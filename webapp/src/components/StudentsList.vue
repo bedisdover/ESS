@@ -8,7 +8,8 @@
       </el-popover>
     </div>
     <div v-else>
-      还没有学生, <router-link :to="'/examStudents/' + $route.params.id">去上传</router-link>
+      还没有学生,
+      <router-link :to="'/examStudents/' + $route.params.id">去上传</router-link>
     </div>
   </div>
 </template>
@@ -66,7 +67,7 @@
       }
     },
 
-    mounted () {
+    mounted: function () {
       let params = {
         courseId: this.courseId
       }
