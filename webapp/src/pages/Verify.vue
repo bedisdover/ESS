@@ -1,5 +1,22 @@
 <template>
-  <el-button @click="gotoLogin">去登录</el-button>
+  <el-container class="bg">
+    <el-aside width="35%"></el-aside>
+    <el-main>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>
+            ESS注册成功
+          </span>
+        </div>
+        <p>
+          ESS注册成功，我们专业为教师学生提供服务，开始您的工作吧。
+        </p>
+        <el-button type="success" round @click="gotoLogin" style="margin-top: 10%">去登录</el-button>
+      </el-card>
+
+    </el-main>
+  </el-container>
+
 </template>
 
 <script>
@@ -8,8 +25,21 @@
 
     methods: {
       gotoLogin: function () {
-        this.$emit('onLogin')
+        this.$router.push('login')
       }
     }
   }
 </script>
+<style scoped>
+  .bg{
+    height: 700px;
+    background: url(../assets/verifybg.jpg) no-repeat center;
+  }
+  .box-card{
+    margin-top: 20%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 40%;
+    background-color: inherit;
+  }
+</style>
