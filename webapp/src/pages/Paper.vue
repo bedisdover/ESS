@@ -1,5 +1,5 @@
 <template>
-  <div class="paper">
+  <div class="paper" v-if="questionList.length">
     <el-card>
       <div slot="header" class="header">
         得分: {{mark}} / {{sum}}

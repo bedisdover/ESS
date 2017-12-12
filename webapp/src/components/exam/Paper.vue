@@ -1,11 +1,11 @@
 <template>
   <el-card class="paper">
-    <div slot="header" class="header" v-if="editable">
+    <div slot="header" class="header">
       <el-progress :percentage="percentage" :stroke-width="15" :show-text="false"></el-progress>
       <span class="percentage-text">{{percentageText}}</span>
       <span class="countdown">{{countdown}}</span>
     </div>
-    <Question :question="question" :index="current" :editable="editable" @onChange="updateAnswer"></Question>
+    <Question :question="question" :index="current" @onChange="updateAnswer"></Question>
     <div class="button-container">
       <el-button type="error" @click="previous" v-show="current !== 0">上一题</el-button>
       <el-button type="primary" @click="next" v-show="!submitVisible">下一题</el-button>
@@ -34,7 +34,6 @@
     data () {
       return {
         current: 0,
-        editable: true,
         endTime: new Date(this.exam.endTime),
         countdown: '00:00:00',
         timeout: null,

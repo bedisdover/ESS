@@ -4,8 +4,8 @@
       <strong class="index">{{index + 1}}.</strong>
       <pre>{{question.content}}</pre>
     </div>
-    <div class="options" :clsss="{editable: editable}">
-      <div v-if="editable">
+    <div class="options">
+      <div>
         <el-checkbox-group v-model="checked" @change="handleChange">
           <el-checkbox
             :key="option.optionId"
@@ -15,14 +15,6 @@
           </el-checkbox>
         </el-checkbox-group>
       </div>
-      <div v-else>
-        <label
-          :key="option.optionId"
-          v-for="option in question.options">
-          <input type="checkbox">
-          <span>{{option.content}}</span>
-        </label>
-      </div>
     </div>
   </div>
 </template>
@@ -31,7 +23,7 @@
   export default {
     name: 'Question',
 
-    props: ['question', 'index', 'editable'],
+    props: ['question', 'index'],
 
     data () {
       return {
