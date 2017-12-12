@@ -58,7 +58,6 @@
       }
       request('/exam/query/simple', 'post', params, (success, message, data) => {
         if (success) {
-          console.log(data)
           this.courseName = data.name
           this.startTime = data.startTime
           this.endTime = data.endTime
@@ -68,7 +67,6 @@
       })
       request('/exam/analyze', 'post', params, (success, message, data) => {
         if (success) {
-          console.log(data)
           var echarts = require('echarts')
           // 基于准备好的dom，初始化echarts实例
           var myChart = echarts.init(document.getElementById('chart'))
