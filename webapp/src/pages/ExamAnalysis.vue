@@ -5,7 +5,7 @@
         <el-card class="box-card clearfix">
           <div slot="header">
             <span style="margin-right: -50px">考试分析</span>
-            <a href="downUrl" target="_blank">
+            <a :href="downUrl" target="_blank">
               <el-tooltip content="下载学生成绩" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
@@ -183,9 +183,10 @@
 </script>
 <style scoped>
   #chart {
-    width: 1000px;
-    height: 500px;
+    width: 500px;
+    height: 300px;
     margin: 0 auto;
+    float: left;
   }
 
   .formClass {
@@ -194,9 +195,10 @@
   }
 
   #distributeChart {
-    width: 1000px;
-    height: 500px;
+    width: 500px;
+    height: 300px;
     margin: 0 auto;
+    float: left;
   }
 
   .operation {
