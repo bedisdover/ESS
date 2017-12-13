@@ -7,14 +7,26 @@
       <div class="level-container">
         <div class="level-box" v-for="(n, index) in maxNum">
           <div>难度 {{index + 1}}</div>
-          <el-input-number v-model="questionNum[index]" :min="0" :max="n" :controls-position="'right'"
-                           size="small" :disabled="readonly"></el-input-number>
+          <el-input
+            v-if="readonly"
+            v-model="questionNum[index]"
+            readonly
+            size="small">
+          </el-input>
+          <el-input-number
+            v-else
+            v-model="questionNum[index]"
+            :min="0" :max="n"
+            :controls-position="'right'"
+            size="small">
+          </el-input-number>
           <el-input v-model="questionMark[index]" placeholder="分数" size="small" :readonly="readonly"></el-input>
         </div>
       </div>
     </div>
     <div v-else>
-      还没有题库, <router-link :to="'/questionList/' + $route.params.id">去上传</router-link>
+      还没有题库,
+      <router-link :to="'/questionList/' + $route.params.id">去上传</router-link>
     </div>
   </div>
 </template>

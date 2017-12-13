@@ -91,9 +91,7 @@
 
     mounted: function () {
       let url = this.id ? '/exam/list' : '/exam/all'
-      let params = {
-        courseId: this.id
-      }
+      let params = this.id ? {courseId: this.id} : ''
 
       request(url, 'post', params, (success, message, data) => {
         if (success) {
@@ -111,15 +109,13 @@
         if (data.examInfoList) { // 单独课程考试列表
           this.maxNum = data.maxNum
 
-          data.examInfoList.forEach(exam => {
+          this.examList = data.examInfoList.map(exam => {
             exam = Object.assign(exam, {courseId: this.id, maxNum: data.maxNum})
 
-            this.examList.push(this.prepareExam(exam))
+            return this.prepareExam(exam)
           })
         } else { // 所有课程列表
-          data.forEach(exam => {
-            this.examList.push(this.prepareExam(exam))
-          })
+          this.examList = data.map(exam => this.prepareExam(exam))
         }
       },
       prepareExam: function (exam) {
@@ -134,6 +130,7 @@
         temp.score = isNaN(score) ? '--' : score
         temp.questionNum = num
         temp.studentNum = exam.students ? exam.students.length : exam.studentInfoList.length
+        temp.students = exam.students ? exam.students : exam.studentInfoList
 
         return temp
       },
