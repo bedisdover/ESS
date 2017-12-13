@@ -28,6 +28,49 @@
           </el-form>
           <div id="chart"></div>
           <div id="distributeChart"></div>
+
+          <el-table
+            :data="examScoreTableData"
+            v-loading="loading"
+            style="width: 100%;text-align: left">
+            <el-table-column
+              prop="email"
+              label="邮箱">
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="姓名">
+            </el-table-column>
+            <el-table-column
+              prop="score"
+              label="成绩">
+            </el-table-column>
+            <el-table-column
+              label="操作">
+              <template slot-scope="scope">
+                <router-link :to="'/paper/'+this.examId+'/'+scope.row.email">
+                  <el-tooltip content="查看试卷" effect="light">
+                  <span style="cursor: pointer;font-size: 1.5em;">
+                  <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-review"></use>
+                  </svg>
+                  </span>
+                  </el-tooltip>
+                </router-link>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="margin-top: 20px">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page=page
+              :page-sizes="[20, 50,100]"
+              :page-size=size
+              layout="total, sizes, prev, pager, next, jumper"
+              :total=total>
+            </el-pagination>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -49,7 +92,13 @@
         downUrl: '/exam/score/download?examId=' + this.examId,
         courseName: '',
         startTime: '',
-        endTime: ''
+        endTime: '',
+        allData: [],
+        examScoreTableData: [],
+        loading: true,
+        size: 20,
+        page: 1,
+        total: 1
       }
     },
     mounted: function () {
@@ -178,6 +227,32 @@
           util.notifyError(message)
         }
       })
+      request('/exam/score', 'post', params, (success, message, data) => {
+        if (success) {
+          console.log(data)
+          this.allData = data
+          this.examScoreTableData = data.slice(0, 20)
+          this.total = data.length
+          this.loading = false
+        } else {
+          util.notifyError(message)
+        }
+      })
+    },
+    methods: {
+      handleSizeChange (val) {
+        this.size = val
+        this.reloadList()
+      },
+      handleCurrentChange (val) {
+        this.page = val
+        this.reloadList()
+      },
+      reloadList () {
+        this.loading = true
+        this.examScoreTableData = this.allData.slice(this.size * (this.page - 1), this.size * this.page)
+        this.loading = false
+      }
     }
   }
 </script>
