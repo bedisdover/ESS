@@ -29,33 +29,33 @@
     $.ajax({
         'url': '/login',
         'method': 'post',
-        'contentType': 'application/json',
+        'contentType': 'application/json;charset=utf-8',
         'data': JSON.stringify({
             'email': '1282976747@qq.com', 'password': 'test', 'role': 1
         }),
         'success': function(data) {
             alert(JSON.stringify(data));
-            $.ajax({
-                'url': '/exam/teacher/review',
-                'method': 'post',
-                // 'contentType': 'application/json',
-               // 'traditional': true,
-               //  'contentType': 'application/x-www-form-urlencode',
-                // 'data': JSON.stringify({
-                //     'courseId': 9, 'name': '软件工程', 'marks': [15,25,35],
-                //     'num': [1,1,1], 'startTime': '2018-01-01 00:00:00', 'endTime': '2018-01-01 00:10:00',
-                //     'students': [{'email': '3061935560@qq.com', 'name': 'test1', 'courseId': 9},
-                //         {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
-                // }),
-               // 'data': JSON.stringify([{'question': {'questionId':32}, 'answer': [1]}]),
-                'data': {'examId': 14, 'email': '1483809252@qq.com'},
-                'success': function(data) {
-                    alert(JSON.stringify(data));
-                },
-                'error': function(data) {
-                    alert(JSON.stringify(data));
-                }
-            });
+            // $.ajax({
+            //     'url': '/exam/add',
+            //     'method': 'post',
+            //     'contentType': 'application/json',
+            //    // 'traditional': true,
+            //    //  'contentType': 'application/x-www-form-urlencode',
+            //     'data': JSON.stringify({
+            //         'courseId': 9, 'name': '软件工程', 'marks': [15,25,35],
+            //         'num': [1,1,1], 'startTime': '2018-01-01 00:00:00', 'endTime': '2018-01-01 00:10:00',
+            //         'students': [{'email': '3061935560@qq.com', 'name': 'test1', 'courseId': 9},
+            //             {'email': '1282976747@qq.com', 'name': 'test2', 'courseId': 9}]
+            //     }),
+            //    // 'data': JSON.stringify([{'question': {'questionId':32}, 'answer': [1]}]),
+            //    //  'data': {'examId': 14, 'email': '1483809252@qq.com'},
+            //     'success': function(data) {
+            //         alert(JSON.stringify(data));
+            //     },
+            //     'error': function(data) {
+            //         alert(JSON.stringify(data));
+            //     }
+            // });
         },
         'error': function (data) {
             alert(JSON.stringify(data));
