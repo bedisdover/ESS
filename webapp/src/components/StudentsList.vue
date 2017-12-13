@@ -1,14 +1,15 @@
 <template>
   <div class="main">
     <div v-if="all && all.length > 0">
-      <el-input v-model="checkedShow" :readonly="true" @click.native="showPopover"></el-input>
+      <el-input v-model="checkedShow" readonly @click.native="showPopover"></el-input>
       <el-popover id="popover" v-model="popoverVisible">
         <el-transfer v-model="checked" :data="all" :titles="['未选', '已选']"
                      :props="{key: 'studentId', label: 'name'}"></el-transfer>
       </el-popover>
     </div>
     <div v-else>
-      还没有学生, <router-link :to="'/examStudents/' + $route.params.id">去上传</router-link>
+      还没有学生,
+      <router-link :to="'/examStudents/' + $route.params.id">去上传</router-link>
     </div>
   </div>
 </template>

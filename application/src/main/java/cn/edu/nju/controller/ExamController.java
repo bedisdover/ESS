@@ -93,6 +93,14 @@ public class ExamController {
         return examService.getExamStatistics(userId, examId);
     }
 
+    @RequestMapping(value = "/exam/score", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultInfo getExamScore(HttpSession session,
+                                   @RequestParam int examId) {
+        Integer userId = (Integer) session.getAttribute(AccountConfig.LOGIN_KEY);
+        return examService.getExamScore(userId, examId);
+    }
+
     @RequestMapping(value = "/exam/score/download")
     public void getExamResult(HttpServletRequest request,
                               HttpServletResponse response,

@@ -5,7 +5,7 @@
         <el-card class="box-card clearfix">
           <div slot="header">
             <span style="margin-right: -50px">考试分析</span>
-            <a href="downUrl" target="_blank">
+            <a :href="downUrl" target="_blank">
               <el-tooltip content="下载学生成绩" effect="light">
                         <span class="operation">
                           <svg class="icon" aria-hidden="true">
@@ -28,6 +28,49 @@
           </el-form>
           <div id="chart"></div>
           <div id="distributeChart"></div>
+
+          <el-table
+            :data="examScoreTableData"
+            v-loading="loading"
+            style="width: 100%;text-align: left">
+            <el-table-column
+              prop="email"
+              label="邮箱">
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="姓名">
+            </el-table-column>
+            <el-table-column
+              prop="score"
+              label="成绩">
+            </el-table-column>
+            <el-table-column
+              label="操作">
+              <template slot-scope="scope">
+                <router-link :to="'/paper/'+ examId + '/' + scope.row.email" target="_blank">
+                  <el-tooltip content="查看试卷" effect="light">
+                  <span style="cursor: pointer;font-size: 1.5em;">
+                  <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-review"></use>
+                  </svg>
+                  </span>
+                  </el-tooltip>
+                </router-link>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="margin-top: 20px">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page=page
+              :page-sizes="[20, 50,100]"
+              :page-size=size
+              layout="total, sizes, prev, pager, next, jumper"
+              :total=total>
+            </el-pagination>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -36,10 +79,8 @@
 <script>
   import request from '../lib/request'
   import util from '../lib/util'
-  import ElFormItem from '../../node_modules/element-ui/packages/form/src/form-item.vue'
 
   export default {
-    components: {ElFormItem},
     name: 'ExamAnalysis',
     props: ['examId'],
     data () {
@@ -49,7 +90,13 @@
         downUrl: '/exam/score/download?examId=' + this.examId,
         courseName: '',
         startTime: '',
-        endTime: ''
+        endTime: '',
+        allData: [],
+        examScoreTableData: [],
+        loading: true,
+        size: 20,
+        page: 1,
+        total: 1
       }
     },
     mounted: function () {
@@ -58,7 +105,6 @@
       }
       request('/exam/query/simple', 'post', params, (success, message, data) => {
         if (success) {
-          console.log(data)
           this.courseName = data.name
           this.startTime = data.startTime
           this.endTime = data.endTime
@@ -68,7 +114,6 @@
       })
       request('/exam/analyze', 'post', params, (success, message, data) => {
         if (success) {
-          console.log(data)
           var echarts = require('echarts')
           // 基于准备好的dom，初始化echarts实例
           var myChart = echarts.init(document.getElementById('chart'))
@@ -180,14 +225,40 @@
           util.notifyError(message)
         }
       })
+      request('/exam/score', 'post', params, (success, message, data) => {
+        if (success) {
+          this.allData = data
+          this.examScoreTableData = data.slice(0, 20)
+          this.total = data.length
+          this.loading = false
+        } else {
+          util.notifyError(message)
+        }
+      })
+    },
+    methods: {
+      handleSizeChange (val) {
+        this.size = val
+        this.reloadList()
+      },
+      handleCurrentChange (val) {
+        this.page = val
+        this.reloadList()
+      },
+      reloadList () {
+        this.loading = true
+        this.examScoreTableData = this.allData.slice(this.size * (this.page - 1), this.size * this.page)
+        this.loading = false
+      }
     }
   }
 </script>
 <style scoped>
   #chart {
-    width: 1000px;
-    height: 500px;
+    width: 500px;
+    height: 300px;
     margin: 0 auto;
+    float: left;
   }
 
   .formClass {
@@ -196,9 +267,10 @@
   }
 
   #distributeChart {
-    width: 1000px;
-    height: 500px;
+    width: 500px;
+    height: 300px;
     margin: 0 auto;
+    float: left;
   }
 
   .operation {

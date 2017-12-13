@@ -19,6 +19,8 @@ public interface IExamService {
 
     ResultInfo getExamStatistics(int userId, int examId);
 
+    ResultInfo getExamScore(int userId, int examId);
+
     ResultInfo getAnsweredPaper(int userId, int examId);
 
     ResultInfo getAnsweredPaper(int userId, int examId, String email);

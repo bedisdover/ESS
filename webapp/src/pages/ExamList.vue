@@ -27,8 +27,17 @@
                           </svg>
                         </span>
                     </el-tooltip>
-                    <el-tooltip v-if="editable(scope.row.endTime)" content="编辑考试" effect="light">
-                        <span>
+                    <el-tooltip content="考试分析" effect="light">
+                        <router-link
+                          :class="{invisible: editable(scope.row.endTime)}"
+                          :to="'/examAnalysis/' + scope.row.examId">
+                          <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#icon-analysis"></use>
+                          </svg>
+                        </router-link>
+                    </el-tooltip>
+                    <el-tooltip content="编辑考试" effect="light">
+                        <span :class="{invisible: !editable(scope.row.endTime)}">
                           <svg class="icon" aria-hidden="true" @click="editExam(scope.row)">
                             <use xlink:href="#icon-edit"></use>
                           </svg>
@@ -82,9 +91,7 @@
 
     mounted: function () {
       let url = this.id ? '/exam/list' : '/exam/all'
-      let params = {
-        courseId: this.id
-      }
+      let params = this.id ? {courseId: this.id} : ''
 
       request(url, 'post', params, (success, message, data) => {
         if (success) {
@@ -102,29 +109,28 @@
         if (data.examInfoList) { // 单独课程考试列表
           this.maxNum = data.maxNum
 
-          data.examInfoList.forEach(exam => {
+          this.examList = data.examInfoList.map(exam => {
             exam = Object.assign(exam, {courseId: this.id, maxNum: data.maxNum})
 
-            this.examList.push(this.prepareExam(exam))
+            return this.prepareExam(exam)
           })
         } else { // 所有课程列表
-          data.forEach(exam => {
-            this.examList.push(this.prepareExam(exam))
-          })
+          this.examList = data.map(exam => this.prepareExam(exam))
         }
       },
       prepareExam: function (exam) {
         let temp = Object.assign({}, {courseId: this.id, maxNum: this.maxNum}, exam)
         let num = 0
-        let mark = 0
+        let score = 0
         for (let i = 0; i < exam.num.length; i++) {
           num += exam.num[i]
-          mark += exam.num[i] * exam.marks[i]
+          score += exam.num[i] * exam.marks[i]
         }
 
-        temp.score = mark
+        temp.score = isNaN(score) ? '--' : score
         temp.questionNum = num
         temp.studentNum = exam.students ? exam.students.length : exam.studentInfoList.length
+        temp.students = exam.students ? exam.students : exam.studentInfoList
 
         return temp
       },
@@ -198,10 +204,11 @@
   }
 
   .operation {
-    font-size: 1.5em;
+    margin-right: 15px;
+    font-size: 1.2rem;
   }
 
-  .operation svg {
-    cursor: pointer;
+  .operation .invisible {
+    visibility: hidden;
   }
 </style>

@@ -20,7 +20,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="参加人员" required>
-        <StudentsList :courseId="exam.courseId" :students="exam.studentInfoList" :readonly="exam.readonly"
+        <StudentsList :courseId="exam.courseId" :students="exam.students" :readonly="exam.readonly"
                       v-on:onUpdateStudents="onUpdateStudents"></StudentsList>
       </el-form-item>
       <el-form-item label="试卷分数" required>
@@ -54,7 +54,7 @@
           name: this.exam.name ? this.exam.name : '',
           startTime: this.exam.startTime ? new Date(this.exam.startTime) : '',
           endTime: this.exam.endTime ? new Date(this.exam.endTime) : '',
-          students: this.exam.studentInfoList ? this.exam.studentInfoList : [],
+          students: this.exam.students ? this.exam.students : [],
           num: this.exam.num ? [...this.exam.num] : [],
           marks: this.exam.marks ? [...this.exam.marks] : [],
           score: 0

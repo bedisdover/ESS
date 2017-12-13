@@ -101,7 +101,7 @@ public class AccountController {
         return accountService.signUp(info);
     }
 
-    @RequestMapping(value = "/mail/verify")
+    @RequestMapping(value = "/mail/verify", method = RequestMethod.POST)
     @ResponseBody
     public ResultInfo verifyEmail(@RequestParam String key) {
         return accountService.verifyEmail(key);
