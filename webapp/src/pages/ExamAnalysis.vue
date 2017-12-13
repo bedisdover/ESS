@@ -48,7 +48,7 @@
             <el-table-column
               label="操作">
               <template slot-scope="scope">
-                <router-link :to="'/paper/'+this.examId+'/'+scope.row.email">
+                <router-link :to="'/paper/'+examId+'/'+scope.row.email">
                   <el-tooltip content="查看试卷" effect="light">
                   <span style="cursor: pointer;font-size: 1.5em;">
                   <svg class="icon" aria-hidden="true">
