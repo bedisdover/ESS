@@ -48,7 +48,7 @@
             <el-table-column
               label="操作">
               <template slot-scope="scope">
-                <router-link :to="'/paper/'+examId+'/'+scope.row.email">
+                <router-link :to="'/paper/'+ examId + '/' + scope.row.email" target="_blank">
                   <el-tooltip content="查看试卷" effect="light">
                   <span style="cursor: pointer;font-size: 1.5em;">
                   <svg class="icon" aria-hidden="true">
@@ -79,10 +79,8 @@
 <script>
   import request from '../lib/request'
   import util from '../lib/util'
-  import ElFormItem from '../../node_modules/element-ui/packages/form/src/form-item.vue'
 
   export default {
-    components: {ElFormItem},
     name: 'ExamAnalysis',
     props: ['examId'],
     data () {
@@ -229,7 +227,6 @@
       })
       request('/exam/score', 'post', params, (success, message, data) => {
         if (success) {
-          console.log(data)
           this.allData = data
           this.examScoreTableData = data.slice(0, 20)
           this.total = data.length
