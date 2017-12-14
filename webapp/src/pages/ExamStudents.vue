@@ -66,7 +66,7 @@
       width="60%"
     >
       <el-upload
-        action="http://localhost:8080//student/upload"
+        action="http://localhost:8080/student/upload"
         :with-credentials="true"
         :data="{courseId: parseInt(id)}"
         :on-success="uploadSuccess"
