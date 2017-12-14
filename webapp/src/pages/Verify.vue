@@ -39,7 +39,11 @@
       }
     },
     mounted: function () {
-      request('/mail/verify?key=' + this.$route.query.key, 'post', null, (success, message) => {
+      let params = {
+        key: this.$route.query.key
+      }
+
+      request('/mail/verify', 'post', params, (success, message) => {
         if (success) {
           this.isVerify = true
         } else {
