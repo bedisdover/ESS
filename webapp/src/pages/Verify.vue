@@ -39,7 +39,7 @@
       }
     },
     mounted: function () {
-      request('/mail/verify?key=' + this.$route.query.key, 'get', null, (success, message) => {
+      request('/mail/verify?key=' + this.$route.query.key, 'post', null, (success, message) => {
         if (success) {
           this.isVerify = true
         } else {
@@ -57,7 +57,7 @@
 
 <style>
   body {
-    background: #F8F8F8;
+    background: #F8F8F8 !important;
   }
 </style>
 
