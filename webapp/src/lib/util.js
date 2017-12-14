@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import {Notification} from 'element-ui'
+import {Loading, Notification} from 'element-ui'
 
 const util = {}
 
@@ -16,15 +16,26 @@ util.title = function (title) {
   window.document.title = title
 }
 
+let loading = null
+
 /**
- *
+ * 全页面 loading
  */
 util.loading = function () {
-
+  loading = Loading.service({
+    target: '#app-content',
+    text: '拼命加载中...',
+    lock: true
+  })
 }
 
+/**
+ * 取消 loading
+ */
 util.closeLoading = function () {
-
+  if (loading) {
+    loading.close()
+  }
 }
 
 /**

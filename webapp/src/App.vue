@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container">
       <NavBar v-if="showNav()" :user="getUser()" @onLogout="onLogout"></NavBar>
-      <router-view :user="getUser()"></router-view>
+      <router-view :user="getUser()" id="app-content"></router-view>
     </div>
     <MyFooter v-show="showFooter()"></MyFooter>
   </div>

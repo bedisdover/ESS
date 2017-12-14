@@ -90,6 +90,8 @@
     },
 
     mounted: function () {
+      Util.loading()
+
       let url = this.id ? '/exam/list' : '/exam/all'
       let params = this.id ? {courseId: this.id} : ''
 
@@ -97,6 +99,8 @@
         if (success) {
           this.initData(data)
           this.loading = false
+
+          Util.closeLoading()
         }
       })
     },
