@@ -9,7 +9,7 @@
     "start": "npm run dev",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
-    "pre-commit": "npm run lint"
+    "precommit": "npm run lint"
   },
   "dependencies": {
     "echarts": "^3.8.5",
