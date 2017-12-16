@@ -59,12 +59,6 @@
   }
 </script>
 
-<style>
-  body {
-    background: #F8F8F8 !important;
-  }
-</style>
-
 <style scoped>
   .bg {
     height: 700px;

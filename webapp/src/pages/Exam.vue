@@ -54,6 +54,8 @@
               this.loadPaper()
             }
           }
+        } else {
+          Util.notifyError(message)
         }
       })
     },

@@ -53,7 +53,7 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    background: #eeeeee;
+    background: #F8F8F8;
   }
 
   ol, ul {
