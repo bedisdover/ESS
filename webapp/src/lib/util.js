@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie'
 import {Loading, Notification} from 'element-ui'
+import format from 'date-fns/format'
 
 const util = {}
 
@@ -126,28 +127,26 @@ util.getParamByName = function (name) {
 /**
  * 格式化时间
  */
-util.formatTime = function (date, format = 'yyyy-MM-dd hh:mm:ss') {
-  const time = {
-    'M+': date.getMonth() + 1, // 月份
-    'd+': date.getDate(), // 日
-    'h+': date.getHours(), // 小时
-    'm+': date.getMinutes(), // 分
-    's+': date.getSeconds(), // 秒
-    'q+': Math.floor((date.getMonth() + 3) / 3), // 季度
-    'S': date.getMilliseconds() // 毫秒
+util.formatTime = function (date, timeFormat = 'yyyy-MM-dd hh:mm:ss') {
+  return format(date, timeFormat)
+}
+
+/**
+ * 返回倒计时
+ */
+util.countdown = function (target) {
+  let time = target - new Date()
+
+  if (time <= 0) {
+    return null
   }
 
-  if (/(y+)/.test(format)) {
-    format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
-  }
+  let day = Math.floor(time / 1000 / 60 / 60 / 24)
+  let dayText = day ? day + '天 ' : ''
 
-  for (let key in time) {
-    if (new RegExp('(' + key + ')').test(format)) {
-      format = format.replace(RegExp.$1, (RegExp.$1.length === 1) ? (time[key]) : (('00' + time[key]).substr(('' + time[key]).length)))
-    }
-  }
+  time = time - day * (1000 * 60 * 60 * 24) - 8 * 1000 * 60 * 60
 
-  return format
+  return dayText + this.formatTime(time, 'HH:mm:ss')
 }
 
 /**
