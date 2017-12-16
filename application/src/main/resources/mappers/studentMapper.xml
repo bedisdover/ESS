@@ -31,7 +31,7 @@
     </select>
 
     <select id="getExamStudents" resultMap="studentMap">
-        SELECT * FROM t_student WHERE enable = 1 AND email IN
+        SELECT * FROM t_student WHERE courseId = #{courseId} AND enable = 1 AND email IN
         (SELECT email FROM r_exam_student WHERE examId = #{examId} AND enable = 1)
     </select>
 

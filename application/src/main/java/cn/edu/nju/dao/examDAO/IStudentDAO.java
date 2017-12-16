@@ -19,7 +19,7 @@ public interface IStudentDAO {
             int courseId, List<String> emails) throws Exception;
 
     List<StudentModel> getExamStudents(
-            int examId) throws DataException;
+            int examId, int courseId) throws DataException;
 
     boolean isStudentFileMD5Exist(String md5Value);
 
