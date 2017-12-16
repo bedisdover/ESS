@@ -278,7 +278,8 @@ public class ExamServiceImpl implements IExamService {
                 courseIds = userCourseDAO.getCourseIdsByUserId(userId);
                 examModelList = examDAO.getCreateExam(courseIds);
             } catch (Exception e) {
-                return new ResultInfo(false, e.getMessage(), null);
+                return new ResultInfo(true, "成功获取考试信息列表",
+                        new ArrayList<ExamModel>());
             }
 
             List<ExamInfoForTeacher> examInfoList;
