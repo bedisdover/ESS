@@ -42,9 +42,9 @@ public class StudentDAOImpl implements IStudentDAO {
 
     @Override
     public List<StudentModel> getExamStudents(
-            int examId) throws DataException {
+            int examId, int courseId) throws DataException {
         try {
-            return studentMapper.getExamStudents(examId);
+            return studentMapper.getExamStudents(examId, courseId);
         } catch (Exception e) {
             throw new DataException("该考试不存在");
         }

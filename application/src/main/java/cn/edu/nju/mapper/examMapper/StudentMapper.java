@@ -18,7 +18,8 @@ public interface StudentMapper {
             @Param("courseId") int courseId) throws Exception;
 
     List<StudentModel> getExamStudents(
-            @Param("examId") int examId) throws Exception;
+            @Param("examId") int examId,
+            @Param("courseId") int courseId) throws Exception;
 
     void deleteCourseStudents(
             @Param("courseId") int courseId,

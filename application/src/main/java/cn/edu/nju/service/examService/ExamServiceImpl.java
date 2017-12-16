@@ -224,7 +224,9 @@ public class ExamServiceImpl implements IExamService {
 
             List<StudentModel> studentModelList;
             try {
-                studentModelList = studentDAO.getExamStudents(exam.getExamId());
+                studentModelList = studentDAO.getExamStudents(
+                        exam.getExamId(), courseId
+                );
             } catch (DataException e) {
                 return new ResultInfo(false, e.getMessage(), null);
             }
@@ -468,7 +470,7 @@ public class ExamServiceImpl implements IExamService {
             List<Integer> maxNum = getQuestionMaxNum(courseId);
             List<Double> marks = getQuestionMarks(model);
             List<StudentInfo> students = StudentModel.toInfoList(
-                    studentDAO.getExamStudents(model.getExamId())
+                    studentDAO.getExamStudents(model.getExamId(), courseId)
             );
             examInfoList.add(model.toInfo(maxNum, marks, students));
         }
