@@ -21,7 +21,13 @@
         </div>
       </div>
       <div class="footer">
-        <el-button type="primary" :disabled="waiting()" @click="handleClick">{{buttonText}}</el-button>
+        <el-button
+          v-if="Object.keys(exam).length"
+          type="primary"
+          :disabled="waiting()"
+          @click="handleClick">
+          {{buttonText}}
+        </el-button>
       </div>
     </div>
   </el-card>
@@ -67,8 +73,9 @@
         let time = new Date(this.exam.startTime) - new Date()
 
         let day = Math.floor(time / 1000 / 60 / 60 / 24)
+        let dayText = day ? day + '天 ' : ''
 
-        this.time = '距离考试开始 : ' + day + Util.formatTime(new Date(time), '天h小时m分s秒')
+        this.time = '距离考试开始 : ' + dayText + Util.formatTime(new Date(time), 'h小时m分s秒')
       },
       handleClick: function () {
         if (this.ended()) {

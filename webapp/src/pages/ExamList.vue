@@ -37,7 +37,7 @@
                         </router-link>
                     </el-tooltip>
                     <el-tooltip content="编辑考试" effect="light">
-                        <span :class="{invisible: !editable(scope.row.endTime)}">
+                        <span :class="{invisible: !editable(scope.row.startTime)}">
                           <svg class="icon" aria-hidden="true" @click="editExam(scope.row)">
                             <use xlink:href="#icon-edit"></use>
                           </svg>
