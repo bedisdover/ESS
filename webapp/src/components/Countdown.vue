@@ -70,12 +70,7 @@
         return this.exam.end || new Date() > new Date(this.exam.endTime)
       },
       getTime: function () {
-        let time = new Date(this.exam.startTime) - new Date()
-
-        let day = Math.floor(time / 1000 / 60 / 60 / 24)
-        let dayText = day ? day + '天 ' : ''
-
-        this.time = '距离考试开始 : ' + dayText + Util.formatTime(new Date(time), 'h小时m分s秒')
+        this.time = '距离考试开始 : ' + Util.countdown(new Date(this.exam.startTime))
       },
       handleClick: function () {
         if (this.ended()) {

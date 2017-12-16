@@ -70,16 +70,13 @@
 
     methods: {
       getCountdown: function () {
-        let time = this.endTime - new Date()
+        let countdown = Util.countdown(this.endTime)
 
-        if (time <= 0) {
+        if (countdown) {
+          this.countdown = countdown
+        } else {
           this.submit()
         }
-
-        let day = Math.floor(time / 1000 / 60 / 60 / 24)
-        let dayText = day ? day + '天 ' : ''
-
-        this.countdown = dayText + Util.formatTime(new Date(time), 'hh:mm:ss')
       },
       updateAnswer: function (answer) {
         this.questionList[this.current].answer = answer
