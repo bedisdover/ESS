@@ -67,9 +67,9 @@ public class PaperDAOImpl implements IPaperDAO {
 
     @Override
     public List<ExamScoreModel> getStudentScores(
-            int examId) throws DataException {
+            int examId, int courseId) throws DataException {
         try {
-            return paperMapper.getStudentScores(examId);
+            return paperMapper.getStudentScores(examId, courseId);
         } catch (Exception e) {
             throw new DataException("该考试不存在");
         }

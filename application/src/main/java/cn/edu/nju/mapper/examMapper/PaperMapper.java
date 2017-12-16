@@ -37,5 +37,6 @@ public interface PaperMapper {
             @Param("examId") int examId) throws Exception;
 
     List<ExamScoreModel> getStudentScores(
-            @Param("examId") int examId) throws Exception;
+            @Param("examId") int examId,
+            @Param("courseId") int courseId) throws Exception;
 }

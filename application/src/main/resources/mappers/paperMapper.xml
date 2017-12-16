@@ -27,7 +27,7 @@
     <select id="getStudentScores" resultType="cn.edu.nju.model.examModel.ExamScoreModel">
         SELECT p.mark as score, s.email, s.name FROM t_paper as p, t_student as s
         WHERE p.examId = #{examId} AND p.enable = 1
-              AND s.email = p.studentEmail AND s.enable = 1
+              AND s.email = p.studentEmail AND s.courseId = #{courseId} AND s.enable = 1
     </select>
 
     <resultMap id="paperMap" type="cn.edu.nju.model.examModel.PaperModel">

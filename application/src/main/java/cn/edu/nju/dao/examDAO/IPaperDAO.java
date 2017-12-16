@@ -29,6 +29,6 @@ public interface IPaperDAO {
             int examId) throws DataException;
 
     List<ExamScoreModel> getStudentScores(
-            int examId) throws DataException;
+            int examId, int courseId) throws DataException;
 
 }
