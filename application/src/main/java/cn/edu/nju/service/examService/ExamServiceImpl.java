@@ -345,7 +345,7 @@ public class ExamServiceImpl implements IExamService {
 
         List<ExamScoreModel> scores;
         try {
-            scores = paperDAO.getStudentScores(examId);
+            scores = paperDAO.getStudentScores(examId, courseId);
         } catch (DataException e) {
             return new ResultInfo(false, e.getMessage(), null);
         }
@@ -415,7 +415,7 @@ public class ExamServiceImpl implements IExamService {
 
         List<ExamScoreModel> scores;
         try {
-            scores = paperDAO.getStudentScores(examId);
+            scores = paperDAO.getStudentScores(examId, courseId);
         } catch (DataException e) {
             Logger.getLogger(ExamServiceImpl.class).error(e.getMessage());
             return null;
