@@ -17,8 +17,13 @@
 
     data () {
       return {
-        active: (this.current + 1) || 1,
         visited: []
+      }
+    },
+
+    computed: {
+      active: function () {
+        return (this.current + 1) || 1
       }
     },
 
